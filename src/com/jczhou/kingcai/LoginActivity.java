@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import com.jczhou.kingcai.common.ComunicableActivity;
 import com.jczhou.kingcai.examination.PaperActivity;
+import com.jczhou.kingcai.examination.QuestionDetailViewAdapter;
 import com.jczhou.platform.CommonDefine;
 import com.jczhou.platform.KingCAIConfig;
 import com.jczhou.kingcai.ServerInfo;
@@ -22,16 +23,22 @@ import com.jczhou.platform.internal.PlatformService;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -46,6 +53,11 @@ import android.widget.Toast;
 
 
 public class LoginActivity  extends ComunicableActivity  {
+	private final static int GROUP_NORMAL = 0;
+	private final static int MENU_MODIFY_PASSWORD = 1;
+	
+	private final static int DIALOG_MODIFY_PASSWORD = 1;
+	
 	private final static int EVENT_QUERY_TIME_OUT = 1;
 	private final static int DELAY_QUERY_TIME = 5000;
 	
@@ -79,10 +91,6 @@ public class LoginActivity  extends ComunicableActivity  {
         
         initSpinnerBar();
         
-//       mImgLogo = (ImageView)findViewById(R.id.imgLogo);
-//       LoadImageFromFile(mImgLogo);
-//       Bitmap bmp = LoadImageFromSocketFile("/sdcard/QQDownload/test.jpg");
-//       mImgLogo.setImageBitmap(bmp);
 
         cleanForm();
     }
@@ -98,36 +106,7 @@ public class LoginActivity  extends ComunicableActivity  {
     	super.onStop();
     	mWifiStateMgr.UnRegister(this);
     }
-    
 
-    
-    /*
-    private Bitmap LoadImageFromSocketFile(String path){
-    	Bitmap bmp = null;
-    	File file = new File(path);//创建一个文件对象
-    	FileInputStream inStream = null;
-		try {
-			inStream = new FileInputStream(file);
-			//读文件
-	    	byte[] buffer = new byte[1024];//缓存
-	    	int len = 0;
-	    	ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-			while( (len = inStream.read(buffer))!= -1){//直到读到文件结束
-				outStream.write(buffer, 0, len);
-			}
-			byte[] data = outStream.toByteArray();//得到文件的二进制数据
-			bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-			outStream.close();
-			inStream.close();
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return bmp;
-    }    
-   */ 
     private Button initButton(int resID){
     	Button btn = (Button)findViewById(resID);
     	btn.setOnClickListener(new BtnClickListener());
@@ -220,6 +199,39 @@ public class LoginActivity  extends ComunicableActivity  {
     	mTxtPassword.setText("");
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+    	menu.add(GROUP_NORMAL, MENU_MODIFY_PASSWORD, 0, R.string.ModifyPassword);
+
+    	return super.onCreateOptionsMenu(menu);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+    	switch (item.getItemId()){
+    	case MENU_MODIFY_PASSWORD:
+    		showDialog(DIALOG_MODIFY_PASSWORD);
+    		break;
+    	}
+    	
+    	return super.onOptionsItemSelected(item);
+    }    
+
+    @Override
+    protected Dialog onCreateDialog(int id){
+    	if (id == DIALOG_MODIFY_PASSWORD){
+    		LayoutInflater inflater = LayoutInflater.from(getApplication());
+    		View modifyView = inflater.inflate(R.layout.modifypassword, null);
+    		
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this)
+    			.setTitle(R.string.ModifyPassword)
+    			.setNegativeButton(android.R.string.cancel, null)
+    			.setView(modifyView);
+    		return builder.create();
+    	}
+    	return super.onCreateDialog(id);
+    }     
+    
     public void StartPaperActivity(String studentInfo, boolean bOffline){
 		Intent openSheetActivity = new Intent(LoginActivity.this, PaperActivity.class);
 		openSheetActivity.putExtra(KingCAIConfig.StudentInfo, studentInfo);
@@ -241,7 +253,6 @@ public class LoginActivity  extends ComunicableActivity  {
 			mInnerHandler.removeMessages(EVENT_QUERY_TIME_OUT);
 			mServerIP = serverip;
 			
-//			Toast.makeText(LoginActivity.this, "Connected Server IP:" + serverip, 2000).show();
 			SocketService.getInstance().ConnectServer(mTxtStudentID.getText().toString(), 
 										mTxtPassword.getText().toString());
 		}
@@ -274,7 +285,6 @@ public class LoginActivity  extends ComunicableActivity  {
 
 
 		public void onNewImage(Integer id, ByteBuffer buf) {
-			// TODO Auto-generated method stub
 			Log.d("PaperActivity", "new image");			
 		}
 	}    

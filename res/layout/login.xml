@@ -2,28 +2,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#DEDEDE"
     android:orientation="vertical" >
 
-
-
-
-    <TextView
-        android:id="@+id/textView3"
+    <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:text="@string/app_name"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:layout_marginLeft="120dp"
+        android:orientation="horizontal" >
+     
+	    <TextView
+	        android:id="@+id/textView3"
+	        android:layout_width="wrap_content"
+	        android:layout_height="50dp"
+	        android:layout_marginRight="35dp"
+	        android:paddingTop="10dp"
+	        android:text="@string/app_name"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:textColor="#B00BCC" />
 
+	    <Button
+	        android:id="@+id/button1"
+	        android:layout_width="85dp"
+	        android:layout_height="match_parent"
+	        android:layout_gravity="right"
+	        android:hint="@string/LoginOffline" />
+
+	</LinearLayout>
+	
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="90dip"
         android:layout_height="120dip"
         android:layout_gravity="center_horizontal"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_launcher" />
 
     <TableLayout
-        android:id="@+id/tableLayout1"
+        android:id="@+id/tableLayout1"      
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -33,25 +50,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/StudentID"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
             <EditText
-                android:id="@+id/txtStudentID"
+                android:id="@+id/txtStudentID" 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:freezesText="true"
-                android:numeric="integer"
-                android:text="@string/StudentID" />
+                android:hint="@string/StudentID"
+                android:numeric="integer" />
 
-            <requestFocus />
         </TableRow>
 
 
@@ -61,14 +68,6 @@
             android:layout_height="match_parent"
             android:baselineAligned="false" >
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/Password"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
             <EditText
                 android:id="@+id/txtPassword"
                 android:layout_width="match_parent"
@@ -76,6 +75,7 @@
                 android:layout_gravity="top"
                 android:layout_weight="1"
                 android:freezesText="true"
+                android:hint="@string/Password"
                 android:inputType="textCapWords|textVisiblePassword"
                 android:singleLine="true" />
 
@@ -108,11 +108,7 @@
                 android:text="@string/Login" />
 
         </LinearLayout>
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="10dip"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
@@ -121,27 +117,28 @@
             <TextView
                 android:id="@+id/txtLoginOffline"
                 android:layout_width="160dip"
-                android:layout_height="60dip"
+                android:layout_height="30dip"
                 android:layout_gravity="center_horizontal"
-                android:paddingLeft="10dip"
-                android:paddingTop="20dip"
+                android:paddingLeft="5dip"
+                android:paddingTop="10dip"
                 android:text="@string/LoginOffline"
                 android:textColor="#0000FF" />
 
             <TextView
                 android:id="@+id/txtModifyPassword"
                 android:layout_width="160dip"
-                android:layout_height="60dip"
+                android:layout_height="30dip"
                 android:textColor="#0000FF"  
-                android:paddingLeft="10dip"
-                android:paddingTop="20dip"
+                android:paddingLeft="5dip"
+                android:paddingTop="10dip"
                 android:text="@string/ModifyPassword"/>
 
         </LinearLayout>
-
+        
+<!-- 
         <ScrollView
             android:id="@+id/scrollView1"
-            android:layout_width="match_parent"
+            android:layout_width="match_parent"           
             android:layout_height="match_parent" >
 
             <LinearLayout
@@ -153,6 +150,19 @@
             </LinearLayout>
 
         </ScrollView>
+ -->
+
+        <ExpandableListView
+            android:id="@+id/expandableListViewStudyInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ExpandableListView>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+        </TableRow>
 
     </TableLayout>
 
