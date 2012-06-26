@@ -8,7 +8,7 @@ import android.content.Intent;
 public class TestOnLineApp extends Application{
 	@Override
 	public void onCreate(){
-		//TODO：何处stop service 呢？
+		//TODO：何处 stop service 呢？
 		startService(new Intent(CommonDefine.START_PLATFORM_ACTION));
 	}
 }

@@ -20,7 +20,7 @@ import android.os.Message;
 import android.os.Process;
 import android.util.Log;
 
-public class PlatformService extends Service{
+public class KingService extends Service{
     private static final String TAG = "SocketService";
     
     public static final String MESSAGE_FROM_UI_ACTION = "message.from.ui"; 
@@ -98,8 +98,8 @@ public class PlatformService extends Service{
 	}
 	
 	public class MyBinder extends Binder{
-		public PlatformService getService(){
-            return PlatformService.this;
+		public KingService getService(){
+            return KingService.this;
         }  
     }      
       

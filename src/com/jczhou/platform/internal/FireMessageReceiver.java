@@ -1,5 +1,7 @@
 package com.jczhou.platform.internal;
 
+import java.nio.ByteBuffer;
+
 import com.jczhou.platform.CommonDefine;
 
 import android.app.Service;
@@ -22,7 +24,9 @@ public abstract class FireMessageReceiver implements Runnable{
 	protected void FireMessage(String peerip, byte[] msgData){
     	Intent intent = new Intent(CommonDefine.BINARY_MESSAG_FROM_SERVICE_ACTION);
     	intent.putExtra("PEER", peerip);
-    	intent.putExtra("CONTENT", msgData);
+		ByteBuffer buf = ByteBuffer.allocate(msgData.length);
+		buf.put(msgData);
+		intent.putExtra("CONTENT", buf.array());
     	mHostService.sendBroadcast(intent);
 	}	
 };

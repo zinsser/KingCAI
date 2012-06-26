@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -86,20 +85,16 @@ public class PaperActivity  extends ComunicableActivity {
 	private String mServerIP = null;
 	private String mSSID = null;
 	private QuestionDetailViewAdapter mFullAdapter = null;
-	private PaperStatus mPaperStatus = null;
-
-	private Spinner mSpinnerQuestion = null;	
+	private PaperStatus mPaperStatus = null;	
 	
 	private QuestionManager mQuestionMgr = new QuestionManager();;
 	private AnswerManager mAnswerMgr = null;	
-	private ImageView mQuestionImg = null;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        mQuestionImg = (ImageView)findViewById(R.id.image);
         
         mListView = (ListView)findViewById(R.id.lstQuestions);
         mFullAdapter = new QuestionDetailViewAdapter(this, new OptionPanelListener());
@@ -114,8 +109,6 @@ public class PaperActivity  extends ComunicableActivity {
         
         mBtnFilter = (Button)findViewById(R.id.btnFilter);
         mBtnFilter.setOnClickListener(new FilterClickListener());
-
-        initSpinnerBar();
         
 		findViewById(R.id.tableInput).setVisibility(View.GONE);
 		findViewById(R.id.tableReference).setVisibility(View.GONE);
@@ -128,21 +121,12 @@ public class PaperActivity  extends ComunicableActivity {
 		mAnswerMgr = new AnswerManager(mQuestionMgr);
 		mQuestionMgr.AddListener(mFullAdapter.mQuestionListener);
 		
-        SocketService.SendMessage(new RequestPaperMessage(), mServerIP);		
-    }
-
-    private void initSpinnerBar(){
-        mSpinnerQuestion = (Spinner) findViewById(R.id.spinnerQuestion);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    	adapter.add("第2道题图");
-    	adapter.add("第4道题图");
-        mSpinnerQuestion.setAdapter(adapter);
+        SocketService.SendMessage(new RequestPaperMessage(), 0/*mServerIP*/);		
     }
 	
     @Override
     public void onDestroy (){
-        SocketService.SendMessage(new LogoutRequestMessage(), mServerIP);
+        SocketService.SendMessage(new LogoutRequestMessage(), 0 /*mServerIP*/);
     	mPaperStatus = null;
     	super.onDestroy();        
     }
@@ -389,8 +373,11 @@ public class PaperActivity  extends ComunicableActivity {
 
 
 		public void onNewImage(Integer id, ByteBuffer buf) {
-			Bitmap bmp = BitmapFactory.decodeByteArray(buf.array(), 0, buf.array().length);
-			mQuestionImg.setImageBitmap(bmp);
+			byte[] data = buf.array();
+			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+			//TODO: item add an imageView to dispaly the image
+//			mQuestionImg.setImageBitmap(bmp);
 		}
 	}
     
@@ -606,7 +593,6 @@ public class PaperActivity  extends ComunicableActivity {
 	        	holder.text.setText(question.mDetail);
 		    	holder.text.setTag(id);
 		    	
-	        	holder.Divider.setVisibility(bTitle ? View.GONE : View.VISIBLE);
 	        	holder.tableLayout.setVisibility(bTitle ? View.GONE : View.VISIBLE);
 		        
 		        if (bTitle){
@@ -656,7 +642,7 @@ public class PaperActivity  extends ComunicableActivity {
 	}	
 
 	public void CommitAnswers(){
-		SocketService.SendMessage(new AnswerMessage(mAnswerMgr.toString()), mServerIP);
+		SocketService.SendMessage(new AnswerMessage(mAnswerMgr.toString()), 0);
 	}
 	
 	public void SwitchPaperStatus(){
@@ -756,7 +742,5 @@ public class PaperActivity  extends ComunicableActivity {
 		}else{
 			((EditText)findViewById(R.id.txtOption)).setText("");
 		}
-	}
-
-	
+	}	
 }

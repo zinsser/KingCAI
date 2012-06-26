@@ -1,17 +1,11 @@
 package com.jczhou.kingcai;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import com.jczhou.kingcai.common.ComunicableActivity;
 import com.jczhou.kingcai.examination.PaperActivity;
-import com.jczhou.kingcai.examination.QuestionDetailViewAdapter;
-import com.jczhou.platform.CommonDefine;
 import com.jczhou.platform.KingCAIConfig;
 import com.jczhou.kingcai.ServerInfo;
 import com.jczhou.kingcai.SocketService;
@@ -19,21 +13,14 @@ import com.jczhou.kingcai.WifiStateManager;
 
 import com.jczhou.kingcai.R;
 
-import com.jczhou.platform.internal.PlatformService;
-
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.app.Activity;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
+
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,7 +33,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;

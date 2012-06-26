@@ -1,10 +1,12 @@
 package com.jczhou.kingcai;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
@@ -41,12 +43,37 @@ public class SocketService{
 	}
 	
 	public void ConnectServer(String number, String password){
-		SendMessage(new LoginRequestMessage(number, password), mServerIP);
+		SendMessage(new LoginRequestMessage(number, password), 0);
 	}
 	
 	public void AnswerReady(String msg){
-		SendMessage(new LoginFinishedMessage(msg), mServerIP);
+		SendMessage(new LoginFinishedMessage(msg), 0);
 	}
+
+	//TCP Socket use this function
+	public static void SendMessage(RequestMessage msg, int mode ){
+		// 根据服务器地址和端口号实例化一个Socket实例  
+		Socket socket = null;
+		try {
+			socket = new Socket(getInstance().mServerIP, KingCAIConfig.mTCPPort);
+			// 返回此套接字的输出流，即向服务器发送的数据对象  
+			OutputStream out = socket.getOutputStream();  
+			// 向服务器发送从控制台接收的数据  
+			out.write(msg.ToPack().getBytes());  
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+		 	e.printStackTrace();
+		} finally {
+			if (socket != null){
+				try {
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}  	
+	}	
 	
 	//UDP Socket use this function
 	public static void SendMessage(RequestMessage msg, String destip){

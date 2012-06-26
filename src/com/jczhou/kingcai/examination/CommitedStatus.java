@@ -70,7 +70,7 @@ public class CommitedStatus extends PaperStatus{
 		super.onLayoutOptionRadioButton(holder, answer);
 		
     	int colorNormal = Color.rgb(0, 0, 0); //black
-    	int colorBackground = Color.rgb(222, 254, 241);
+    	int colorBackground = Color.rgb(236, 236, 236);//(222, 254, 241);
 		holder.radioBtnA.setTextColor(colorNormal);
 		holder.radioBtnA.setBackgroundColor(colorBackground);
 		

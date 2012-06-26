@@ -7,7 +7,7 @@ import java.util.Set;
 import com.jczhou.kingcai.messageservice.ActiveMessage;
 import com.jczhou.kingcai.messageservice.ActiveMessageManager;
 import com.jczhou.platform.CommonDefine;
-import com.jczhou.platform.internal.PlatformService;
+import com.jczhou.platform.internal.KingService;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -146,15 +146,15 @@ public abstract class ComunicableActivity extends Activity{
     	}    	
     }
 	
-	protected PlatformService mPlatformService = null; 	
+	protected KingService mKingService = null; 	
     private myServiceChannel mServiceChannel = new myServiceChannel();
     private class myServiceChannel implements ServiceConnection{     
         public void onServiceConnected(ComponentName name, IBinder service) { 
-        	mPlatformService = ((PlatformService.MyBinder)service).getService();  
+        	mKingService = ((KingService.MyBinder)service).getService();  
         }
         
         public void onServiceDisconnected(ComponentName name) {  
-        	mPlatformService = null;
+        	mKingService = null;
         }
     };
     

@@ -8,6 +8,7 @@ import com.jczhou.kingcai.examination.PaperActivity.OptionPanelListener;
 
 import android.content.Context;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -30,8 +31,7 @@ public class QuestionDetailViewAdapter extends BaseAdapter {
         RadioButton radioBtnB;
         RadioButton radioBtnC;
         RadioButton radioBtnD;
-        View Divider ;
-        TableLayout tableLayout;
+        LinearLayout tableLayout;
     }
 
     public class QuestionListListener implements QuestionManager.QuestionListener{
@@ -122,8 +122,7 @@ public class QuestionDetailViewAdapter extends BaseAdapter {
             holder.radioBtnB = (RadioButton)convertView.findViewById(R.id.radioBtnB);
             holder.radioBtnC = (RadioButton)convertView.findViewById(R.id.radioBtnC);
             holder.radioBtnD = (RadioButton)convertView.findViewById(R.id.radioBtnD);
-            holder.Divider = convertView.findViewById(R.id.viewDivider);
-            holder.tableLayout = (TableLayout)convertView.findViewById(R.id.tableLayoutOption);
+            holder.tableLayout = (LinearLayout)convertView.findViewById(R.id.linearLayoutOption);
             
             holder.mark.setOnClickListener(mOptionPanelListener);
             holder.radioBtnA.setOnClickListener(mOptionPanelListener);

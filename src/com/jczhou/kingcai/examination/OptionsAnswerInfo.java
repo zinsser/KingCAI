@@ -80,7 +80,7 @@ public class OptionsAnswerInfo extends Answer{
 			boolAnswers[i] = false;
 		}
 
-		if (strAnswer != null){
+		if (strAnswer != null && !strAnswer.equals("")){
 			String[] refs = strAnswer.substring(1).split("#");
 			for (String ref : refs){
 				if ("A".equals(ref)){
