@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ECECEC"    
+    android:orientation="horizontal" >
+<!--     android:background="#ECECEC" 
+	android:descendantFocusability="blocksDescendants"  
+	        android:background=""
+	        -->
+
+    <TextView
+        android:id="@+id/txtQuestionDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.999"
+		android:background="#ECECEC"
+        android:paddingLeft="5dip"
+        android:paddingBottom="30dip"
+        android:paddingTop="3dip"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#000000"/>
+ 
+    <View
+        android:id="@+id/viewDivider"
+        android:layout_width="2dip"
+        android:layout_height="match_parent"
+         android:background="#DDDDDD"/>
+    
+    <TableLayout
+        android:id="@+id/tableLayoutOption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.001"
+        android:paddingRight="5dip"
+        android:paddingTop="10dip" >
+
+        <LinearLayout
+            android:id="@+id/linearLayoutMark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+	    <View
+	        android:id="@+id/viewPaddingLeft"
+	        android:layout_width="46dip"
+	        android:layout_height="match_parent"/>            
+        <ImageView
+            android:id="@+id/imgMark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+    		android:layout_gravity="center_horizontal"                
+            android:src="@drawable/unmark_icon" />
+	    <View
+	        android:id="@+id/viewPaddingRight"
+	        android:layout_width="21dip"
+	        android:layout_height="match_parent"/>            
+            
+        </LinearLayout>
+
+        <TableRow
+            android:id="@+id/tableAB"
+            
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/radioBtnA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:text="A" />
+
+            <RadioButton
+                android:id="@+id/radioBtnB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:text="B" />
+ 
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableCD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+
+            <RadioButton
+                android:id="@+id/radioBtnC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+            	android:textColor="#000000"   
+                android:text="C" />
+
+            <RadioButton
+                android:id="@+id/radioBtnD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+            	android:textColor="#000000"   
+                android:text="D" />
+                   
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+         </TableRow> 
+    </TableLayout>
+
+
+
+</LinearLayout>

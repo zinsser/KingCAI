@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, KingCAIActivity!</string>
+    <string name="app_name">KingCAI</string>
+    <string name="Title">Classroom Testing</string>
+    <string name="StudentID">Student ID:</string>
+    <string name="Password">Password:</string>
+    <string name="Login">Login</string>
+    <string name="Exit">Exit</string>
+    <string name="Commit">Commit</string>   
+    <string name="Filter">Filter</string>
+    <string name="FontSize">Font Size</string>    
+    <string name="ColorScheme">Color Schemes</string>
+    <string name="ManagerWifi">Refresh Network</string>
+    <string name="SearchErrorTip">Please Input a Correct Item or \n switch to full questions view</string> 
+    <string name="QuestionMarked"><font size="30">%d Questions are marked!</font></string>
+    <string name="QuestionUndone"><font size="30">%d Questions are undone!</font></string>    
+    <string name="QuestionIncorrect"><font size="30">%d Questions are incorrect!</font></string>   
+    <string name="QuestionCorrect"><font size="30">%d Questions are correct!</font></string>    
+    <string name="CommitTips">You have Committed the Answers!</string>    
+    <string name="CommittingTitle">Commit Paper</string>
+    <string name="CommitPromptMsg">Are you sure to commit the paper?</string> 
+    <string name="ExitPromptTitle">Exit Application</string>    
+    <string name="ExitPromptMsg">Are you sure to <b>EXIT</b> Test on line?</string>               
+    <string name="OptionPanelTips">you have Committed the Answers, \n and you can\'t answer again!</string>
+    <string name="AllQuestions">All Questions</string>    
+    <string name="UndoneQuestions">Questions Undone</string>
+    <string name="UncertainQuestions">Questions Uncertain</string>
+    <string name="CorrectQuestions">Questions Correct</string>        
+    <string name="IncorrectQuestions">Questions Incorrect</string>
+    <string name="ModifyPassword">Modify Password</string>
+    <string name="LoginOffline">Login Off-Line</string>  
+    <string name="RefAnswer">Reference</string>      
+    <string name="CurrentQuestion">the %d Question</string> 
+    <string name="CurrentBlankQuestion">the %1$d(%2$d) Question</string>
+    <string name="ServerNotFound">Server could not be found!</string>    
+    <string name="SelectClassTip">Please SELECT a class!</string> 
+    <string name="InputCorrectIDTip">Please input a correct ID or password!</string>    
+</resources>

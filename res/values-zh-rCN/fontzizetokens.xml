@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string-array name="font_size_tokens">
+	<item>小号</item>
+	<item>正常</item>	
+	<item>大号</item>	
+</string-array>
+    
+</resources>

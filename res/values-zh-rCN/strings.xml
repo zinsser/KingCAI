@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">在线测试</string>
+    <string name="app_name">在线测试</string>
+    <string name="Title">在线测试</string>
+    <string name="StudentID">学号:</string>
+    <string name="Password">密码:</string>
+    <string name="Login">登录</string>
+    <string name="Exit">退出</string>
+    <string name="Commit">我要交卷</string>
+    <string name="Filter">筛选</string>
+    <string name="FontSize">字体大小</string>    
+    <string name="ColorScheme">配色方案</string>
+    <string name="ManagerWifi">网络重联</string>    
+    <string name="SearchErrorTip">请输入正确的题号 \n或切换到全部问题视图</string>    
+    <string name="QuestionMarked"><font size="30">共 %d 道题存在疑惑!</font></string>
+    <string name="QuestionUndone"><font size="30">共 %d 道题尚未作答!</font></string>   
+    <string name="QuestionCorrect"><font size="30">共 %d 道题回答正确!</font></string>
+    <string name="QuestionIncorrect"><font size="30">共 %d 道题回答错误!</font></string>       
+    <string name="CommitTips">你已经交卷了!</string>   
+    <string name="CommittingTitle">交卷确认</string>
+    <string name="CommitPromptMsg">确认是否交卷？</string> 
+    <string name="ExitPromptTitle">退出应用</string>    
+    <string name="ExitPromptMsg">是否确认<b>退出</b>在线测试?</string>    
+    <string name="OptionPanelTips">你已交卷，无法继续作答</string>
+    <string name="AllQuestions">全部试题</string>    
+    <string name="UndoneQuestions">未答试题</string>
+    <string name="UncertainQuestions">疑惑试题</string>
+    <string name="CorrectQuestions">正确试题</string>        
+    <string name="IncorrectQuestions">错误试题</string>  
+    <string name="ModifyPassword">修改密码</string>
+    <string name="LoginOffline">离线登录</string> 
+    <string name="RefAnswer">参考答案</string>  
+    <string name="CurrentQuestion">第 %d 道题</string>
+    <string name="CurrentBlankQuestion">第%1$d(%2$d)道题</string>
+    <string name="ServerNotFound">无法找到服务器</string>        
+    <string name="SelectClassTip">请选择班级！</string>   
+    <string name="InputCorrectIDTip">请输入正确的学号及密码！</string>     
+</resources>
