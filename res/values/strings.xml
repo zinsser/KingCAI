@@ -42,4 +42,5 @@
 	<string name="InputOldPasswd">Please input OLD password</string>	
 	<string name="InputFirstNewPasswd">Please input NEW password</string>
 	<string name="InputSecondPasswd">Please input NEW password again</string>		    
+	<string name="BaseInfo">Base Information</string>	
 </resources>

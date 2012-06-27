@@ -32,6 +32,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -52,7 +53,8 @@ public class LoginActivity  extends ComunicableActivity  {
 	private EditText mTxtPassword = null;
 	private Button mBtnLogin = null;
 	private Button mBtnExit = null;
-    private TextView mTxtLoginOffline = null;	
+    private CheckBox mCheckBoxOffline = null;	
+
 	private String mServerIP;
 	private Spinner mSpinnerSSID = null;
 	private WifiStateManager mWifiStateMgr = null;
@@ -66,9 +68,7 @@ public class LoginActivity  extends ComunicableActivity  {
         mBtnLogin = initButton(R.id.btnLogin);
         mBtnExit = initButton(R.id.btnExit);
         
-        mTxtLoginOffline = (TextView)findViewById(R.id.txtLoginOffline);
-        mTxtLoginOffline.setOnClickListener(new BtnClickListener());
-        mTxtLoginOffline.setVisibility(mIsDebug ? View.VISIBLE : View.GONE);
+        mCheckBoxOffline = (CheckBox)findViewById(R.id.checkBoxOffline);
         
         mTxtStudentID = (EditText)findViewById(R.id.txtStudentID);
         mTxtPassword = (EditText)findViewById(R.id.txtPassword);
@@ -157,25 +157,27 @@ public class LoginActivity  extends ComunicableActivity  {
     };
     
     public class BtnClickListener implements OnClickListener{
+
 	    public void onClick(View btn){
 	    	if (btn == mBtnLogin){
 				InputMethodManager im =(InputMethodManager)btn.getContext().getSystemService(Context.INPUT_METHOD_SERVICE); 
 				im.hideSoftInputFromWindow(mTxtStudentID.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS); 
 				im.hideSoftInputFromWindow(mTxtPassword.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
-				if (mSpinnerSSID.getSelectedItemPosition() != 0){
-					SocketService.getInstance().QueryServer();
-					Message msg = mInnerHandler.obtainMessage(EVENT_QUERY_TIME_OUT);
-					mInnerHandler.sendMessageDelayed(msg, DELAY_QUERY_TIME);
+				if (!mCheckBoxOffline.isChecked()){
+					if (mSpinnerSSID.getSelectedItemPosition() != 0){
+						SocketService.getInstance().QueryServer();
+						Message msg = mInnerHandler.obtainMessage(EVENT_QUERY_TIME_OUT);
+						mInnerHandler.sendMessageDelayed(msg, DELAY_QUERY_TIME);
+					}else{
+						mSpinnerSSID.setPressed(true);
+		    			Toast.makeText(LoginActivity.this, R.string.SelectClassTip, 2000).show();					
+					}
 				}else{
-					mSpinnerSSID.setPressed(true);
-	    			Toast.makeText(LoginActivity.this, R.string.SelectClassTip, 2000).show();					
+				    StartPaperActivity("初三一班  张三丰", mCheckBoxOffline.isChecked());					
 				}
 	    	}else if (btn == mBtnExit){
 		    	cleanForm();
 		    	finish();
-	    	}else if (btn == mTxtLoginOffline){
-				StartPaperActivity("初三（一）班 张三丰", true);
 	    	}
 	    }
     };
@@ -216,7 +218,7 @@ public class LoginActivity  extends ComunicableActivity  {
     		return builder.create();
     	}
     	return super.onCreateDialog(id);
-    }     
+    }
     
     public void StartPaperActivity(String studentInfo, boolean bOffline){
 		Intent openSheetActivity = new Intent(LoginActivity.this, PaperActivity.class);
@@ -224,7 +226,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		openSheetActivity.putExtra(KingCAIConfig.ServerIP, mServerIP);
 		openSheetActivity.putExtra(KingCAIConfig.SSID, "一年级");
 		openSheetActivity.putExtra(KingCAIConfig.Offline, bOffline);
-		startActivity(openSheetActivity);    
+		startActivity(openSheetActivity);
 		finish();
     }
     
@@ -245,7 +247,7 @@ public class LoginActivity  extends ComunicableActivity  {
 
 
 		public void onLoginSuccess(String studentinfo) {
-			StartPaperActivity(studentinfo, false);
+			StartPaperActivity(studentinfo, mCheckBoxOffline.isChecked());
 		}
 
 
