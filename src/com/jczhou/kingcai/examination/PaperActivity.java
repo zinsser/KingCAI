@@ -622,8 +622,7 @@ public class PaperActivity  extends ComunicableActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		//按下键盘上返回按钮
-		if(keyCode == KeyEvent.KEYCODE_BACK 
-				|| keyCode == KeyEvent.KEYCODE_HOME){
+		if(keyCode == KeyEvent.KEYCODE_BACK ){
 			new AlertDialog.Builder(this)
 				.setTitle(R.string.ExitPromptTitle)
 				.setMessage(R.string.ExitPromptMsg)
@@ -635,6 +634,8 @@ public class PaperActivity  extends ComunicableActivity {
 				})
 				.setNegativeButton(android.R.string.cancel, null)
 				.show();
+			return true;
+		}else if (keyCode == KeyEvent.KEYCODE_HOME){
 			return true;
 		}
 

@@ -248,9 +248,9 @@ public class LoginActivity  extends ComunicableActivity  {
     	if (id == DIALOG_MODIFY_PASSWORD){
     		LayoutInflater inflater = LayoutInflater.from(getApplication());
     		View modifyView = inflater.inflate(R.layout.modifypassword, null);
-    		
+    	//    			.setTitle(R.string.ModifyPassword)	
     		AlertDialog.Builder builder = new AlertDialog.Builder(this)
-    			.setTitle(R.string.ModifyPassword)
+    			.setPositiveButton(android.R.string.ok, null)
     			.setNegativeButton(android.R.string.cancel, null)
     			.setView(modifyView);
     		return builder.create();

@@ -69,6 +69,12 @@
 	    		android:layout_gravity="center_horizontal"     
 	    		android:layout_marginLeft="20dip"           
 	            android:src="@drawable/unmark_icon" />
+
+	        <RatingBar
+	            android:id="@+id/ratingBar1"
+	            android:layout_width="wrap_content"
+				android:layout_marginLeft="20dip" 	            
+	            android:layout_height="40dp" />
 	            
 	        </LinearLayout>
 	</LinearLayout>
