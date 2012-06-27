@@ -42,14 +42,16 @@ public class WifiStateManager {
 		mWifiStateListener = listener;
 		mWifiService = (WifiManager)ctx.getSystemService(Context.WIFI_SERVICE);
 		mConnManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);		
+	}
 
+	public void Register(Context ctx){
 		IntentFilter filter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         ctx.registerReceiver(mReceiver, filter);
 	}
-
+	
 	public void UnRegister(Context ctx){
     	RemoveWifiConfiguration();
     	ctx.unregisterReceiver(mReceiver);		

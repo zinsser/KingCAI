@@ -15,13 +15,17 @@ import com.jczhou.kingcai.R;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,6 +38,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,13 +53,15 @@ public class LoginActivity  extends ComunicableActivity  {
 	private final static int EVENT_QUERY_TIME_OUT = 1;
 	private final static int DELAY_QUERY_TIME = 5000;
 	
+	private final static int RESULT_LOAD_HEADER_PHOTO= 1;
+	
 	private final static boolean mIsDebug = true;
 	private EditText mTxtStudentID = null;
 	private EditText mTxtPassword = null;
 	private Button mBtnLogin = null;
 	private Button mBtnExit = null;
     private CheckBox mCheckBoxOffline = null;	
-
+    private ImageView mImgViewHeader = null;
 	private String mServerIP;
 	private Spinner mSpinnerSSID = null;
 	private WifiStateManager mWifiStateMgr = null;
@@ -69,6 +76,8 @@ public class LoginActivity  extends ComunicableActivity  {
         mBtnExit = initButton(R.id.btnExit);
         
         mCheckBoxOffline = (CheckBox)findViewById(R.id.checkBoxOffline);
+        mImgViewHeader = (ImageView)findViewById(R.id.imageViewHeaderPhoto);
+        mImgViewHeader.setOnClickListener(new BtnClickListener());
         
         mTxtStudentID = (EditText)findViewById(R.id.txtStudentID);
         mTxtPassword = (EditText)findViewById(R.id.txtPassword);
@@ -84,13 +93,14 @@ public class LoginActivity  extends ComunicableActivity  {
     @Override
     public void onStart(){
     	super.onStart();
+    	mWifiStateMgr.Register(getApplication());
         mWifiStateMgr.StartScanServer();
     }
     
     @Override
     public void onStop(){
-    	super.onStop();
-    	mWifiStateMgr.UnRegister(this);
+    	mWifiStateMgr.UnRegister(getApplication());
+    	super.onStop();    	
     }
 
     private Button initButton(int resID){
@@ -178,9 +188,37 @@ public class LoginActivity  extends ComunicableActivity  {
 	    	}else if (btn == mBtnExit){
 		    	cleanForm();
 		    	finish();
+	    	}else if (btn == mImgViewHeader){
+	    		//Intent i = new Intent(Intent.ACTION_PICK, 
+//	    				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//	    		startActivityForResult(i, RESULT_LOAD_HEADER_PHOTO);
+
+	    		Intent intent = new Intent();  
+	            /*Open the page of select pictures and set the type to image*/  
+	            intent.setType("image/*");  
+	            intent.setAction(Intent.ACTION_GET_CONTENT);  
+	            startActivityForResult(intent, RESULT_LOAD_HEADER_PHOTO);      		
 	    	}
 	    }
     };
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+	    if (requestCode == RESULT_LOAD_HEADER_PHOTO 
+	    		&& resultCode == RESULT_OK && null != data) {
+	    	Uri selectedImage = data.getData();
+	        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+	        Cursor cursor = getContentResolver().query(selectedImage,
+	        		filePathColumn, null, null, null);
+	        cursor.moveToFirst();
+	        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+	        String picturePath = cursor.getString(columnIndex);
+	        cursor.close();
+
+	        mImgViewHeader.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+	    }
+	}
     
     private void cleanForm(){
     	mTxtStudentID.setText("");
