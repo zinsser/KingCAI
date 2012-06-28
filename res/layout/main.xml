@@ -12,15 +12,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:paddingTop="5dip" >
-
+
         <Button
             android:id="@+id/btnCommit"
             android:layout_width="100dip"
             android:layout_height="40dip"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.4"
+            android:background="@drawable/btn_style_two_normal"
             android:text="@string/Commit"
-            android:layout_weight="0.4"            
-            android:layout_gravity="center_vertical"            
             android:textColor="#000000" />
+
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
@@ -48,13 +50,14 @@
             android:text="0/0"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#000000" />
-
+
         <Button
             android:id="@+id/btnFilter"
             android:layout_width="100dip"
             android:layout_height="40dip"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.4"
+            android:background="@drawable/btn_style_two_normal"
             android:text="@string/AllQuestions" />
 
     </TableRow>
@@ -104,14 +107,15 @@
             android:textColor="#000000"
             android:textSize="20dip" >
         </EditText>
-
+
         <Button
             android:id="@+id/btnUP"
             android:layout_width="40dip"
             android:layout_height="40dip"
-            android:layout_weight="0.06"            
             android:layout_gravity="center_vertical"
-            android:background="@drawable/up" />
+            android:layout_weight="0.06"
+            android:background="@drawable/numberpicker_up_focused_holo_light" />
+
     </TableRow>
 
     <TableRow
@@ -139,14 +143,15 @@
             android:textColor="#0000FF"
             android:textSize="20dip" >
         </TextView>
-
+
         <Button
             android:id="@+id/btnDown"
             android:layout_width="40dip"
             android:layout_height="40dip"
-            android:layout_weight="0.06"            
             android:layout_gravity="center_vertical"
-            android:background="@drawable/down" />
+            android:layout_weight="0.06"
+            android:background="@drawable/numberpicker_down_focused_holo_light" />
+
     </TableRow>
 
     <View

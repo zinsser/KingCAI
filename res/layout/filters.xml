@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="#ECECEC"
     android:orientation="horizontal" >
-	
+    	
 	<LinearLayout            
 	    android:id="@+id/linearLayoutTextInfo" 
 	    android:layout_width="match_parent"
@@ -15,15 +15,15 @@
 	
 	    <TextView
 	        android:id="@+id/txtQuestionDetail"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
 	        android:layout_weight="0.999"
-			android:background="#ECECEC"
 	        android:paddingLeft="5dip"
 	        android:paddingTop="3dip"
+    		android:background="@drawable/btn_style_two_normal"
 	        android:textAppearance="?android:attr/textAppearanceMedium"
 	        android:textColor="#000000"/>
-	 
+	 <!-- 			android:background="#ECECEC" -->
 	    <LinearLayout
 	            android:id="@+id/linearLayoutOption"
 	            android:layout_width="wrap_content"
@@ -71,10 +71,12 @@
 	            android:src="@drawable/unmark_icon" />
 
 	        <RatingBar
-	            android:id="@+id/ratingBar1"
+	            android:id="@+id/ratingBarHardness"
 	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" 
 				android:layout_marginLeft="20dip" 	            
-	            android:layout_height="40dp" />
+ 				style="?android:attr/ratingBarStyleIndicator"
+ 				android:numStars="7"/>
 	            
 	        </LinearLayout>
 	</LinearLayout>

@@ -51,8 +51,8 @@ public class CommitedStatus extends PaperStatus{
 
 	@Override
 	protected void LoadOptionIcon(Context context) {
-        mMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.mark_ok);        
-        mUnMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.mark_err);
+        mMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_bullet_key_permission);        
+        mUnMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_delete);
 	}
 
 	@Override
