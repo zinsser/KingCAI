@@ -1,9 +1,12 @@
 package com.jczhou.kingcai.examination;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,6 +14,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -53,9 +58,11 @@ public class PaperActivity  extends ComunicableActivity {
 	private final static int MENU_FONT_SIZE = 0;
 	private final static int MENU_COLOR_SCHEME = 1;	
 	private final static int MENU_WIFI_MANAGER = 2;
+	private final static int MENU_ABOUT = 3;
 	
 	private final static int SET_FONT_SIZE_DIALOG = 0;
 	private final static int SET_COLOR_SCHEME_DIALOG = 1;
+	private final static int DIALOG_ABOUT = 2;
 	
 	private int mCurrentFontSize = 1;//normal
 	
@@ -287,7 +294,8 @@ public class PaperActivity  extends ComunicableActivity {
     	menu.add(GROUP_NORMAL, MENU_FONT_SIZE, 0, R.string.FontSize);
     	menu.add(GROUP_NORMAL, MENU_COLOR_SCHEME, 0, R.string.ColorScheme);
     	menu.add(GROUP_NORMAL, MENU_WIFI_MANAGER, 0, R.string.ManagerWifi);
-
+    	menu.add(GROUP_NORMAL, MENU_ABOUT, 0, R.string.About);
+    	
     	return super.onCreateOptionsMenu(menu);
     }
     
@@ -301,6 +309,9 @@ public class PaperActivity  extends ComunicableActivity {
     		showDialog(SET_COLOR_SCHEME_DIALOG);
     		break;
     	case MENU_WIFI_MANAGER:
+    		break;
+    	case MENU_ABOUT:
+    		showDialog(DIALOG_ABOUT);
     		break;
     	}
     	
@@ -333,9 +344,44 @@ public class PaperActivity  extends ComunicableActivity {
     			.setNegativeButton(android.R.string.cancel, null)
     			.setView(v);
     		return builder.create();
+    	}else if (id == DIALOG_ABOUT){
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this)
+			.setTitle(R.string.About)
+			.setMessage(GenAboutString())
+			.setNegativeButton(android.R.string.ok, null);
+    		return builder.create();
     	}
+    	
     	return super.onCreateDialog(id);
     } 
+    
+    private String GenAboutString(){
+        List<PackageInfo> pkgInfos = getPackageManager().getInstalledPackages(PackageManager.GET_ACTIVITIES);
+        PackageInfo kingPackage = null;
+        for(PackageInfo info : pkgInfos) {
+        	if ("com.jczhou.kingcai".equals(info.packageName)){
+        		kingPackage = info;
+        		break;
+        	}
+        }
+        
+    	String about = "软件名称：\n";
+        if (kingPackage == null){
+        	about += "在线测试";
+        }else{
+        	about += kingPackage.applicationInfo.loadLabel(getPackageManager());
+        	about += "\n版本号：\n";
+    		about += kingPackage.versionName + "." + kingPackage.versionCode;
+    		about += "\nAndroid平台兼容版本：\n" 
+    					+ (kingPackage.applicationInfo.targetSdkVersion == 8 ? "2.2" : 
+    						kingPackage.applicationInfo.targetSdkVersion == 10 ? "2.3" :
+    						   kingPackage.applicationInfo.targetSdkVersion == 11 ? "4.0" : "unknown"); 
+        	about += "\n发布日期：\n";
+        	about += new Date(new File(kingPackage.applicationInfo.sourceDir).lastModified()).toLocaleString();
+        }
+
+    	return about;
+    }
     
 	@Override
 	protected EventProcessListener doGetEventProcessListener() {

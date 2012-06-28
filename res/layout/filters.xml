@@ -76,7 +76,7 @@
 	            android:layout_height="wrap_content" 
 				android:layout_marginLeft="20dip" 	            
  				style="?android:attr/ratingBarStyleIndicator"
- 				android:numStars="7"/>
+ 				android:numStars="3"/>
 	            
 	        </LinearLayout>
 	</LinearLayout>

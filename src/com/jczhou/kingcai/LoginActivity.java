@@ -55,7 +55,6 @@ public class LoginActivity  extends ComunicableActivity  {
 	
 	private final static int RESULT_LOAD_HEADER_PHOTO= 1;
 	
-	private final static boolean mIsDebug = true;
 	private EditText mTxtStudentID = null;
 	private EditText mTxtPassword = null;
 	private Button mBtnLogin = null;
@@ -65,8 +64,8 @@ public class LoginActivity  extends ComunicableActivity  {
 	private String mServerIP;
 	private Spinner mSpinnerSSID = null;
 	private WifiStateManager mWifiStateMgr = null;
-//	private ImageView mImgLogo = null;
-
+	private TextView mTextViewBaseInfo = null;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,8 +84,18 @@ public class LoginActivity  extends ComunicableActivity  {
         mWifiStateMgr = new WifiStateManager(this, new WifiStateEventListener());
         
         initSpinnerBar();
-        
+        findViewById(R.id.imageViewSpinnerDown).setOnClickListener(new View.OnClickListener(){
 
+			@Override
+			public void onClick(View v) {
+				if (mSpinnerSSID != null){
+					mSpinnerSSID.performClick();
+				}
+			}
+        	
+        });
+        mTextViewBaseInfo = (TextView)findViewById(R.id.textViewBaseInfo);
+        
         cleanForm();
     }
 

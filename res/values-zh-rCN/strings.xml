@@ -42,5 +42,6 @@
 	<string name="InputOldPasswd">请输入旧密码</string>	
 	<string name="InputFirstNewPasswd">请输入新密码</string>
 	<string name="InputSecondPasswd">请再次输入新密码</string>	
-	<string name="BaseInfo">基本信息</string>		
+	<string name="BaseInfo">基本信息</string>	
+	<string name="About">关于在线测试</string>
 </resources>
