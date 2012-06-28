@@ -365,19 +365,18 @@ public class PaperActivity  extends ComunicableActivity {
         	}
         }
         
-    	String about = "软件名称：\n";
+        
+    	String about = "";
         if (kingPackage == null){
-        	about += "在线测试";
+        	about = "Software Name：\n" + getResources().getString(R.string.app_name);
         }else{
-        	about += kingPackage.applicationInfo.loadLabel(getPackageManager());
-        	about += "\n版本号：\n";
-    		about += kingPackage.versionName + "." + kingPackage.versionCode;
-    		about += "\nAndroid平台兼容版本：\n" 
-    					+ (kingPackage.applicationInfo.targetSdkVersion == 8 ? "2.2" : 
-    						kingPackage.applicationInfo.targetSdkVersion == 10 ? "2.3" :
-    						   kingPackage.applicationInfo.targetSdkVersion == 11 ? "4.0" : "unknown"); 
-        	about += "\n发布日期：\n";
-        	about += new Date(new File(kingPackage.applicationInfo.sourceDir).lastModified()).toLocaleString();
+        	about = String.format(getResources().getString(R.string.AboutDetail), 
+    				kingPackage.applicationInfo.loadLabel(getPackageManager()), 
+    				kingPackage.versionName + "." + kingPackage.versionCode,
+    				kingPackage.applicationInfo.targetSdkVersion == 8 ? "2.2" : 
+						kingPackage.applicationInfo.targetSdkVersion == 10 ? "2.3" :
+						   kingPackage.applicationInfo.targetSdkVersion == 11 ? "4.0" : "unknown",
+					new Date(new File(kingPackage.applicationInfo.sourceDir).lastModified()).toLocaleString());
         }
 
     	return about;

@@ -20,7 +20,8 @@
        	           
         <activity
             android:name=".LoginActivity" 
-	    android:theme="@android:style/Theme.Light.NoTitleBar"        
+	    	android:theme="@android:style/Theme.Light.NoTitleBar"  
+	    	android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />

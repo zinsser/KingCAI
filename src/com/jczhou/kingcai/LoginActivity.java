@@ -1,11 +1,14 @@
 package com.jczhou.kingcai;
 
 
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import com.jczhou.kingcai.common.ComunicableActivity;
+import com.jczhou.kingcai.examination.Answer;
 import com.jczhou.kingcai.examination.PaperActivity;
+import com.jczhou.kingcai.examination.PaperDBHelper;
 import com.jczhou.platform.KingCAIConfig;
 import com.jczhou.kingcai.ServerInfo;
 import com.jczhou.kingcai.SocketService;
@@ -13,9 +16,11 @@ import com.jczhou.kingcai.WifiStateManager;
 
 import com.jczhou.kingcai.R;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import android.app.AlertDialog;
@@ -112,6 +117,27 @@ public class LoginActivity  extends ComunicableActivity  {
     	super.onStop();    	
     }
 
+    public void SaveStudent(String strID, String name, String password, Bitmap photo){
+		StudentDBHelper helper = new StudentDBHelper(getApplicationContext());
+		ContentValues values = new ContentValues();		
+
+		Integer id = Integer.parseInt(strID);
+		values.put(StudentDBHelper.s_StudentTag_ID, id);  
+		values.put(StudentDBHelper.s_StudentTag_Name, name);  
+		values.put(StudentDBHelper.s_StudentTag_Passwd, password); 
+		values.put(StudentDBHelper.s_StudentTag_Info, "");
+		
+		 // 将Bitmap压缩成PNG编码，质量为100%存储            
+		final ByteArrayOutputStream os = new ByteArrayOutputStream(); 			
+        photo.compress(Bitmap.CompressFormat.PNG, 100, os);     			
+		values.put(StudentDBHelper.s_StudentTag_Photo, os.toByteArray());
+				
+		
+		helper.Insert(values, id);
+
+		helper.close();
+	}
+	
     private Button initButton(int resID){
     	Button btn = (Button)findViewById(resID);
     	btn.setOnClickListener(new BtnClickListener());
@@ -188,7 +214,7 @@ public class LoginActivity  extends ComunicableActivity  {
 						Message msg = mInnerHandler.obtainMessage(EVENT_QUERY_TIME_OUT);
 						mInnerHandler.sendMessageDelayed(msg, DELAY_QUERY_TIME);
 					}else{
-						mSpinnerSSID.setPressed(true);
+						mSpinnerSSID.performClick();
 		    			Toast.makeText(LoginActivity.this, R.string.SelectClassTip, 2000).show();					
 					}
 				}else{
@@ -198,13 +224,8 @@ public class LoginActivity  extends ComunicableActivity  {
 		    	cleanForm();
 		    	finish();
 	    	}else if (btn == mImgViewHeader){
-	    		//Intent i = new Intent(Intent.ACTION_PICK, 
-//	    				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//	    		startActivityForResult(i, RESULT_LOAD_HEADER_PHOTO);
-
 	    		Intent intent = new Intent();  
-	            /*Open the page of select pictures and set the type to image*/  
-	            intent.setType("image/*");  
+ 	            intent.setType("image/*");  
 	            intent.setAction(Intent.ACTION_GET_CONTENT);  
 	            startActivityForResult(intent, RESULT_LOAD_HEADER_PHOTO);      		
 	    	}
