@@ -292,7 +292,7 @@ public class PaperActivity  extends ComunicableActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
     	menu.add(GROUP_NORMAL, MENU_FONT_SIZE, 0, R.string.FontSize);
-    	menu.add(GROUP_NORMAL, MENU_COLOR_SCHEME, 0, R.string.ColorScheme);
+//    	menu.add(GROUP_NORMAL, MENU_COLOR_SCHEME, 0, R.string.ColorScheme);
     	menu.add(GROUP_NORMAL, MENU_WIFI_MANAGER, 0, R.string.ManagerWifi);
     	menu.add(GROUP_NORMAL, MENU_ABOUT, 0, R.string.About);
     	

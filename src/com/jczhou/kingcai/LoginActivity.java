@@ -63,7 +63,6 @@ public class LoginActivity  extends ComunicableActivity  {
 	private EditText mTxtStudentID = null;
 	private EditText mTxtPassword = null;
 	private Button mBtnLogin = null;
-	private Button mBtnExit = null;
     private CheckBox mCheckBoxOffline = null;	
     private ImageView mImgViewHeader = null;
 	private String mServerIP;
@@ -77,7 +76,6 @@ public class LoginActivity  extends ComunicableActivity  {
         setContentView(R.layout.login);
         
         mBtnLogin = initButton(R.id.btnLogin);
-        mBtnExit = initButton(R.id.btnExit);
         
         mCheckBoxOffline = (CheckBox)findViewById(R.id.checkBoxOffline);
         mImgViewHeader = (ImageView)findViewById(R.id.imageViewHeaderPhoto);
@@ -91,7 +89,6 @@ public class LoginActivity  extends ComunicableActivity  {
         initSpinnerBar();
         findViewById(R.id.imageViewSpinnerDown).setOnClickListener(new View.OnClickListener(){
 
-			@Override
 			public void onClick(View v) {
 				if (mSpinnerSSID != null){
 					mSpinnerSSID.performClick();
@@ -220,9 +217,6 @@ public class LoginActivity  extends ComunicableActivity  {
 				}else{
 				    StartPaperActivity("初三一班  张三丰", mCheckBoxOffline.isChecked());					
 				}
-	    	}else if (btn == mBtnExit){
-		    	cleanForm();
-		    	finish();
 	    	}else if (btn == mImgViewHeader){
 	    		Intent intent = new Intent();  
  	            intent.setType("image/*");  
