@@ -422,6 +422,7 @@ public class PaperActivity  extends ComunicableActivity {
 			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
 
 			//TODO: item add an imageView to dispaly the image
+			mQuestionMgr.AddQuestionImage(0, bmp);
 //			mQuestionImg.setImageBitmap(bmp);
 		}
 	}
@@ -624,6 +625,13 @@ public class PaperActivity  extends ComunicableActivity {
     		mPaperStatus.onOptionPanelClick(v, mAnswerMgr.GetAnswer(id));
 		}
 
+		private void AddImageView(ViewHolder holder, Bitmap bmp){
+			ImageView imgView = new ImageView(getApplication());
+			imgView.setImageBitmap(bmp);
+//			holder.mGraphices.add(imgView);
+			holder.mParent.addView(imgView);
+		}
+		
 		@Override
 		public void OnAdapterLayoutView(ViewHolder holder, Integer id) {
 	        do {
@@ -643,7 +651,10 @@ public class PaperActivity  extends ComunicableActivity {
 		        if (bTitle){
 		        	break;
 		        }
-		        
+		        if (question.HasImage()){
+			        AddImageView(holder, question.GetImage());		        	
+		        }
+
 	        	mPaperStatus.onLayoutMarkButton(holder, answer);
 		       
 		    	holder.radioBtnA.setVisibility(question.IsOption() ? View.VISIBLE : View.GONE);

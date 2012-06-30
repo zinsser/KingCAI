@@ -6,8 +6,11 @@ import java.util.Set;
 
 import com.jczhou.kingcai.messageservice.ActiveMessage;
 import com.jczhou.kingcai.messageservice.ActiveMessageManager;
+import com.jczhou.kingcai.messageservice.NewImageMessage;
 import com.jczhou.platform.CommonDefine;
 import com.jczhou.platform.internal.KingService;
+import com.jczhou.platform.internal.KingService.MessageReceiver;
+import com.jczhou.platform.internal.KingService.UIMessageHandler;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -18,19 +21,27 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
+import android.os.Process;
 import android.util.Log;
 
 public abstract class ComunicableActivity extends Activity{
-
+    private static final String TAG = "ComunicableActivity";
+    
 	private ServiceMessageReceiver mReceiver = null;
     private ServiceMessageHandler mHandler = null;
    
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	mHandler = new ServiceMessageHandler();
+
+    	HandlerThread Comunicator = new HandlerThread(TAG, Process.THREAD_PRIORITY_BACKGROUND);
+    	Comunicator.start();	
+    	mHandler = new ServiceMessageHandler(Comunicator.getLooper());
+
     	mReceiver = new ServiceMessageReceiver(mHandler);
     	mEventProcessListener = getEventProcessListener();
     }
@@ -86,12 +97,12 @@ public abstract class ComunicableActivity extends Activity{
     	public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (CommonDefine.TEXT_MESSAG_FROM_SERVICE_ACTION.equals(action)){
-        		Bundle bundle = new Bundle();
+        		Bundle bundle = new Bundle(intent.getExtras());
         		Message msg = mHostHandler.obtainMessage(ServiceMessageHandler.EVENT_TEXT_MESSAGE);
         		msg.setData(bundle);
         		msg.sendToTarget();
             }else if (CommonDefine.BINARY_MESSAG_FROM_SERVICE_ACTION.equals(action)){
-        		Bundle bundle = new Bundle();
+        		Bundle bundle = new Bundle(intent.getExtras());
         		Message msg = mHostHandler.obtainMessage(ServiceMessageHandler.EVENT_BINARY_MESSAGE);
         		msg.setData(bundle);
         		msg.sendToTarget();            	
@@ -103,7 +114,9 @@ public abstract class ComunicableActivity extends Activity{
     	public static final int EVENT_TEXT_MESSAGE = 0;
     	public static final int EVENT_BINARY_MESSAGE = 1;
 		private ActiveMessageManager mActiveMsgMgr = new ActiveMessageManager();
-		
+		public ServiceMessageHandler(Looper loop){
+			super(loop);
+		}
     	@Override
     	public void handleMessage(Message msg){
     		switch (msg.what){
@@ -124,8 +137,12 @@ public abstract class ComunicableActivity extends Activity{
     		}
     	}
     	
-    	private void OnReceiveImage(String peer, byte[] MsgData){
-    		//TODO:
+    	private void OnReceiveImage(String peer, byte[] msgData){
+			ByteBuffer buf = ByteBuffer.allocate(msgData.length);
+			buf.put(msgData);
+			NewImageMessage.NewImageFunctor functor = new NewImageMessage.NewImageFunctor();
+			NewImageMessage activeMsgExecutor = (NewImageMessage) functor.OnReceiveMessage(peer,  buf.array());
+			activeMsgExecutor.Execute(mEventProcessListener);
     	}
     	
     	private void OnReceiveMessage(String peer, String MsgData){

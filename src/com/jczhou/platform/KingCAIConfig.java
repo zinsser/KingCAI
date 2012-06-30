@@ -24,4 +24,5 @@ public class KingCAIConfig {
 	public final static int mMulticastClientImagePort = 2015;
 //	public final static String mMulticastServerImageGroupIP = "224.0.0.103";	
 	public final static int mUDPServerImagePort = 2016;
+	public final static int mTCPServerImagePort = 2018;
 }

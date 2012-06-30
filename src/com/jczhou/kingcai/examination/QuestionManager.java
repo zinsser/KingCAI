@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
+import android.graphics.Bitmap;
+
 public class QuestionManager {
 	private HashMap<Integer, QuestionInfo> mQuestions = new HashMap<Integer, QuestionInfo>();
 	private ArrayList<QuestionListener> mListeners = new ArrayList<QuestionListener>();
@@ -12,7 +14,8 @@ public class QuestionManager {
 	public static interface QuestionListener{
 		public abstract void OnQuestionArrayChanged(ArrayList<Integer> ids);
 		public abstract void OnAddQuestion(Integer id);		
-		public abstract void OnClearQuestion();			
+		public abstract void OnClearQuestion();
+//		public abstract void OnImageReady(Bitmap bmp);
 	}
 	
 	public QuestionManager(){
@@ -55,6 +58,13 @@ public class QuestionManager {
 		}	
 	}
 
+	public void AddQuestionImage(Integer id, Bitmap bmp){
+		mQuestions.get(id).AddGraphic(bmp);
+//		for (QuestionListener l : mListeners){
+//			l.OnImageReady(bmp);
+//		}			
+	}
+	
 	public  ArrayList<Integer> GetIDs(){
 		ArrayList<Integer> ids = new ArrayList<Integer>();
 		

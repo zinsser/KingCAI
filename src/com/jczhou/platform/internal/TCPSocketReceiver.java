@@ -7,6 +7,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
+import com.jczhou.platform.KingCAIConfig;
+
 import android.app.Service;
 
 import android.util.Log;
@@ -42,7 +44,7 @@ public class TCPSocketReceiver extends FireMessageReceiver{
 
 			    while (in.read(mReceiveBuf.array()) > 0){
 				    Log.d("TCPSocket", "msg:" + mReceiveBuf.array());
-			    	String msg = new String(mReceiveBuf.array());
+			    	String msg = new String(mReceiveBuf.array(), KingCAIConfig.mCharterSet);
 			    	if (msg.contains("[ImageBC]")){
 			    		int pos = msg.indexOf("\\");
 			    		mRemain = Integer.parseInt(msg.substring("[ImageBC]".length(), pos));

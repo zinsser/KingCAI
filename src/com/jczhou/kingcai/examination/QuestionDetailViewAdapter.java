@@ -7,6 +7,7 @@ import com.jczhou.kingcai.R;
 import com.jczhou.kingcai.examination.PaperActivity.OptionPanelListener;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -32,6 +33,11 @@ public class QuestionDetailViewAdapter extends BaseAdapter {
         RadioButton radioBtnC;
         RadioButton radioBtnD;
         LinearLayout tableLayout;
+ //       ArrayList<ImageView> mGraphices = new ArrayList<ImageView>();
+        LinearLayout mParent = null;
+        public ViewHolder(LinearLayout parent){
+        	mParent = parent;
+        }
     }
 
     public class QuestionListListener implements QuestionManager.QuestionListener{
@@ -59,6 +65,12 @@ public class QuestionDetailViewAdapter extends BaseAdapter {
             Collections.sort(mIDs);		
 	        notifyDataSetChanged();            
     	}
+
+
+		public void OnImageReady(Bitmap bmp) {
+			// TODO Auto-generated method stub
+			
+		}
     }
     
     public static abstract class AdapterListener{
@@ -115,7 +127,7 @@ public class QuestionDetailViewAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.filters, null);
 
-            holder = new ViewHolder();
+            holder = new ViewHolder((LinearLayout)convertView);
             holder.mark = (ImageView) convertView.findViewById(R.id.imgMark);
             holder.text = (TextView) convertView.findViewById(R.id.txtQuestionDetail);
             holder.radioBtnA = (RadioButton)convertView.findViewById(R.id.radioBtnA);

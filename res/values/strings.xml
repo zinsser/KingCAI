@@ -45,4 +45,5 @@
 	<string name="BaseInfo">Base Information</string>	
 	<string name="About">About</string>		
 	<string name="AboutDetail">Software Name:\n %1$s \nVersion:\n %2$s \nAndroid Version:\n %3$s \nDistribute Date:\n %4$s \n</string>	
+	<string name="CompanyName">Company Name</string>		
 </resources>

@@ -1,5 +1,9 @@
 package com.jczhou.kingcai.examination;
 
+import java.util.ArrayList;
+
+import android.graphics.Bitmap;
+
 public class QuestionInfo {
 	public static final int QUESTION_TYPE_TITLE = 0;
 	public static final int QUESTION_TYPE_OPTION = 1;
@@ -11,12 +15,17 @@ public class QuestionInfo {
 	public int mType;
 	public String mDetail;
 	public String mReference;
+	public ArrayList<Bitmap> mGraphics = new ArrayList<Bitmap>();
 	
 	public QuestionInfo(int type, String reference, String detail){
 		mDetail = detail;
 		mReference = reference;
 		
 		mType = AnalysisDetailTypeByReference(type, reference);
+	}
+	
+	public void AddGraphic(Bitmap graphic){
+		mGraphics.add(graphic);
 	}
 	
 	private int AnalysisDetailTypeByReference(int type, String reference){
@@ -35,6 +44,15 @@ public class QuestionInfo {
 		}
 
 		return retType;
+	}
+	
+	public Bitmap GetImage(){
+		if (mGraphics.size() < 1) return null;
+		return mGraphics.get(0);
+	}
+	
+	public boolean HasImage(){
+		return mGraphics.size() > 0;
 	}
 	
 	public boolean IsBlank(){

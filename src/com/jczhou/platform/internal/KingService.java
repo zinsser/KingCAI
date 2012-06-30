@@ -32,6 +32,7 @@ public class KingService extends Service{
     private Thread mUDPReceiver = null;
     private Thread mMulticastReceiver = null;
     private Thread mImageReceiver = null;
+    private Thread mTCPReceiver = null;
     
     @Override  
     public void onCreate() {  
@@ -41,7 +42,9 @@ public class KingService extends Service{
     	mUIMessageReceiver = new MessageReceiver(mUIMessageHandler);
     	
     	mUDPReceiver = new Thread(new UDPSocketReceiver(this, KingCAIConfig.mUDPPort));
-		mMulticastReceiver = new Thread(new MulticastSocketReceiver(this, 
+    	mTCPReceiver = new Thread(new TCPSocketReceiver(this, KingCAIConfig.mTCPServerImagePort));
+    	
+    	mMulticastReceiver = new Thread(new MulticastSocketReceiver(this, 
 								KingCAIConfig.mMulticastClientGroupIP, KingCAIConfig.mMulticastClientCommonPort));
 /*		mImageReceiver =  new Thread(new MulticastSocketReceiver(mHandler, 
 							KingCAIConfig.mMulticastClientImageGroupIP, KingCAIConfig.mMulticastClientImagePort));
@@ -62,6 +65,10 @@ public class KingService extends Service{
 			mUDPReceiver.start();
 		}
 		
+		if (mTCPReceiver != null && !mTCPReceiver.isAlive()){
+			mTCPReceiver.start();
+		}
+		
 		if (mMulticastReceiver != null && mMulticastReceiver.isAlive()){
 			mMulticastReceiver.start();
 		}
@@ -76,16 +83,16 @@ public class KingService extends Service{
     public void onDestroy() { 
     	unregisterReceiver(mUIMessageReceiver);
 		if (mUIComunicator != null && !mUIComunicator.isAlive()){
-			mUIComunicator.stop();
+//			mUIComunicator.stop();
 		}
 		if (mUDPReceiver != null && !mUDPReceiver.isAlive()){
-			mUDPReceiver.stop();
+//			mUDPReceiver.stop();
 		}
 		if (mMulticastReceiver != null && mMulticastReceiver.isAlive()){
-			mMulticastReceiver.stop();
+//			mMulticastReceiver.stop();
 		}
 		if (mImageReceiver != null && mImageReceiver.isAlive()){
-			mImageReceiver.stop();
+//			mImageReceiver.stop();
 		}
         super.onDestroy();
     } 
