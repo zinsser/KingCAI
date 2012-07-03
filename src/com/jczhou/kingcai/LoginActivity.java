@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import com.jczhou.kingcai.common.ComunicableActivity;
+import com.jczhou.kingcai.common.TransDialog;
 import com.jczhou.kingcai.examination.Answer;
 import com.jczhou.kingcai.examination.PaperActivity;
 import com.jczhou.kingcai.examination.PaperDBHelper;
@@ -37,6 +38,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -75,8 +78,9 @@ public class LoginActivity  extends ComunicableActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         
-        mBtnLogin = initButton(R.id.btnLogin);
-        
+        mBtnLogin = (Button)findViewById(R.id.btnLogin);
+        mBtnLogin.setOnClickListener(new BtnClickListener());  
+         
         mCheckBoxOffline = (CheckBox)findViewById(R.id.checkBoxOffline);
         mImgViewHeader = (ImageView)findViewById(R.id.imageViewHeaderPhoto);
         mImgViewHeader.setOnClickListener(new BtnClickListener());
@@ -134,12 +138,6 @@ public class LoginActivity  extends ComunicableActivity  {
 
 		helper.close();
 	}
-	
-    private Button initButton(int resID){
-    	Button btn = (Button)findViewById(resID);
-    	btn.setOnClickListener(new BtnClickListener());
-    	return btn;
-    }  
 
     private void initSpinnerBar(){
         mSpinnerSSID = (Spinner) findViewById(R.id.spinnerSSID);
@@ -260,7 +258,18 @@ public class LoginActivity  extends ComunicableActivity  {
     public boolean onOptionsItemSelected(MenuItem item){
     	switch (item.getItemId()){
     	case MENU_MODIFY_PASSWORD:
-    		showDialog(DIALOG_MODIFY_PASSWORD);
+ //   		showDialog(DIALOG_MODIFY_PASSWORD);
+ //   		LayoutInflater inflater = LayoutInflater.from(getApplication());
+ //   		View modifyView = inflater.inflate(, null);
+    	//    			.setTitle(R.string.ModifyPassword)	
+ //   		AlertDialog.Builder builder = new AlertDialog.Builder(this)
+  //  			.setPositiveButton(android.R.string.ok, null)
+ //   			.setNegativeButton(android.R.string.cancel, null)
+ //   			.setView(modifyView);
+    		TransDialog dlg = new TransDialog(this, R.xml.style);
+    		dlg.setContentView(R.layout.modifypassword);
+    		dlg.show();
+    		
     		break;
     	}
     	
