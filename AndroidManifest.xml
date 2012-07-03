@@ -39,11 +39,20 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:configChanges="orientation|keyboardHidden">
          </activity> 
-        <service android:name="com.jczhou.platform.internal.KingService" android:enabled="true">
+        <service android:enabled="true" 
+            android:name="com.jczhou.platform.internal.KingService">
             <intent-filter >
                 <action android:name="com.jczhou.platform.socketservice"/>
             </intent-filter>                            
-        </service>        
+        </service>
+        <receiver android:enabled="true" 
+            android:name="com.jczhou.kingcai.BootCompleteReceiver" 
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+			<intent-filter> 
+        		<action android:name="android.intent.action.BOOT_COMPLETED" /> 
+    		</intent-filter>            
+        </receiver>
+                
     </application>
 
 </manifest>
