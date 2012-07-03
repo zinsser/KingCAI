@@ -6,9 +6,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import com.jczhou.kingcai.common.ComunicableActivity;
-import com.jczhou.kingcai.examination.Answer;
 import com.jczhou.kingcai.examination.PaperActivity;
-import com.jczhou.kingcai.examination.PaperDBHelper;
 import com.jczhou.platform.KingCAIConfig;
 import com.jczhou.kingcai.ServerInfo;
 import com.jczhou.kingcai.SocketService;
@@ -19,6 +17,7 @@ import com.jczhou.kingcai.R;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -60,12 +59,17 @@ public class LoginActivity  extends ComunicableActivity  {
 	
 	private final static int RESULT_LOAD_HEADER_PHOTO= 1;
 	
+	private final static String s_ConfigFileName = "kingcai_last_login";
+	private final static String s_Tag_Number = "last_number";
+	private final static String s_Tag_Grade = "last_grade";
+	
 	private EditText mTxtStudentID = null;
 	private EditText mTxtPassword = null;
 	private Button mBtnLogin = null;
     private CheckBox mCheckBoxOffline = null;	
     private ImageView mImgViewHeader = null;
 	private String mServerIP;
+	private String mSSID;
 	private Spinner mSpinnerSSID = null;
 	private WifiStateManager mWifiStateMgr = null;
 	private TextView mTextViewBaseInfo = null;
@@ -75,8 +79,9 @@ public class LoginActivity  extends ComunicableActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         
-        mBtnLogin = initButton(R.id.btnLogin);
-        
+        mBtnLogin = (Button)findViewById(R.id.btnLogin);
+        mBtnLogin.setOnClickListener(new BtnClickListener());
+    	
         mCheckBoxOffline = (CheckBox)findViewById(R.id.checkBoxOffline);
         mImgViewHeader = (ImageView)findViewById(R.id.imageViewHeaderPhoto);
         mImgViewHeader.setOnClickListener(new BtnClickListener());
@@ -111,9 +116,20 @@ public class LoginActivity  extends ComunicableActivity  {
     @Override
     public void onStop(){
     	mWifiStateMgr.UnRegister(getApplication());
+    	SaveLastLogin();
     	super.onStop();    	
     }
 
+    private void SaveLastLogin(){
+		//–¥»Î
+		SharedPreferences sp = getSharedPreferences(s_ConfigFileName, 0);
+		SharedPreferences.Editor editor = sp.edit();
+
+		editor.putString(s_Tag_Number, mTxtStudentID.getText().toString());
+		editor.putString(s_Tag_Grade, mSSID);
+		editor.commit();    	
+    }
+    
     public void SaveStudent(String strID, String name, String password, Bitmap photo){
 		StudentDBHelper helper = new StudentDBHelper(getApplicationContext());
 		ContentValues values = new ContentValues();		
@@ -134,12 +150,6 @@ public class LoginActivity  extends ComunicableActivity  {
 
 		helper.close();
 	}
-	
-    private Button initButton(int resID){
-    	Button btn = (Button)findViewById(resID);
-    	btn.setOnClickListener(new BtnClickListener());
-    	return btn;
-    }  
 
     private void initSpinnerBar(){
         mSpinnerSSID = (Spinner) findViewById(R.id.spinnerSSID);
@@ -271,8 +281,7 @@ public class LoginActivity  extends ComunicableActivity  {
     protected Dialog onCreateDialog(int id){
     	if (id == DIALOG_MODIFY_PASSWORD){
     		LayoutInflater inflater = LayoutInflater.from(getApplication());
-    		View modifyView = inflater.inflate(R.layout.modifypassword, null);
-    	//    			.setTitle(R.string.ModifyPassword)	
+    		View modifyView = inflater.inflate(R.layout.modifypassword, null);	
     		AlertDialog.Builder builder = new AlertDialog.Builder(this)
     			.setPositiveButton(android.R.string.ok, null)
     			.setNegativeButton(android.R.string.cancel, null)
@@ -302,7 +311,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		public void  onTalkingFinished(final String serverip){
 			mInnerHandler.removeMessages(EVENT_QUERY_TIME_OUT);
 			mServerIP = serverip;
-			
+	//		mSSID = mSpinnerSSID.getAdapter().mSpinnerSSID.getSelectedItemPosition()
 			SocketService.getInstance().ConnectServer(mTxtStudentID.getText().toString(), 
 										mTxtPassword.getText().toString());
 		}

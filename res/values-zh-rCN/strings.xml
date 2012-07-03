@@ -45,5 +45,5 @@
 	<string name="BaseInfo">基本信息</string>	
 	<string name="About">关于在线测试</string>
 	<string name="AboutDetail">软件名称:\n  %1$s \n版本号:\n  %2$s \nAndroid 平台最低兼容版本:\n  %3$s \n软件发布时间:\n  %4$s</string>	
-	<string name="CompanyName">深圳市华教科技有限公司</string>
+	<string name="CompanyName">深圳市智源科技有限公司</string>
 </resources>

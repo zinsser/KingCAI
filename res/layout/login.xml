@@ -24,7 +24,8 @@
 		android:layout_height="200dip"
 		android:layout_gravity="center_horizontal"
 		android:scaleType="fitCenter"
-		android:src="@drawable/ic_launcher" />
+		android:background="#000000FF"
+		android:src="@drawable/logo_finger" />
 		<LinearLayout 
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"

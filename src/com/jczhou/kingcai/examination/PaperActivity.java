@@ -128,12 +128,12 @@ public class PaperActivity  extends ComunicableActivity {
 		mAnswerMgr = new AnswerManager(mQuestionMgr);
 		mQuestionMgr.AddListener(mFullAdapter.mQuestionListener);
 		
-        SocketService.SendMessage(new RequestPaperMessage(), 0/*mServerIP*/);		
+        SocketService.SendMessage(new RequestPaperMessage(), 0);		
     }
 	
     @Override
     public void onDestroy (){
-        SocketService.SendMessage(new LogoutRequestMessage(), 0 /*mServerIP*/);
+        SocketService.SendMessage(new LogoutRequestMessage(), 0);
     	mPaperStatus = null;
     	super.onDestroy();        
     }
@@ -678,6 +678,7 @@ public class PaperActivity  extends ComunicableActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		//按下键盘上返回按钮
+		Toast.makeText(this, "keyCode:"+keyCode, 2000);
 		if(keyCode == KeyEvent.KEYCODE_BACK ){
 			new AlertDialog.Builder(this)
 				.setTitle(R.string.ExitPromptTitle)
