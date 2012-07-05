@@ -690,9 +690,11 @@ public class PaperActivity  extends ComunicableActivity {
 					}
 				})
 				.setNegativeButton(android.R.string.cancel, null)
+				.setCancelable(false)
 				.show();
 			return true;
 		}else if (keyCode == KeyEvent.KEYCODE_HOME){
+			Toast.makeText(this, "you should commit the paper first then exit", 2000);
 			return true;
 		}
 
