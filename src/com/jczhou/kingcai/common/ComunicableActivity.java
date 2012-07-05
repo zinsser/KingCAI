@@ -9,8 +9,6 @@ import com.jczhou.kingcai.messageservice.ActiveMessageManager;
 import com.jczhou.kingcai.messageservice.NewImageMessage;
 import com.jczhou.platform.CommonDefine;
 import com.jczhou.platform.internal.KingService;
-import com.jczhou.platform.internal.KingService.MessageReceiver;
-import com.jczhou.platform.internal.KingService.UIMessageHandler;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -57,8 +55,8 @@ public abstract class ComunicableActivity extends Activity{
     protected abstract EventProcessListener doGetEventProcessListener();
     
     @Override
-    public void onStart(){
-    	super.onStart();
+    public void onResume(){
+    	super.onResume();
     	
     	IntentFilter filter = new IntentFilter();
     	filter.addAction(CommonDefine.TEXT_MESSAG_FROM_SERVICE_ACTION);
@@ -70,19 +68,10 @@ public abstract class ComunicableActivity extends Activity{
     }
     
     @Override
-    public void onStop(){
+    public void onPause(){
     	unregisterReceiver(mReceiver);
     	unbindService(mServiceChannel);    	
-    	super.onStop();
-    }    
-    
-    @Override
-    public void onResume(){
-    	super.onResume();
-    }
-    
-    @Override
-    public void onPause(){
+
     	super.onPause();
     }
     
