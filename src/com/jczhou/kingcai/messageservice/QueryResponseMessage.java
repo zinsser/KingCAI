@@ -1,6 +1,5 @@
 package com.jczhou.kingcai.messageservice;
 
-import com.jczhou.kingcai.SocketService;
 import com.jczhou.kingcai.common.ComunicableActivity.EventProcessListener;
 import com.jczhou.kingcai.messageservice.ActiveMessageManager.ActiveFunctor;
 
@@ -24,7 +23,6 @@ public class QueryResponseMessage extends ActiveMessage{
 
 	@Override
 	public void Execute(EventProcessListener l) {
-		SocketService.getInstance().SetServerIPAddr(mPeerIP);
 		l.onTalkingFinished(mPeerIP);
 	}
 }

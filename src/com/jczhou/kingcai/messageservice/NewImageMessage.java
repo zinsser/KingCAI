@@ -4,9 +4,10 @@ import java.nio.ByteBuffer;
 
 import com.jczhou.kingcai.common.ComunicableActivity.EventProcessListener;
 import com.jczhou.kingcai.messageservice.ActiveMessageManager.ActiveFunctor;
+import com.jczhou.platform.KingCAIConfig;
 
 public class NewImageMessage  extends ActiveMessage{
-	public final static String s_MsgTag = "[ImageBC]";
+	public final static String s_MsgTag = KingCAIConfig.NewImageMessageTag;
 	private String mMsgPack = null;
 	private ByteBuffer mImageBuffer = null;
 	public NewImageMessage(String RawMsg){

@@ -25,30 +25,42 @@ public class NewQuestionMessage  extends ActiveMessage{
 
 	@Override
 	public void Execute(EventProcessListener l) {
-		String pack = super.FromPack(mMsgPack);
-
+		new QuestionParseTask(l).execute(super.FromPack(mMsgPack));
 	}
 	
-	public class QuestionParseTask extends  AsyncTask<String, Integer, String> {
+	public class ProgressObject{
+		int mType;
+		String mAnswer;
+		String mContent;
+		ProgressObject(int type, String answer, String content){
+			mType = type;
+			mAnswer = answer;
+			mContent = content;
+		}
+	}
+	
+	public class QuestionParseTask extends  AsyncTask<String, ProgressObject, String> {
 		EventProcessListener mProcessListener;
 		public QuestionParseTask(EventProcessListener l){
 			mProcessListener = l;
 		}
 		@Override
-		protected String doInBackground(String... pack) {
-			String[] questions = pack[0].split("@");
-			for (String question : questions){
-				//[answer]xxx[type]x[content]xxx
-				//[id]xx[answer]xxx[type]x[image]1/0[content]xxx
-				if (question.contains("[type]") && question.contains("[content]")
-						&& question.contains("[answer]")){
-					int TypePos = question.indexOf("[type]");
-					String answer = question.substring("[answer]".length(), TypePos);
-					int type = Integer.parseInt(question.substring(TypePos+"[type]".length(), TypePos+"[type]".length()+1));
-					int ContentPos = question.indexOf("[content]");
-					String content = question.substring(ContentPos + "[content]".length(), question.length());
-					
-					l.onNewQuestion(answer, type, content);
+		protected String doInBackground(String... packs) {
+			for (String subpack : packs){
+				String[] questions = subpack.split("@");
+
+				for (String question : questions){
+					//[answer]xxx[type]x[content]xxx
+					//[id]xx[answer]xxx[type]x[image]1/0[content]xxx
+					if (question.contains("[type]") && question.contains("[content]")
+							&& question.contains("[answer]")){
+						int TypePos = question.indexOf("[type]");
+						String answer = question.substring("[answer]".length(), TypePos);
+						int type = Integer.parseInt(question.substring(TypePos+"[type]".length(), TypePos+"[type]".length()+1));
+						int ContentPos = question.indexOf("[content]");
+						String content = question.substring(ContentPos + "[content]".length(), question.length());
+						publishProgress(new ProgressObject(type, answer, content));
+					}
 				}
 			}
 			return null;
@@ -56,20 +68,22 @@ public class NewQuestionMessage  extends ActiveMessage{
 		@Override  
 		protected void onPostExecute(String result) {  
 			// 在doInBackground完成后，会收到处理好的结果result  
-			progressdialog.dismiss();   
+//			progressdialog.dismiss();   
 		}  
 		
 		@Override  
 		protected void onPreExecute() {  
 			// 执行了execute  
-			progressdialog.show();  
+//			progressdialog.show();  
 		}  
 		
 		@Override  
-		protected void onProgressUpdate(Integer... values) {  
-			// 更新进度  
-			mProcessListener();
-		}  
-	
+		protected void onProgressUpdate(ProgressObject... values) {  
+			// 更新进度
+			//setProgress
+			for (ProgressObject obj : values){
+				mProcessListener.onNewQuestion(obj.mAnswer, obj.mType, obj.mContent);					
+			}
+		}
 	};
 }

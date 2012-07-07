@@ -14,15 +14,17 @@ public class KingCAIConfig {
 	public final static String SSID = "SSID";
 	public final static String Offline = "Offline";
 	
-	public final static int mTCPPort = 2011;	
+	public final static String NewImageMessageTag = "[ImageBC]";
+	
+	public final static int mTextSendPort = 2011;	
 	public final static int mUDPPort = 2012;
 	public final static String mMulticastServerGroupIP = "224.0.0.100";
 	public final static int mMulticastServerCommonPort = 2013;
 	public final static String mMulticastClientGroupIP = "224.0.0.101";	
 	public final static int mMulticastClientCommonPort = 2014;
 	public final static String mMulticastClientImageGroupIP = "224.0.0.102";	
-	public final static int mMulticastClientImagePort = 2015;
+	public final static int mImageReceivePort = 2015;
 //	public final static String mMulticastServerImageGroupIP = "224.0.0.103";	
 	public final static int mUDPServerImagePort = 2016;
-	public final static int mTCPServerImagePort = 2018;
+	public final static int mTextReceivePort = 2018;
 }

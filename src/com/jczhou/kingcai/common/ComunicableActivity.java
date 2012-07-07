@@ -7,6 +7,7 @@ import java.util.Set;
 import com.jczhou.kingcai.messageservice.ActiveMessage;
 import com.jczhou.kingcai.messageservice.ActiveMessageManager;
 import com.jczhou.kingcai.messageservice.NewImageMessage;
+import com.jczhou.kingcai.messageservice.RequestMessage;
 import com.jczhou.platform.CommonDefine;
 import com.jczhou.platform.internal.KingService;
 
@@ -25,6 +26,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
 public abstract class ComunicableActivity extends Activity{
     private static final String TAG = "ComunicableActivity";
@@ -75,6 +78,25 @@ public abstract class ComunicableActivity extends Activity{
     	super.onPause();
     }
     
+    private Toast buildToast(){
+    	Toast toast = new Toast(this);
+    	toast.setDuration(2000);
+    	toast.setGravity(Gravity.CENTER, 0, 0);
+    	return toast;
+    }
+    
+    protected void showToast(String msg){
+    	Toast toast = buildToast();
+    	toast.setText(msg);
+    	toast.show();
+    }
+
+    protected void showToast(int resId){
+    	Toast toast = buildToast();
+    	toast.setText(resId);
+    	toast.show();
+    }    
+    
 	public class ServiceMessageReceiver extends BroadcastReceiver{
     	private Handler mHostHandler = null;
     	
@@ -106,6 +128,7 @@ public abstract class ComunicableActivity extends Activity{
 		public ServiceMessageHandler(Looper loop){
 			super(loop);
 		}
+		
     	@Override
     	public void handleMessage(Message msg){
     		switch (msg.what){
@@ -152,15 +175,52 @@ public abstract class ComunicableActivity extends Activity{
     	}    	
     }
 	
-	protected KingService mKingService = null; 	
-    private myServiceChannel mServiceChannel = new myServiceChannel();
-    private class myServiceChannel implements ServiceConnection{     
-        public void onServiceConnected(ComponentName name, IBinder service) { 
+
+    protected myServiceChannel mServiceChannel = new myServiceChannel();
+    protected class myServiceChannel implements ServiceConnection{     
+    	private KingService mKingService = null;
+    	public void onServiceConnected(ComponentName name, IBinder service) { 
         	mKingService = ((KingService.MyBinder)service).getService();  
         }
         
         public void onServiceDisconnected(ComponentName name) {  
         	mKingService = null;
+        }
+        
+        public void sendMessage(RequestMessage msg, String ip){
+        	if (mKingService != null){
+        		mKingService.sendMessage(msg, ip);
+        	}
+        }
+
+        public void sendMessage(RequestMessage msg, int mode){
+        	if (mKingService != null){
+        		mKingService.sendMessage(msg, mode);
+        	}
+        }        
+        
+        public void sendMessage(RequestMessage msg){
+        	if (mKingService != null){
+            	mKingService.sendMessage(msg);        		
+        	}        	
+        }
+        
+        public void QueryServer(){
+        	if (mKingService != null){
+        		mKingService.queryServer();
+        	}
+        }
+        
+        public void connectServer(String number, String password){
+        	if (mKingService != null){
+        		mKingService.connectServer(number, password);
+        	}
+        }
+        
+        public void setServerIPAddr(String serverip){
+        	if (mKingService != null){
+        		mKingService.setServerIPAddr(serverip);
+        	}
         }
     };
     

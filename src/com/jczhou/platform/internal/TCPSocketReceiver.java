@@ -21,7 +21,7 @@ public class TCPSocketReceiver extends FireMessageReceiver{
 	private int mRemain = 0;
 	private int mPort = 0;
 
-	protected TCPSocketReceiver(Service s, int port) {
+	protected TCPSocketReceiver(KingService s, int port) {
 		super(s);
 		mPort = port;
 		try{ 
@@ -39,13 +39,15 @@ public class TCPSocketReceiver extends FireMessageReceiver{
 			Socket socket = null;
 			try{
 			    socket = mTcpSocket.accept();
+			    mHostService.setTextChannelSocket(socket);
+			    
 			    InputStream in = socket.getInputStream();
 			    mReceiveBuf.clear();
 
 			    while (in.read(mReceiveBuf.array()) > 0){
 				    Log.d("TCPSocket", "msg:" + mReceiveBuf.array());
 			    	String msg = new String(mReceiveBuf.array(), KingCAIConfig.mCharterSet);
-			    	if (msg.contains("[ImageBC]")){
+			    	if (msg.contains(KingCAIConfig.NewImageMessageTag)){
 			    		int pos = msg.indexOf("\\");
 			    		mRemain = Integer.parseInt(msg.substring("[ImageBC]".length(), pos));
 			    		mImageBuf = null;

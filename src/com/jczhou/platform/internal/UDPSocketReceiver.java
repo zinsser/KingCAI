@@ -19,7 +19,7 @@ public class UDPSocketReceiver extends FireMessageReceiver{
 	// 接收的字节大小，客户端发送的数据不能超过这个大小
 	private ByteBuffer mMsgBuffer = ByteBuffer.allocate(20480);
 	
-	public UDPSocketReceiver(Service s, int port){
+	public UDPSocketReceiver(KingService s, int port){
 		super(s);
 		try {
 			// 建立Socket连接

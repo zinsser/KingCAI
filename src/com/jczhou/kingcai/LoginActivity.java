@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import com.jczhou.kingcai.common.ComunicableActivity;
 import com.jczhou.kingcai.common.TransDialog;
 import com.jczhou.kingcai.examination.PaperActivity;
+import com.jczhou.kingcai.messageservice.LoginRequestMessage;
 import com.jczhou.platform.KingCAIConfig;
 import com.jczhou.kingcai.ServerInfo;
-import com.jczhou.kingcai.SocketService;
 import com.jczhou.kingcai.WifiStateManager;
 
 import com.jczhou.kingcai.R;
@@ -37,8 +37,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -48,7 +46,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class LoginActivity  extends ComunicableActivity  {
@@ -205,7 +202,7 @@ public class LoginActivity  extends ComunicableActivity  {
     	public void handleMessage(Message msg){
     		switch (msg.what){
     		case EVENT_QUERY_TIME_OUT:
-    			Toast.makeText(LoginActivity.this, R.string.ServerNotFound, 2000).show();
+    			showToast(R.string.ServerNotFound);
     			break;
     		}
     	}
@@ -220,12 +217,12 @@ public class LoginActivity  extends ComunicableActivity  {
 				im.hideSoftInputFromWindow(mTxtPassword.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				if (!mCheckBoxOffline.isChecked()){
 					if (mSpinnerSSID.getSelectedItemPosition() != 0){
-						SocketService.getInstance().QueryServer();
+						mServiceChannel.QueryServer();						
 						Message msg = mInnerHandler.obtainMessage(EVENT_QUERY_TIME_OUT);
 						mInnerHandler.sendMessageDelayed(msg, DELAY_QUERY_TIME);
 					}else{
 						mSpinnerSSID.performClick();
-		    			Toast.makeText(LoginActivity.this, R.string.SelectClassTip, 2000).show();					
+						showToast(R.string.SelectClassTip);					
 					}
 				}else{
 				    StartPaperActivity("初三一班  张三丰", mCheckBoxOffline.isChecked());					
@@ -326,8 +323,11 @@ public class LoginActivity  extends ComunicableActivity  {
 			mInnerHandler.removeMessages(EVENT_QUERY_TIME_OUT);
 			mServerIP = serverip;
 	//		mSSID = mSpinnerSSID.getAdapter().mSpinnerSSID.getSelectedItemPosition()
-			SocketService.getInstance().ConnectServer(mTxtStudentID.getText().toString(), 
-										mTxtPassword.getText().toString());
+			mServiceChannel.setServerIPAddr(mServerIP);
+			mServiceChannel.sendMessage(new LoginRequestMessage(
+												mTxtStudentID.getText().toString(), 
+												mTxtPassword.getText().toString())
+										);
 		}
 
 
@@ -337,7 +337,7 @@ public class LoginActivity  extends ComunicableActivity  {
 
 
 		public void onLoginFail() {
-			Toast.makeText(LoginActivity.this, R.string.InputCorrectIDTip, 2000).show();			
+			showToast(R.string.InputCorrectIDTip);			
 			cleanForm();
 		}
 

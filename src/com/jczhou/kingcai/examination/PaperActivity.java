@@ -33,24 +33,20 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jczhou.kingcai.R;
 import com.jczhou.kingcai.common.ComunicableActivity;
 import com.jczhou.kingcai.examination.QuestionDetailViewAdapter.ViewHolder;
 import com.jczhou.kingcai.examination.QuestionDetailViewAdapter;
-import com.jczhou.kingcai.LoginActivity.SpinnerItemClickListener;
 import com.jczhou.kingcai.messageservice.AnswerMessage;
+import com.jczhou.kingcai.messageservice.LoginFinishedMessage;
 import com.jczhou.kingcai.messageservice.LogoutRequestMessage;
 import com.jczhou.kingcai.messageservice.RequestPaperMessage;
-import com.jczhou.kingcai.SocketService;
 import com.jczhou.platform.KingCAIConfig;
 
 public class PaperActivity  extends ComunicableActivity {
@@ -125,15 +121,16 @@ public class PaperActivity  extends ComunicableActivity {
 		ParseIntentExtraParam();
 
 		mPaperStatus = new AnswerStatus(this, mQuestionMgr);
+//		mServiceChannel.sendMessage(new LoginFinishedMessage("Answer Status Ready"), 0);
 		mAnswerMgr = new AnswerManager(mQuestionMgr);
 		mQuestionMgr.AddListener(mFullAdapter.mQuestionListener);
 		
-        SocketService.SendMessage(new RequestPaperMessage(), 0);		
+        mServiceChannel.sendMessage(new RequestPaperMessage(), 0);		
     }
 	
     @Override
     public void onDestroy (){
-        SocketService.SendMessage(new LogoutRequestMessage(), 0);
+    	mServiceChannel.sendMessage(new LogoutRequestMessage(), 0);
     	mPaperStatus = null;
     	super.onDestroy();        
     }
@@ -275,7 +272,7 @@ public class PaperActivity  extends ComunicableActivity {
 						HiddenKeyBoard(v);
 	//					return true;//返回true时，收到两次actionId回调
 					}else{
-						Toast.makeText(PaperActivity.this, R.string.SearchErrorTip, 2000).show();
+						showToast(R.string.SearchErrorTip);
 					}
 				}
 			}
@@ -678,7 +675,7 @@ public class PaperActivity  extends ComunicableActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		//按下键盘上返回按钮
-		Toast.makeText(this, "keyCode:"+keyCode, 2000);
+		showToast("keyCode:"+keyCode);
 		if(keyCode == KeyEvent.KEYCODE_BACK ){
 			new AlertDialog.Builder(this)
 				.setTitle(R.string.ExitPromptTitle)
@@ -694,7 +691,7 @@ public class PaperActivity  extends ComunicableActivity {
 				.show();
 			return true;
 		}else if (keyCode == KeyEvent.KEYCODE_HOME){
-			Toast.makeText(this, "you should commit the paper first then exit", 2000);
+			showToast("you should commit the paper first then exit");
 			return true;
 		}
 
@@ -702,7 +699,7 @@ public class PaperActivity  extends ComunicableActivity {
 	}	
 
 	public void CommitAnswers(){
-		SocketService.SendMessage(new AnswerMessage(mAnswerMgr.toString()), 0);
+		mServiceChannel.sendMessage(new AnswerMessage(mAnswerMgr.toString()), 0);
 	}
 	
 	public void SwitchPaperStatus(){

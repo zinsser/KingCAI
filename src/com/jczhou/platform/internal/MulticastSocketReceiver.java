@@ -18,7 +18,7 @@ public class MulticastSocketReceiver extends FireMessageReceiver{
     private DatagramPacket mDatagramPacket = null;
 	private ByteBuffer mMsgBuffer = ByteBuffer.allocate(9216);
 
-	public MulticastSocketReceiver(Service s, String groupip, int port){
+	public MulticastSocketReceiver(KingService s, String groupip, int port){
 		super(s);
         try{
         	mMulticastSocket = new MulticastSocket(port/*KingCAIConfig.mMulticastClientCommonPort*/);  

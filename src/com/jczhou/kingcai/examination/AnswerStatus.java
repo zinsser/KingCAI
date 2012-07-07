@@ -17,7 +17,6 @@ import android.widget.RadioButton;
 import com.jczhou.kingcai.R;
 import com.jczhou.kingcai.examination.QuestionDetailViewAdapter.ViewHolder;
 import com.jczhou.kingcai.examination.QuestionManager.QuestionListener;
-import com.jczhou.kingcai.SocketService;
 
 
 public class AnswerStatus extends PaperStatus implements QuestionListener{
@@ -32,7 +31,6 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	
 	@Override
 	protected void InitStatus() {
-		SocketService.getInstance().AnswerReady("Answer Status Ready");
 		mStatusOwner.FetchUndoneList(mListFirst);
 		mStatusOwner.ShowDoneInfo(mListFirst.size());
 		startTimeTicker(true);

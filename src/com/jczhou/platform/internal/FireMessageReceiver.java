@@ -9,8 +9,8 @@ import android.content.Intent;
 
 
 public abstract class FireMessageReceiver implements Runnable{
-	private Service mHostService = null;
-	public FireMessageReceiver(Service s){
+	protected KingService mHostService = null;
+	public FireMessageReceiver(KingService s){
 		mHostService = s;
 	}
 
