@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Parcel;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.jczhou.kingcai.R;
 import com.jczhou.kingcai.examination.QuestionDetailViewAdapter.ViewHolder;
@@ -46,7 +45,7 @@ public class CommitedStatus extends PaperStatus{
 
 	@Override
 	public void onCommitClick() {
-    	Toast.makeText(mStatusOwner, R.string.CommitTips, 2000).show();		
+		mStatusOwner.showToast(R.string.CommitTips);		
 	}
 
 	@Override
@@ -70,7 +69,7 @@ public class CommitedStatus extends PaperStatus{
 		super.onLayoutOptionRadioButton(holder, answer);
 		
     	int colorNormal = Color.rgb(0, 0, 0); //black
-    	int colorBackground = Color.rgb(236, 236, 236);//(222, 254, 241);
+    	int colorBackground = Color.rgb(220, 220, 220);//236, 236, 236);//(222, 254, 241);
 		holder.radioBtnA.setTextColor(colorNormal);
 		holder.radioBtnA.setBackgroundColor(colorBackground);
 		

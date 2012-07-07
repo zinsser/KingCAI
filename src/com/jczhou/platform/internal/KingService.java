@@ -10,7 +10,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import com.jczhou.kingcai.messageservice.LoginFinishedMessage;
 import com.jczhou.kingcai.messageservice.LoginRequestMessage;
 import com.jczhou.kingcai.messageservice.QueryServerMessage;
 import com.jczhou.kingcai.messageservice.RequestMessage;
@@ -31,15 +30,17 @@ public class KingService extends Service{
     private Thread mUDPReceiver = null;
     private Thread mMulticastReceiver = null;
     private Thread mImageReceiver = null;
-    private Thread mTCPReceiver = null;
-    
+    private Thread mTCPThread = null;
+    private TCPSocketReceiver mReceiverRoutine = null;
     private Socket mTCPTextChannelSocket = null;
     private String mServerIP = null;
+    
     @Override  
     public void onCreate() {  
     	
     	mUDPReceiver = new Thread(new UDPSocketReceiver(this, KingCAIConfig.mUDPPort));
-    	mTCPReceiver = new Thread(new TCPSocketReceiver(this, KingCAIConfig.mTextReceivePort));    	
+    	mReceiverRoutine = new TCPSocketReceiver(this, KingCAIConfig.mTextReceivePort);
+    	mTCPThread = new Thread(mReceiverRoutine);    	
 		mImageReceiver = new Thread(new TCPSocketReceiver(this, KingCAIConfig.mImageReceivePort));
   
         super.onCreate();  
@@ -52,8 +53,8 @@ public class KingService extends Service{
 			mUDPReceiver.start();
 		}
 		
-		if (mTCPReceiver != null && !mTCPReceiver.isAlive()){
-			mTCPReceiver.start();
+		if (mTCPThread != null && !mTCPThread.isAlive()){
+			mTCPThread.start();
 		}
 		
 		if (mMulticastReceiver != null && mMulticastReceiver.isAlive()){
@@ -71,6 +72,12 @@ public class KingService extends Service{
 		if (mUDPReceiver != null && !mUDPReceiver.isAlive()){
 //			mUDPReceiver.stop();
 		}
+		
+		if (mReceiverRoutine != null 
+				&& mTCPThread != null && !mTCPThread.isAlive()){
+			mReceiverRoutine.stopRunner();
+		}
+		
 		if (mMulticastReceiver != null && mMulticastReceiver.isAlive()){
 //			mMulticastReceiver.stop();
 		}

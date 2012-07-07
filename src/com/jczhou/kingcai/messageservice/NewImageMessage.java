@@ -49,6 +49,6 @@ public class NewImageMessage  extends ActiveMessage{
 	//		dataBuf.put(rawData.getBytes());
 			l.onNewImage(id, mImageBuffer);
 		}
-		l.onNewImage(0, mImageBuffer);		
+		l.onNewImage(0, mImageBuffer);
 	}
 }

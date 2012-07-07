@@ -78,22 +78,15 @@ public abstract class ComunicableActivity extends Activity{
     	super.onPause();
     }
     
-    private Toast buildToast(){
-    	Toast toast = new Toast(this);
-    	toast.setDuration(2000);
-    	toast.setGravity(Gravity.CENTER, 0, 0);
-    	return toast;
-    }
-    
-    protected void showToast(String msg){
-    	Toast toast = buildToast();
-    	toast.setText(msg);
+    public void showToast(String msg){
+    	Toast toast = Toast.makeText(this, msg, 2000); 
+    	toast.setGravity(Gravity.CENTER, 0, -80);
     	toast.show();
     }
 
-    protected void showToast(int resId){
-    	Toast toast = buildToast();
-    	toast.setText(resId);
+    public void showToast(int resId){
+    	Toast toast = Toast.makeText(this, resId, 2000);
+    	toast.setGravity(Gravity.CENTER, 0, -80);
     	toast.show();
     }    
     

@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 
 import com.jczhou.platform.CommonDefine;
 
-import android.app.Service;
 import android.content.Intent;
 
 
