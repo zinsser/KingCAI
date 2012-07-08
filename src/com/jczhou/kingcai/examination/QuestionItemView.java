@@ -13,28 +13,32 @@ import android.widget.TextView;
 
 public class QuestionItemView {
     private ImageView mMark;
-    private TextView mText;
-    private RadioButton radioBtnA;
-    private RadioButton radioBtnB;
-    private RadioButton radioBtnC;
-    private RadioButton radioBtnD;
-    private LinearLayout tableLayout;
+    private TextView mTextDetail;
+    private RadioButton mRadioButtonA;
+    private RadioButton mRadioButtonB;
+    private RadioButton mRadioButtonC;
+    private RadioButton mRadioButtonD;
+    private LinearLayout mTableLayoutOption;
+    private ImageView mImageView_1;
+    private ImageView mImageView_2;
+    private ImageView mImageView_3;
+    private ImageView mImageView_4;    
     private ArrayList<ImageView> mImageViews = new ArrayList<ImageView>(); 
     
     public QuestionItemView(View parentView, OptionPanelListener mOptionPanelListener){
     	mMark = (ImageView) parentView.findViewById(R.id.imgMark);
-    	mText = (TextView) parentView.findViewById(R.id.txtQuestionDetail);
-        radioBtnA = (RadioButton)parentView.findViewById(R.id.radioBtnA);
-        radioBtnB = (RadioButton)parentView.findViewById(R.id.radioBtnB);
-        radioBtnC = (RadioButton)parentView.findViewById(R.id.radioBtnC);
-        radioBtnD = (RadioButton)parentView.findViewById(R.id.radioBtnD);
-        tableLayout = (LinearLayout)parentView.findViewById(R.id.linearLayoutOption);
+    	mTextDetail = (TextView) parentView.findViewById(R.id.txtQuestionDetail);
+    	mRadioButtonA = (RadioButton)parentView.findViewById(R.id.radioBtnA);
+    	mRadioButtonB = (RadioButton)parentView.findViewById(R.id.radioBtnB);
+    	mRadioButtonC = (RadioButton)parentView.findViewById(R.id.radioBtnC);
+    	mRadioButtonD = (RadioButton)parentView.findViewById(R.id.radioBtnD);
+    	mTableLayoutOption = (LinearLayout)parentView.findViewById(R.id.linearLayoutOption);
         
         mMark.setOnClickListener(mOptionPanelListener);
-        radioBtnA.setOnClickListener(mOptionPanelListener);
-        radioBtnB.setOnClickListener(mOptionPanelListener);
-        radioBtnC.setOnClickListener(mOptionPanelListener);
-        radioBtnD.setOnClickListener(mOptionPanelListener);
-        mText.setOnClickListener(mOptionPanelListener);    	
+        mRadioButtonA.setOnClickListener(mOptionPanelListener);
+        mRadioButtonB.setOnClickListener(mOptionPanelListener);
+        mRadioButtonC.setOnClickListener(mOptionPanelListener);
+        mRadioButtonD.setOnClickListener(mOptionPanelListener);
+        mTextDetail.setOnClickListener(mOptionPanelListener);    	
     }
 }
