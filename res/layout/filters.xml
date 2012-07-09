@@ -6,11 +6,12 @@
     android:background="#DCDCDC"
     android:orientation="horizontal" >
     	<!--     android:background="#ECECEC" -->
-	<LinearLayout            
+	<LinearLayout 
 	    android:id="@+id/linearLayoutTextInfo" 
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-    	android:background="#DCDCDC"    
+    	android:background="#DCDCDC"  
+	    android:layout_weight="0.1"    	
 	    android:orientation="vertical" >
 	
 	    <TextView
@@ -25,7 +26,7 @@
     		android:background="@drawable/buddy_head_frame"
 	        android:textAppearance="?android:attr/textAppearanceMedium"
 	        android:textColor="#000000"/>
-	 <!-- 			android:background="#ECECEC" -->
+	 <!-- 	    android:visibility="gone"			android:background="#ECECEC" -->
 	    <LinearLayout
 	            android:id="@+id/linearLayoutOption"
 	            android:layout_width="wrap_content"
@@ -88,8 +89,9 @@
 	</LinearLayout>
 	<LinearLayout            
 	    android:id="@+id/linearLayoutImage" 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_weight="0.8"
     	android:background="#DCDCDC"    
 	    android:orientation="vertical" >
 		<LinearLayout            
@@ -102,7 +104,7 @@
 	            android:id="@+id/imageView_1"
 	            android:layout_width="50dp"
 	            android:layout_height="50dp"
-	            android:visibility="gone"
+	            android:visibility="visible"
 	            android:src="@drawable/spinner_black_48"
 	    		android:layout_gravity="center_horizontal"/>
 	        <ImageView
@@ -133,6 +135,6 @@
 	            android:visibility="gone"
 	           	android:src="@drawable/spinner_black_48"
 	    		android:layout_gravity="center_horizontal"/>	        	        
-		</LinearLayout>			    
+		</LinearLayout>	    
 	</LinearLayout>	
 </LinearLayout>
