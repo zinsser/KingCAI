@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
-import android.app.Service;
 import android.util.Log;
 
 import com.jczhou.platform.internal.FireMessageReceiver;

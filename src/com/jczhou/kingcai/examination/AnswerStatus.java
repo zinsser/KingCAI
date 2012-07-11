@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.CountDownTimer;
 import android.os.Parcel;
@@ -15,7 +16,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 
 import com.jczhou.kingcai.R;
-import com.jczhou.kingcai.examination.QuestionDetailViewAdapter.ViewHolder;
+import com.jczhou.kingcai.examination.ItemViewHolder;
 import com.jczhou.kingcai.examination.QuestionManager.QuestionListener;
 
 
@@ -69,8 +70,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
     }	
 	
 	@Override
-	public void onFilterClick(ListView listView, 
-							QuestionDetailViewAdapter fullAdapter) {
+	public void onFilterClick(ListView listView, PaperViewAdapter fullAdapter) {
 		mStatusOwner.findViewById(R.id.tableInput).setVisibility(View.GONE);
 		mStatusOwner.findViewById(R.id.tableReference).setVisibility(View.GONE);
 		
@@ -116,7 +116,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 		int viewID = v.getId();
 		Integer questionID = 0;
 		switch (viewID){
-		case R.id.imgMark:
+		case R.id.imageViewMarker:
 			answer.mIsMark = !answer.mIsMark;
 			ImageView imgMask = (ImageView)v;
 			imgMask.setImageBitmap(answer.mIsMark ? mMarkIcon : mUnMarkIcon);
@@ -237,5 +237,10 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	public void OnClearQuestion() {
 		mListFirst.clear();
 		mStatusOwner.ShowDoneInfo(mListFirst.size());
+	}
+
+	public void OnImageReady(Bitmap bmp) {
+		// TODO Auto-generated method stub
+		
 	}	
 }

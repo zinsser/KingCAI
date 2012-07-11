@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 
 import com.jczhou.kingcai.R;
 
-public class QuestionDetailViewAdapter extends BaseAdapter {
+public class PaperViewAdapter extends BaseAdapter {
 	private Context mContext = null;
     private LayoutInflater mInflater;
     private int mFontSize = 22;
@@ -55,10 +55,10 @@ public class QuestionDetailViewAdapter extends BaseAdapter {
 		}
     }
 
-    private QuestionDetailViewAdapter(){
+    private PaperViewAdapter(){
     }
     
-	public QuestionDetailViewAdapter(Context context, QuestionManager questionMgr, AnswerManager answerMgr) {
+	public PaperViewAdapter(Context context, QuestionManager questionMgr, AnswerManager answerMgr) {
 		mContext = context;
         mInflater = LayoutInflater.from(mContext);
         mQuestionMgr = questionMgr;
@@ -66,8 +66,8 @@ public class QuestionDetailViewAdapter extends BaseAdapter {
     }
     
     @SuppressWarnings("unchecked")
-	public QuestionDetailViewAdapter CloneAdapter(ArrayList<Integer> ids){
-    	QuestionDetailViewAdapter retAdapter = new QuestionDetailViewAdapter();
+	public PaperViewAdapter CloneAdapter(ArrayList<Integer> ids){
+    	PaperViewAdapter retAdapter = new PaperViewAdapter();
 
         retAdapter.mContext = this.mContext;
     	retAdapter.mInflater = this.mInflater;
@@ -118,14 +118,12 @@ public class QuestionDetailViewAdapter extends BaseAdapter {
         ItemViewHolder holder = null;
 
         if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.filters, null);
         	if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsPaperTitle()){
-                convertView = mInflater.inflate(R.layout.title_filters, null);
         		holder = new ItemViewHolder(mContext, convertView, mQuestionMgr, mAnswerMgr);       		
         	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsOption()){
-                convertView = mInflater.inflate(R.layout.option_filters, null);
         		holder = new OptionItemViewHolder(mContext, convertView, mQuestionMgr, mAnswerMgr);
         	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsBlank()){
-                convertView = mInflater.inflate(R.layout.blank_filters, null);
         		holder = new BlankItemViewHolder(mContext, convertView, mQuestionMgr, mAnswerMgr);
         	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsLogic()){
         		

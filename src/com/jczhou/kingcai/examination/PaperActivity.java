@@ -41,8 +41,8 @@ import android.widget.TextView;
 
 import com.jczhou.kingcai.R;
 import com.jczhou.kingcai.common.ComunicableActivity;
-import com.jczhou.kingcai.examination.QuestionDetailViewAdapter.ViewHolder;
-import com.jczhou.kingcai.examination.QuestionDetailViewAdapter;
+import com.jczhou.kingcai.examination.ItemViewHolder;
+import com.jczhou.kingcai.examination.PaperViewAdapter;
 import com.jczhou.kingcai.messageservice.AnswerMessage;
 import com.jczhou.kingcai.messageservice.LoginFinishedMessage;
 import com.jczhou.kingcai.messageservice.LogoutRequestMessage;
@@ -52,19 +52,16 @@ import com.jczhou.platform.KingCAIConfig;
 public class PaperActivity  extends ComunicableActivity {
 	private final static int GROUP_NORMAL = 0;
 	private final static int MENU_FONT_SIZE = 0;
-	private final static int MENU_COLOR_SCHEME = 1;	
 	private final static int MENU_WIFI_MANAGER = 2;
 	private final static int MENU_ABOUT = 3;
 	
 	private final static int SET_FONT_SIZE_DIALOG = 0;
-	private final static int SET_COLOR_SCHEME_DIALOG = 1;
 	private final static int DIALOG_ABOUT = 2;
 	
 	private int mCurrentFontSize = 1;//normal
 	
 	private final static String s_ConfigFileName = "KingCAI_Config";
 	private final static String s_CfgTag_FontSize = "fontsize";
-	private final static String s_CfgTag_ColorSchem = "colorschem";
 	private final static String s_CfgTag_ExitStatus = "exitstatus"; //true:normal false:exception
 	
 	private final static String s_PaperTag_ID = "id";
@@ -87,7 +84,7 @@ public class PaperActivity  extends ComunicableActivity {
 	private String mStudentInfo = null;
 	private String mServerIP = null;
 	private String mSSID = null;
-	private QuestionDetailViewAdapter mFullAdapter = null;
+	private PaperViewAdapter mFullAdapter = null;
 	private PaperStatus mPaperStatus = null;	
 	
 	private QuestionManager mQuestionMgr = new QuestionManager();;
@@ -100,7 +97,7 @@ public class PaperActivity  extends ComunicableActivity {
 
         
         mListView = (ListView)findViewById(R.id.lstQuestions);
-        mFullAdapter = new QuestionDetailViewAdapter(this, new OptionPanelListener());
+        mFullAdapter = new PaperViewAdapter(this, new OptionPanelListener());
         mListView.setOnScrollListener(new QuestionListScrollListener());
 		mListView.setCacheColorHint(0);
         mListView.setAdapter(mFullAdapter);
@@ -238,7 +235,7 @@ public class PaperActivity  extends ComunicableActivity {
 	}
     
     
-    private void ResetAdapterFontSize(QuestionDetailViewAdapter adapter){
+    private void ResetAdapterFontSize(PaperViewAdapter adapter){
     	if (mCurrentFontSize == 0){
     		adapter.SetSmallFontSize();
     	}else if (mCurrentFontSize == 1){
@@ -302,9 +299,6 @@ public class PaperActivity  extends ComunicableActivity {
     	case MENU_FONT_SIZE:
     		showDialog(SET_FONT_SIZE_DIALOG);
     		break;
-    	case MENU_COLOR_SCHEME:
-    		showDialog(SET_COLOR_SCHEME_DIALOG);
-    		break;
     	case MENU_WIFI_MANAGER:
     		break;
     	case MENU_ABOUT:
@@ -325,21 +319,13 @@ public class PaperActivity  extends ComunicableActivity {
 
 					public void onClick(DialogInterface dialog, int which) {
 						mCurrentFontSize = which;
-						QuestionDetailViewAdapter curAdapter = (QuestionDetailViewAdapter)mListView.getAdapter();
+						PaperViewAdapter curAdapter = (PaperViewAdapter)mListView.getAdapter();
 						ResetAdapterFontSize(mFullAdapter);
 						ResetAdapterFontSize(curAdapter);
 						mListView.setAdapter(curAdapter);
 						dismissDialog(SET_FONT_SIZE_DIALOG);
 					}
 				});
-    		return builder.create();
-    	}else if (id == SET_COLOR_SCHEME_DIALOG){
-    		LayoutInflater inflater = LayoutInflater.from(this);
-    		View v = inflater.inflate(R.layout.colorscheme, null);
-    		AlertDialog.Builder builder = new AlertDialog.Builder(this)
-    			.setTitle(R.string.ColorScheme)
-    			.setNegativeButton(android.R.string.cancel, null)
-    			.setView(v);
     		return builder.create();
     	}else if (id == DIALOG_ABOUT){
     		AlertDialog.Builder builder = new AlertDialog.Builder(this)
@@ -614,7 +600,7 @@ public class PaperActivity  extends ComunicableActivity {
 		
 	}
 	public class OptionPanelListener 
-					extends QuestionDetailViewAdapter.AdapterListener 
+					extends PaperViewAdapter.AdapterListener 
 					implements View.OnClickListener{
 		private int mCurRow = 0;
 		public void onClick(View v) {
@@ -622,15 +608,14 @@ public class PaperActivity  extends ComunicableActivity {
     		mPaperStatus.onOptionPanelClick(v, mAnswerMgr.GetAnswer(id));
 		}
 
-		private void AddImageView(ViewHolder holder, Bitmap bmp){
+		private void AddImageView(ItemViewHolder holder, Bitmap bmp){
 			ImageView imgView = new ImageView(getApplication());
 			imgView.setImageBitmap(bmp);
-//			holder.mGraphices.add(imgView);
 			holder.mParent.addView(imgView);
 		}
 		
 		@Override
-		public void OnAdapterLayoutView(ViewHolder holder, Integer id) {
+		public void OnAdapterLayoutView(ItemViewHolder holder, Integer id) {
 	        do {
 				QuestionInfo question = mQuestionMgr.GetQuestionItem(id);
 		        Answer answer = mAnswerMgr.GetAnswer(id);

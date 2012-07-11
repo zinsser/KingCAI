@@ -3,6 +3,8 @@ package com.jczhou.kingcai.examination;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.graphics.Bitmap;
+
 public class AnswerManager implements QuestionManager.QuestionListener{
 	private HashMap<Integer, Answer> mAnswers = new HashMap<Integer, Answer>();
 	private QuestionManager mQuestionMgr = null;
@@ -73,5 +75,10 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 
 	public void OnClearQuestion() {
 		mAnswers.clear();
+	}
+
+	public void OnImageReady(Bitmap bmp) {
+		// TODO Auto-generated method stub
+		
 	}
 }

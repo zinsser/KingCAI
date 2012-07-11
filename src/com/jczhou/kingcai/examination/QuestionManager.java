@@ -15,7 +15,7 @@ public class QuestionManager {
 		public abstract void OnQuestionArrayChanged(ArrayList<Integer> ids);
 		public abstract void OnAddQuestion(Integer id);		
 		public abstract void OnClearQuestion();
-//		public abstract void OnImageReady(Bitmap bmp);
+		public abstract void OnImageReady(Bitmap bmp);
 	}
 	
 	public QuestionManager(){

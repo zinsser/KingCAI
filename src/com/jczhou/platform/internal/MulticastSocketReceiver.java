@@ -6,7 +6,6 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.nio.ByteBuffer;
 
-import android.app.Service;
 import android.util.Log;
 
 import com.jczhou.platform.internal.FireMessageReceiver;

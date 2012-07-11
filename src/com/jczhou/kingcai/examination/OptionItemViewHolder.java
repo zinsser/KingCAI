@@ -7,7 +7,6 @@ import android.widget.RadioButton;
 import com.jczhou.kingcai.R;
 
 public class OptionItemViewHolder extends QuestionItemViewHolder {
-
 	private RadioButton mRadioButtonA;
 	private RadioButton mRadioButtonB;
 	private RadioButton mRadioButtonC;
@@ -31,7 +30,9 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
 	@Override	
     public void doGettingItemView(Integer id, int fontSize){
     	super.doGettingItemView(id, fontSize);
-    	
+    	if (mLinearLayoutOptions != null){
+    		mLinearLayoutOptions.setVisibility(View.VISIBLE);
+    	}
     }	
     
     private View.OnClickListener mPanelListener = new View.OnClickListener() {
