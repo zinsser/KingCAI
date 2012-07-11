@@ -10,7 +10,8 @@ public class QuestionInfo {
 	public static final int QUESTION_TYPE_MULTIOPTION = 2;	
 	public static final int QUESTION_TYPE_BLANK = 3;
 	public static final int QUESTION_TYPE_MULTIBLANK = 4;	
-	public static final int QUESTION_TYPE_LOGIC = 5;	
+	public static final int QUESTION_TYPE_LOGIC = 5;
+	public static final int QUESTION_TYPE_MAX = QUESTION_TYPE_LOGIC + 1;
 	
 	public int mType;
 	public String mDetail;
@@ -53,6 +54,10 @@ public class QuestionInfo {
 	
 	public boolean HasImage(){
 		return mGraphics.size() > 0;
+	}
+	
+	public int GetType(){
+		return mType;
 	}
 	
 	public boolean IsBlank(){

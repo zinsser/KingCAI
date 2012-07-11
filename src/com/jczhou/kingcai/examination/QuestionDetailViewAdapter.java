@@ -3,42 +3,24 @@ package com.jczhou.kingcai.examination;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.jczhou.kingcai.R;
-import com.jczhou.kingcai.examination.PaperActivity.OptionPanelListener;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.TableLayout;
-import android.widget.TextView;
-import android.widget.ImageView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
 
+import com.jczhou.kingcai.R;
+
 public class QuestionDetailViewAdapter extends BaseAdapter {
+	private Context mContext = null;
     private LayoutInflater mInflater;
-    private ArrayList<Integer> mIDs = new ArrayList<Integer>();
     private int mFontSize = 22;
-    private OptionPanelListener mOptionPanelListener;
-    public QuestionListListener mQuestionListener = new QuestionListListener();
+    private ArrayList<Integer> mIDs = new ArrayList<Integer>();
+    private QuestionManager mQuestionMgr = null;
+    private AnswerManager mAnswerMgr = null;
     
-    public class ViewHolder {
-        ImageView mark;
-        TextView text;
-        RadioButton radioBtnA;
-        RadioButton radioBtnB;
-        RadioButton radioBtnC;
-        RadioButton radioBtnD;
-        LinearLayout tableLayout;
- //       ArrayList<ImageView> mGraphices = new ArrayList<ImageView>();
-        LinearLayout mParent = null;
-        public ViewHolder(LinearLayout parent){
-        	mParent = parent;
-        }
-    }
+    public QuestionListListener mQuestionListener = new QuestionListListener();
 
     public class QuestionListListener implements QuestionManager.QuestionListener{
     	@SuppressWarnings("unchecked")
@@ -72,33 +54,44 @@ public class QuestionDetailViewAdapter extends BaseAdapter {
 			
 		}
     }
-    
-    public static abstract class AdapterListener{
-    	public  abstract void OnAdapterLayoutView(ViewHolder hodlerView, Integer id);
-    }
 
-    public QuestionDetailViewAdapter(){
+    private QuestionDetailViewAdapter(){
     }
     
-	public QuestionDetailViewAdapter(Context context, OptionPanelListener listener) {
-        mInflater = LayoutInflater.from(context);
-        mOptionPanelListener = listener;
+	public QuestionDetailViewAdapter(Context context, QuestionManager questionMgr, AnswerManager answerMgr) {
+		mContext = context;
+        mInflater = LayoutInflater.from(mContext);
+        mQuestionMgr = questionMgr;
+        mAnswerMgr = answerMgr;
     }
     
     @SuppressWarnings("unchecked")
 	public QuestionDetailViewAdapter CloneAdapter(ArrayList<Integer> ids){
     	QuestionDetailViewAdapter retAdapter = new QuestionDetailViewAdapter();
-    	retAdapter.mInflater = this.mInflater;
-        retAdapter.mOptionPanelListener = this.mOptionPanelListener;
-        retAdapter.mFontSize = this.mFontSize;
 
+        retAdapter.mContext = this.mContext;
+    	retAdapter.mInflater = this.mInflater;
+        retAdapter.mFontSize = this.mFontSize;
+        retAdapter.mQuestionMgr = this.mQuestionMgr;
+        retAdapter.mAnswerMgr = this.mAnswerMgr;
+        
         retAdapter.mIDs = (ArrayList<Integer>) ids.clone();
         Collections.sort(retAdapter.mIDs);
 
         return retAdapter;
     }
     
+    @Override
+    public int getItemViewType(int position) {
+        return mQuestionMgr.GetQuestionItem(mIDs.get(position)).GetType();
+    }
 
+    @Override
+    public int getViewTypeCount() {
+        return QuestionInfo.QUESTION_TYPE_MAX;
+    }
+    
+    
     public int getCount() {
         return mIDs.size();
     }
@@ -122,39 +115,30 @@ public class QuestionDetailViewAdapter extends BaseAdapter {
 
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        ItemViewHolder holder = null;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.filters, null);
-            
-            holder = new ViewHolder((LinearLayout)convertView);
-            holder.mark = (ImageView) convertView.findViewById(R.id.imgMark);
-            holder.text = (TextView) convertView.findViewById(R.id.txtQuestionDetail);
-            holder.radioBtnA = (RadioButton)convertView.findViewById(R.id.radioBtnA);
-            holder.radioBtnB = (RadioButton)convertView.findViewById(R.id.radioBtnB);
-            holder.radioBtnC = (RadioButton)convertView.findViewById(R.id.radioBtnC);
-            holder.radioBtnD = (RadioButton)convertView.findViewById(R.id.radioBtnD);
-            holder.tableLayout = (LinearLayout)convertView.findViewById(R.id.linearLayoutAnswerAera);
-            
-            holder.mark.setOnClickListener(mOptionPanelListener);
-            holder.radioBtnA.setOnClickListener(mOptionPanelListener);
-            holder.radioBtnB.setOnClickListener(mOptionPanelListener);
-            holder.radioBtnC.setOnClickListener(mOptionPanelListener);
-            holder.radioBtnD.setOnClickListener(mOptionPanelListener);
-            holder.text.setOnClickListener(mOptionPanelListener);
-            
+        	if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsPaperTitle()){
+                convertView = mInflater.inflate(R.layout.title_filters, null);
+        		holder = new ItemViewHolder(mContext, convertView, mQuestionMgr, mAnswerMgr);       		
+        	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsOption()){
+                convertView = mInflater.inflate(R.layout.option_filters, null);
+        		holder = new OptionItemViewHolder(mContext, convertView, mQuestionMgr, mAnswerMgr);
+        	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsBlank()){
+                convertView = mInflater.inflate(R.layout.blank_filters, null);
+        		holder = new BlankItemViewHolder(mContext, convertView, mQuestionMgr, mAnswerMgr);
+        	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsLogic()){
+        		
+        	}
+           
             convertView.setTag(holder);
         } else { 
-            holder = (ViewHolder) convertView.getTag();
+            holder = (ItemViewHolder) convertView.getTag();
         }
-
-        holder.text.setTextSize(mFontSize);
-        if (mIDs.size() > position){
-        	mOptionPanelListener.OnAdapterLayoutView(holder, mIDs.get(position));
-        }else{
-            holder.text.setTextSize(mFontSize);
+        
+        if (holder != null){
+        	holder.doGettingItemView(mIDs.get(position), mFontSize);
         }
-
         return convertView;
     }
     

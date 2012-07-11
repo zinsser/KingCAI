@@ -56,7 +56,7 @@ public class CommitedStatus extends PaperStatus{
 
 	@Override
 	public void onLayoutMarkButton(ViewHolder holder, Answer answer) {
-        holder.mark.setEnabled(false);        
+        holder.mark.setEnabled(false);
 	    if (answer != null && answer.IsCorrect()){
 	    	holder.mark.setImageBitmap(mMarkIcon);
 	    }else if (answer != null && !answer.IsCorrect()){

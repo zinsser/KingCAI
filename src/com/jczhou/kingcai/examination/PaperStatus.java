@@ -37,7 +37,7 @@ public abstract class PaperStatus{
     	return String.format(Html.fromHtml(res.getString(resid)).toString(), iField);
 	}	
 
-	public void onLayoutOptionRadioButton(ViewHolder holder, Answer answer){
+	public void onLayoutOptionRadioButton(ItemViewHolder holder, Answer answer){
     	//—°‘ÒÃ‚
 		if (answer != null){
 	    	Parcel parcelValues  = answer.GetAnswer(); 
@@ -70,7 +70,7 @@ public abstract class PaperStatus{
 	public abstract void onCommitClick();
 	public abstract void onFilterClick(ListView listView, QuestionDetailViewAdapter fullAdapter);
 
-	public abstract void onLayoutMarkButton(ViewHolder holder, Answer answer);
+	public abstract void onLayoutMarkButton(ItemViewHolder holder, Answer answer);
 	public abstract void onBlankInputDone(Integer questionID, final Answer answer);
 	
 	protected abstract void LoadOptionIcon(Context context);

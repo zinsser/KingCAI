@@ -8,13 +8,23 @@ import android.widget.TextView;
 
 public class ItemViewHolder{
    	protected TextView mTextDetail;
-    public ItemViewHolder(Context context, View rawView){
+   	protected QuestionManager mQuestionMgr = null;
+   	protected AnswerManager mAnswerMgr = null;
+    public ItemViewHolder(Context context, View rawView,
+    		QuestionManager questionMgr, AnswerManager answerMgr){
         mTextDetail = (TextView) rawView.findViewById(R.id.txtQuestionDetail);
-        mTextDetail.setOnClickListener(mPanelListener);
+        if (mTextDetail != null){
+        	mTextDetail.setOnClickListener(mPanelListener);
+        }
+        mQuestionMgr = questionMgr;
+        mAnswerMgr = answerMgr;
     }
     
-    public void doGettingItemView(){
-    	
+    public void doGettingItemView(Integer id, int fontSize){
+    	if (mTextDetail != null){
+	    	mTextDetail.setTextSize(fontSize);
+	    	mTextDetail.setText(mQuestionMgr.GetQuestionItem(id).mDetail);
+    	}
     }
     
     private View.OnClickListener mPanelListener = new View.OnClickListener() {

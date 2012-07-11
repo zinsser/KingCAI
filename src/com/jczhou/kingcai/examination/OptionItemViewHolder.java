@@ -13,8 +13,9 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
 	private RadioButton mRadioButtonC;
 	private RadioButton mRadioButtonD;
 
-	public OptionItemViewHolder(Context context, View rawView){
-	    super(context, rawView);
+	public OptionItemViewHolder(Context context, View rawView,
+    		QuestionManager questionMgr, AnswerManager answerMgr){
+	    super(context, rawView, questionMgr, answerMgr);
 
 	    mRadioButtonA = (RadioButton)rawView.findViewById(R.id.radioBtnA);
 	    mRadioButtonB = (RadioButton)rawView.findViewById(R.id.radioBtnB);
@@ -28,8 +29,8 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
 	}
 
 	@Override	
-    public void doGettingItemView(){
-    	super.doGettingItemView();
+    public void doGettingItemView(Integer id, int fontSize){
+    	super.doGettingItemView(id, fontSize);
     	
     }	
     

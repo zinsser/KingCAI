@@ -184,7 +184,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	}
 
 	@Override
-	public void onLayoutMarkButton(ViewHolder holder, Answer answer) {
+	public void onLayoutMarkButton(ItemViewHolder holder, Answer answer) {
         holder.mark.setEnabled(true);
         if (answer != null && answer.mIsMark){
         	holder.mark.setImageBitmap(mMarkIcon);
@@ -200,7 +200,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	}
 
 	@Override
-	public void onLayoutOptionRadioButton(ViewHolder holder, Answer answer) {
+	public void onLayoutOptionRadioButton(ItemViewHolder holder, Answer answer) {
 		super.onLayoutOptionRadioButton(holder, answer);
 		
         holder.radioBtnA.setEnabled(true);

@@ -13,16 +13,17 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	protected ImageView mImageView_1;
 	protected ImageView mImageView_2;
 	
-	public QuestionItemViewHolder(Context context, View rawView) {
-		super(context, rawView);
-	    mMark = (ImageView) rawView.findViewById(R.id.imgMark);
+	public QuestionItemViewHolder(Context context, View rawView,
+    		QuestionManager questionMgr, AnswerManager answerMgr) {
+		super(context, rawView, questionMgr, answerMgr);
+	    mMark = (ImageView) rawView.findViewById(R.id.imageViewMarker);
 	    mMark.setOnClickListener(mPanelListener);
-	    mTableLayoutAnswer = (LinearLayout)rawView.findViewById(R.id.linearLayoutOption);
+	    mTableLayoutAnswer = (LinearLayout)rawView.findViewById(R.id.linearLayoutAnswerAera);
 	}
 	
 	@Override
-    public void doGettingItemView(){
-    	super.doGettingItemView();
+    public void doGettingItemView(Integer id, int fontSize){
+    	super.doGettingItemView(id, fontSize);
     	//TODO:
     }
 	
