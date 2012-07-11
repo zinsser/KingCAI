@@ -84,7 +84,7 @@
 	            android:orientation="vertical" > 
 		        <EditText
 		            android:id="@+id/editTextAnswer"
-		            android:layout_width="260dp"
+		            android:layout_width="262dp"
 		            android:layout_height="match_parent"          
 		            android:textAppearance="?android:attr/textAppearanceMedium"
 		            android:textColor="#000000" />
