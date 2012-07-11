@@ -97,7 +97,7 @@ public class PaperActivity  extends ComunicableActivity {
 
         
         mListView = (ListView)findViewById(R.id.lstQuestions);
-        mFullAdapter = new PaperViewAdapter(this, new OptionPanelListener());
+        mFullAdapter = new PaperViewAdapter(this, mQuestionMgr);
         mListView.setOnScrollListener(new QuestionListScrollListener());
 		mListView.setCacheColorHint(0);
         mListView.setAdapter(mFullAdapter);
@@ -440,7 +440,7 @@ public class PaperActivity  extends ComunicableActivity {
 
 		public void onClick(View v) {
     		HiddenKeyBoard(findViewById(R.id.tableInput));
-    		mPaperStatus.onFilterClick(mListView, mFullAdapter);
+    //		mPaperStatus.onFilterClick(mListView, mFullAdapter);
 		}
     }
     
@@ -599,6 +599,7 @@ public class PaperActivity  extends ComunicableActivity {
 		}
 		
 	}
+	/*
 	public class OptionPanelListener 
 					extends PaperViewAdapter.AdapterListener 
 					implements View.OnClickListener{
@@ -656,7 +657,7 @@ public class PaperActivity  extends ComunicableActivity {
 	        }while (false);	    	
 		}
 	}
-	
+	*/
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		//按下键盘上返回按钮

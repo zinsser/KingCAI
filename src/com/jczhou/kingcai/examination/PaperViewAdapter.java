@@ -18,7 +18,7 @@ public class PaperViewAdapter extends BaseAdapter {
     private int mFontSize = 22;
     private ArrayList<Integer> mIDs = new ArrayList<Integer>();
     private QuestionManager mQuestionMgr = null;
-    private AnswerManager mAnswerMgr = null;
+//    private AnswerManager mAnswerMgr = null;
     
     public QuestionListListener mQuestionListener = new QuestionListListener();
 
@@ -58,11 +58,11 @@ public class PaperViewAdapter extends BaseAdapter {
     private PaperViewAdapter(){
     }
     
-	public PaperViewAdapter(Context context, QuestionManager questionMgr, AnswerManager answerMgr) {
+	public PaperViewAdapter(Context context, QuestionManager questionMgr/*, AnswerManager answerMgr*/) {
 		mContext = context;
         mInflater = LayoutInflater.from(mContext);
         mQuestionMgr = questionMgr;
-        mAnswerMgr = answerMgr;
+  //      mAnswerMgr = answerMgr;
     }
     
     @SuppressWarnings("unchecked")
@@ -73,7 +73,7 @@ public class PaperViewAdapter extends BaseAdapter {
     	retAdapter.mInflater = this.mInflater;
         retAdapter.mFontSize = this.mFontSize;
         retAdapter.mQuestionMgr = this.mQuestionMgr;
-        retAdapter.mAnswerMgr = this.mAnswerMgr;
+//        retAdapter.mAnswerMgr = this.mAnswerMgr;
         
         retAdapter.mIDs = (ArrayList<Integer>) ids.clone();
         Collections.sort(retAdapter.mIDs);
@@ -120,11 +120,11 @@ public class PaperViewAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.filters, null);
         	if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsPaperTitle()){
-        		holder = new ItemViewHolder(mContext, convertView, mQuestionMgr, mAnswerMgr);       		
+        		holder = new ItemViewHolder(mContext, convertView, mQuestionMgr, null/*mAnswerMgr*/);       		
         	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsOption()){
-        		holder = new OptionItemViewHolder(mContext, convertView, mQuestionMgr, mAnswerMgr);
+        		holder = new OptionItemViewHolder(mContext, convertView, mQuestionMgr, null/*mAnswerMgr*/);
         	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsBlank()){
-        		holder = new BlankItemViewHolder(mContext, convertView, mQuestionMgr, mAnswerMgr);
+        		holder = new BlankItemViewHolder(mContext, convertView, mQuestionMgr, null/*mAnswerMgr*/);
         	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsLogic()){
         		
         	}

@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.jczhou.kingcai.R;
-import com.jczhou.kingcai.examination.QuestionDetailViewAdapter.ViewHolder;
+import com.jczhou.kingcai.examination.ItemViewHolder;
 
 public class CommitedStatus extends PaperStatus{
 
@@ -26,7 +26,7 @@ public class CommitedStatus extends PaperStatus{
 
 	@Override
 	public void onFilterClick(ListView listView,
-			QuestionDetailViewAdapter fullAdapter) {
+			PaperViewAdapter fullAdapter) {
 		mStatusOwner.findViewById(R.id.tableInput).setVisibility(View.GONE);
 		mStatusOwner.findViewById(R.id.tableReference).setVisibility(View.GONE);
 		
@@ -55,22 +55,22 @@ public class CommitedStatus extends PaperStatus{
 	}
 
 	@Override
-	public void onLayoutMarkButton(ViewHolder holder, Answer answer) {
-        holder.mark.setEnabled(false);
+	public void onLayoutMarkButton(ItemViewHolder holder, Answer answer) {
+/*        holder.mark.setEnabled(false);
 	    if (answer != null && answer.IsCorrect()){
 	    	holder.mark.setImageBitmap(mMarkIcon);
 	    }else if (answer != null && !answer.IsCorrect()){
 	        holder.mark.setImageBitmap(mUnMarkIcon);
-	    }
+	    }*/
 	}
 
 	@Override
-	public void onLayoutOptionRadioButton(ViewHolder holder, Answer answer) {
+	public void onLayoutOptionRadioButton(ItemViewHolder holder, Answer answer) {
 		super.onLayoutOptionRadioButton(holder, answer);
 		
     	int colorNormal = Color.rgb(0, 0, 0); //black
     	int colorBackground = Color.rgb(220, 220, 220);//236, 236, 236);//(222, 254, 241);
-		holder.radioBtnA.setTextColor(colorNormal);
+/*		holder.radioBtnA.setTextColor(colorNormal);
 		holder.radioBtnA.setBackgroundColor(colorBackground);
 		
    		holder.radioBtnB.setTextColor(colorNormal);
@@ -112,7 +112,7 @@ public class CommitedStatus extends PaperStatus{
 	           		holder.radioBtnD.setBackgroundColor(RectifyBackground);	           		
 	           	}
         	}
-    	}
+    	}*/
 	}
 
 	@Override

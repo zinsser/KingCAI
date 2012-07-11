@@ -79,11 +79,12 @@
 	            android:id="@+id/linearLayoutBlanks"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	    		android:background="#DCDCDC"	            
+	    		android:background="#DCDCDC"
+	            android:layout_marginLeft="15dp"	    			            
 	            android:orientation="vertical" > 
 		        <EditText
 		            android:id="@+id/editTextAnswer"
-		            android:layout_width="match_parent"
+		            android:layout_width="260dp"
 		            android:layout_height="match_parent"          
 		            android:textAppearance="?android:attr/textAppearanceMedium"
 		            android:textColor="#000000" />
@@ -98,7 +99,8 @@
 		            android:id="@+id/imageViewMarker"
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
-		    		android:layout_gravity="center_horizontal"     
+		    		android:layout_gravity="center" 
+					android:scaleType="fitCenter"		    		    
 		    		android:layout_marginLeft="20dip"           
 		            android:src="@drawable/unmark_icon" />
 	
@@ -126,9 +128,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
+    		android:layout_gravity="center" 
+			android:scaleType="fitCenter"		    		    
             android:visibility="visible"
-            android:src="@drawable/spinner_black_48"
-    		android:layout_gravity="center_horizontal"/>	    
+            android:src="@drawable/spinner_black_48"/>	    
 	    <TextView
 	        android:id="@+id/textViewTip_Grap1"
 	        android:layout_width="match_parent"
@@ -142,8 +145,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="visible"
-            android:src="@drawable/spinner_black_48"	            
-    		android:layout_gravity="center_horizontal"/>	
+    		android:layout_gravity="center" 
+			android:scaleType="fitCenter"		    
+            android:src="@drawable/spinner_black_48"/>	
 	    <TextView
 	        android:id="@+id/textViewTip_Grap2"
 	        android:layout_width="wrap_content"

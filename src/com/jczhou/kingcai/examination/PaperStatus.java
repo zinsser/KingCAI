@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jczhou.kingcai.R;
-import com.jczhou.kingcai.examination.QuestionDetailViewAdapter.ViewHolder;
+import com.jczhou.kingcai.examination.ItemViewHolder;
 
 public abstract class PaperStatus{
 	protected ArrayList<Integer> mListFirst = new ArrayList<Integer>();
@@ -39,7 +39,7 @@ public abstract class PaperStatus{
 
 	public void onLayoutOptionRadioButton(ItemViewHolder holder, Answer answer){
     	//—°‘ÒÃ‚
-		if (answer != null){
+/*		if (answer != null){
 	    	Parcel parcelValues  = answer.GetAnswer(); 
 	    	if (parcelValues != null){
 	        	boolean[] bValue = parcelValues.createBooleanArray();
@@ -49,7 +49,7 @@ public abstract class PaperStatus{
 	           	holder.radioBtnC.setChecked(bValue[2]);       	
 	           	holder.radioBtnD.setChecked(bValue[3]);
 	    	}
-		}
+		}*/
 	}	
 
 	public void onOptionPanelClick(View v, Answer answer){
@@ -68,7 +68,7 @@ public abstract class PaperStatus{
 	public abstract void onBlankInputShow(Integer questinID, Answer answer);
 	
 	public abstract void onCommitClick();
-	public abstract void onFilterClick(ListView listView, QuestionDetailViewAdapter fullAdapter);
+	public abstract void onFilterClick(ListView listView, PaperViewAdapter fullAdapter);
 
 	public abstract void onLayoutMarkButton(ItemViewHolder holder, Answer answer);
 	public abstract void onBlankInputDone(Integer questionID, final Answer answer);
