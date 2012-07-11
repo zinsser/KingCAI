@@ -126,7 +126,7 @@ public class QuestionDetailViewAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.filters, null);
-
+            
             holder = new ViewHolder((LinearLayout)convertView);
             holder.mark = (ImageView) convertView.findViewById(R.id.imgMark);
             holder.text = (TextView) convertView.findViewById(R.id.txtQuestionDetail);
@@ -134,7 +134,7 @@ public class QuestionDetailViewAdapter extends BaseAdapter {
             holder.radioBtnB = (RadioButton)convertView.findViewById(R.id.radioBtnB);
             holder.radioBtnC = (RadioButton)convertView.findViewById(R.id.radioBtnC);
             holder.radioBtnD = (RadioButton)convertView.findViewById(R.id.radioBtnD);
-            holder.tableLayout = (LinearLayout)convertView.findViewById(R.id.linearLayoutOption);
+            holder.tableLayout = (LinearLayout)convertView.findViewById(R.id.linearLayoutAnswerAera);
             
             holder.mark.setOnClickListener(mOptionPanelListener);
             holder.radioBtnA.setOnClickListener(mOptionPanelListener);
