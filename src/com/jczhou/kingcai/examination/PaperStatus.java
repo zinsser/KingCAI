@@ -5,11 +5,8 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.os.Parcel;
 import android.text.Html;
-import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.jczhou.kingcai.R;
 import com.jczhou.kingcai.examination.ItemViewHolder;
@@ -37,33 +34,10 @@ public abstract class PaperStatus{
     	return String.format(Html.fromHtml(res.getString(resid)).toString(), iField);
 	}	
 
-	public void onLayoutOptionRadioButton(ItemViewHolder holder, Answer answer){
-    	//—°‘ÒÃ‚
-/*		if (answer != null){
-	    	Parcel parcelValues  = answer.GetAnswer(); 
-	    	if (parcelValues != null){
-	        	boolean[] bValue = parcelValues.createBooleanArray();
-	        	assert bValue.length == 4;
-	            holder.radioBtnA.setChecked(bValue[0]);
-	           	holder.radioBtnB.setChecked(bValue[1]);
-	           	holder.radioBtnC.setChecked(bValue[2]);       	
-	           	holder.radioBtnD.setChecked(bValue[3]);
-	    	}
-		}*/
-	}	
-
-	public void onOptionPanelClick(View v, Answer answer){
-		Integer viewID = v.getId();
-		if(viewID == R.id.txtQuestionDetail) {
-			Integer questionID = (Integer)((TextView)v).getTag();
-//			mStatusOwner.OnQuestionDetailClick(questionID);
-		}
-	}	
-
 	public void onSearchFinished() {
 		mStatusOwner.ChangeFilterButtonText(R.string.AllQuestions);
 		mFilterLevel = 0;
-	}		
+	}
 
 	public abstract void onBlankInputShow(Integer questinID, Answer answer);
 	
@@ -72,7 +46,6 @@ public abstract class PaperStatus{
 
 	public abstract void doGettingItemView(ItemViewHolder holder, Integer id, int fontsize);	
 
-	public abstract void onLayoutMarkButton(ItemViewHolder holder, Answer answer);
 	public abstract void onBlankInputDone(Integer questionID, final Answer answer);
 	
 	protected abstract void LoadOptionIcon(Context context);

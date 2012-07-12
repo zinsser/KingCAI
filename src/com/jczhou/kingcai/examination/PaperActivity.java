@@ -4,8 +4,6 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -20,7 +18,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -98,7 +95,7 @@ public class PaperActivity  extends ComunicableActivity {
 		
         mListView = (ListView)findViewById(R.id.lstQuestions);
         mFullAdapter = new PaperViewAdapter(this, mQuestionMgr, mAnswerMgr);
- //       mListView.setOnScrollListener(new QuestionListScrollListener());
+        mListView.setOnScrollListener(new QuestionListScrollListener());
 		mListView.setCacheColorHint(0);
         mListView.setAdapter(mFullAdapter);
         
@@ -392,9 +389,7 @@ public class PaperActivity  extends ComunicableActivity {
 			byte[] data = buf.array();
 			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-			//TODO: item add an imageView to dispaly the image
 			mQuestionMgr.AddQuestionImage(0, bmp);
-//			mQuestionImg.setImageBitmap(bmp);
 		}
 	}
     
@@ -438,10 +433,10 @@ public class PaperActivity  extends ComunicableActivity {
 			mPaperStatus.onCommitClick();
 		}
     }
-
+    /*
     private HashMap<Integer, String> mMultiBlankAnswer = new HashMap<Integer, String>();    
     private HashMap<Integer, String> mMultiBlankRefAnswer = new HashMap<Integer, String>();
- /*   
+   
     public class BlankInputListener implements TextView.OnEditorActionListener{
 
 		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -573,79 +568,19 @@ public class PaperActivity  extends ComunicableActivity {
 			HiddenKeyBoard(findViewById(R.id.tableInput));
 		} 		
 	}
-  
+   */
 	public class QuestionListScrollListener implements OnScrollListener {
 
 		public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
 		}
 
 		public void onScrollStateChanged(AbsListView arg0, int arg1) {
-			findViewById(R.id.tableInput).setVisibility(View.GONE);
-			findViewById(R.id.tableReference).setVisibility(View.GONE);
-			HiddenKeyBoard(findViewById(R.id.tableInput));			
+
+			HiddenKeyBoard(findViewById(R.id.txtGoto));
 		}
 		
 	}
- */ 	
-	/*
-	public class OptionPanelListener 
-					extends PaperViewAdapter.AdapterListener 
-					implements View.OnClickListener{
-		private int mCurRow = 0;
-		public void onClick(View v) {
-			Integer id = (Integer)v.getTag();
-    		mPaperStatus.onOptionPanelClick(v, mAnswerMgr.GetAnswer(id));
-		}
-
-		private void AddImageView(ItemViewHolder holder, Bitmap bmp){
-			ImageView imgView = new ImageView(getApplication());
-			imgView.setImageBitmap(bmp);
-			holder.mParent.addView(imgView);
-		}
-		
-		@Override
-		public void OnAdapterLayoutView(ItemViewHolder holder, Integer id) {
-	        do {
-				QuestionInfo question = mQuestionMgr.GetQuestionItem(id);
-		        Answer answer = mAnswerMgr.GetAnswer(id);
-		        boolean bTitle = question.mReference == null || question.IsPaperTitle();
-		        mCurRow++;
-		        
-		        //TODO:difference background color
-		        //if (mCurRow % 2 == 0){}else{}
-		        	
-	        	holder.text.setText(question.mDetail);
-		    	holder.text.setTag(id);
-		    	
-	        	holder.tableLayout.setVisibility(bTitle ? View.GONE : View.VISIBLE);
-		        
-		        if (bTitle){
-		        	break;
-		        }
-		        if (question.HasImage()){
-			        AddImageView(holder, question.GetImage());		        	
-		        }
-
-	        	mPaperStatus.onLayoutMarkButton(holder, answer);
-		       
-		    	holder.radioBtnA.setVisibility(question.IsOption() ? View.VISIBLE : View.GONE);
-		        holder.radioBtnB.setVisibility(question.IsOption() ? View.VISIBLE : View.GONE);    	
-		        holder.radioBtnC.setVisibility(question.IsOption() ? View.VISIBLE : View.GONE);
-		        holder.radioBtnD.setVisibility(question.IsOption() ? View.VISIBLE : View.GONE);
-		        
-		        if (question.IsOption()){
-		        	mPaperStatus.onLayoutOptionRadioButton(holder, answer);
-		        }
-	        	holder.radioBtnA.setTag(id);
-	        	holder.radioBtnB.setTag(id);
-	        	holder.radioBtnC.setTag(id);
-	        	holder.radioBtnD.setTag(id);	        
-		    	holder.mark.setTag(id);
-
-	        }while (false);	    	
-		}
-	}
-	*/
+ 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		//按下键盘上返回按钮
@@ -693,7 +628,7 @@ public class PaperActivity  extends ComunicableActivity {
 		((TextView)findViewById(R.id.txtAnswerInfo)).setText(Html.fromHtml(info));
 
 		mListView.setAdapter(mFullAdapter);
-//		ChangeFilterButtonText(R.string.AllQuestions);
+		ChangeFilterButtonText(R.string.AllQuestions);
 	}	
 	 
 	public void FetchUndoneList(ArrayList<Integer> undonelist){
@@ -702,7 +637,7 @@ public class PaperActivity  extends ComunicableActivity {
     			undonelist.add(id);
     		}
     	}
-    	mMultiBlankRefAnswer.clear();
+ //   	mMultiBlankRefAnswer.clear();
 	}
 	
 	public void InitUncorrectList(ArrayList<Integer> correctList, 
@@ -716,7 +651,7 @@ public class PaperActivity  extends ComunicableActivity {
     			uncorrectList.add(id);
     		}
     	}
-    	mMultiBlankAnswer.clear(); 
+ //   	mMultiBlankAnswer.clear(); 
 	}
 	
 	public void ChangeFilterButtonText(int resID){

@@ -9,11 +9,8 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.CountDownTimer;
-import android.os.Parcel;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioButton;
+
 
 import com.jczhou.kingcai.R;
 import com.jczhou.kingcai.examination.ItemViewHolder;
@@ -113,59 +110,6 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 			.show();
 	}
 
-	@Override
-	public void onOptionPanelClick(View v, Answer answer) {
-		super.onOptionPanelClick(v, answer);
-		if (answer == null){
-			return ;
-		}
-			
-		int viewID = v.getId();
-		Integer questionID = 0;
-		switch (viewID){
-		case R.id.imageViewMarker:
-			answer.mIsMark = !answer.mIsMark;
-			ImageView imgMask = (ImageView)v;
-			imgMask.setImageBitmap(answer.mIsMark ? mMarkIcon : mUnMarkIcon);
-			questionID = (Integer)imgMask.getTag();
-			PostClicked(questionID, answer);
-			break;
-		case R.id.radioBtnA:
-		case R.id.radioBtnB:
-		case R.id.radioBtnC:
-		case R.id.radioBtnD:
-			RadioButton radioBtn = (RadioButton)v;
-			questionID = (Integer)radioBtn.getTag();
-			
-			boolean[] bRadioValue = answer.GetAnswer().createBooleanArray();
-			assert bRadioValue.length == 4;
-			boolean bChecked = false;
-			if (viewID == R.id.radioBtnA){
-				bRadioValue[0] = !bRadioValue[0];
-				bChecked = bRadioValue[0];
-			}else if (viewID == R.id.radioBtnB){
-				bRadioValue[1] = !bRadioValue[1];
-				bChecked = bRadioValue[1];
-			}else if (viewID == R.id.radioBtnC){
-				bRadioValue[2] = !bRadioValue[2];
-				bChecked = bRadioValue[2];
-			}else if (viewID == R.id.radioBtnD){
-				bRadioValue[3] = !bRadioValue[3];
-				bChecked = bRadioValue[3];
-			}
-			radioBtn.setChecked(bChecked);
-			
-			Parcel answers = Parcel.obtain();
-			answers.writeBooleanArray(bRadioValue);
-			answer.AddAnswer(answers);
-			
-			PostClicked(questionID, answer);				
-			break;
-		default:
-			break;
-		}
-	}
-	
 	private void PostClicked(Integer questionID, final Answer answer){
 		if (answer.mIsMark){
 			if (!mListSecond.contains(questionID)){
@@ -191,29 +135,9 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	}
 
 	@Override
-	public void onLayoutMarkButton(ItemViewHolder holder, Answer answer) {
- /*       holder.mark.setEnabled(true);
-        if (answer != null && answer.mIsMark){
-        	holder.mark.setImageBitmap(mMarkIcon);
-        }else{
-            holder.mark.setImageBitmap(mUnMarkIcon);
-        }*/
-	}
-
-	@Override
 	protected void LoadOptionIcon(Context context) {
         mMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.mark_icon);        
         mUnMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.unmark_icon);
-	}
-
-	@Override
-	public void onLayoutOptionRadioButton(ItemViewHolder holder, Answer answer) {
-		super.onLayoutOptionRadioButton(holder, answer);
-		/*
-        holder.radioBtnA.setEnabled(true);
-        holder.radioBtnB.setEnabled(true);
-        holder.radioBtnC.setEnabled(true);
-        holder.radioBtnD.setEnabled(true);*/
 	}
 
 	@Override

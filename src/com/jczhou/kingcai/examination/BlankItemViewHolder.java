@@ -18,7 +18,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     	super.doGettingItemViews(id, fontSize, listener);
     	doLayoutSubViews();
     	mLinearLayoutBlanks.setTag(id);
-
+    	
 		String tipQuestion = String.format(mHostActivity.getResources().getString(R.string.CurrentQuestion), id);    	
     	mEditTextInput.setHint(tipQuestion);
 	}

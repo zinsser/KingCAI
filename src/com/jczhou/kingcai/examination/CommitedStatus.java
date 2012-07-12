@@ -2,9 +2,6 @@ package com.jczhou.kingcai.examination;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.os.Parcel;
-import android.view.View;
 import android.widget.ListView;
 
 import com.jczhou.kingcai.R;
@@ -55,67 +52,6 @@ public class CommitedStatus extends PaperStatus{
 	protected void LoadOptionIcon(Context context) {
         mMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_bullet_key_permission);        
         mUnMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_delete);
-	}
-
-	@Override
-	public void onLayoutMarkButton(ItemViewHolder holder, Answer answer) {
-/*        holder.mark.setEnabled(false);
-	    if (answer != null && answer.IsCorrect()){
-	    	holder.mark.setImageBitmap(mMarkIcon);
-	    }else if (answer != null && !answer.IsCorrect()){
-	        holder.mark.setImageBitmap(mUnMarkIcon);
-	    }*/
-	}
-
-	@Override
-	public void onLayoutOptionRadioButton(ItemViewHolder holder, Answer answer) {
-		super.onLayoutOptionRadioButton(holder, answer);
-		
-    	int colorNormal = Color.rgb(0, 0, 0); //black
-    	int colorBackground = Color.rgb(220, 220, 220);//236, 236, 236);//(222, 254, 241);
-/*		holder.radioBtnA.setTextColor(colorNormal);
-		holder.radioBtnA.setBackgroundColor(colorBackground);
-		
-   		holder.radioBtnB.setTextColor(colorNormal);
-		holder.radioBtnB.setBackgroundColor(colorBackground);
-		
-   		holder.radioBtnC.setTextColor(colorNormal);
-		holder.radioBtnC.setBackgroundColor(colorBackground);
-		
-   		holder.radioBtnD.setTextColor(colorNormal);
-		holder.radioBtnD.setBackgroundColor(colorBackground);
-		
-        holder.radioBtnA.setEnabled(false);
-        holder.radioBtnB.setEnabled(false);
-        holder.radioBtnC.setEnabled(false);
-        holder.radioBtnD.setEnabled(false);   		
-   		
-    	if (answer!= null && !answer.IsCorrect()){
-    		Parcel parcelValues = answer.GetRefAnswer();
-        	if (parcelValues != null){
-	        	boolean[] bValue = parcelValues.createBooleanArray();
-	        	assert bValue.length == 4;
-	    
-	        	int RectifyFontColor = Color.rgb(248, 254, 131);	 //red
-	        	int RectifyBackground = Color.rgb(0, 128, 0);
-	        	if (bValue[0]) {
-	        		holder.radioBtnA.setTextColor(RectifyFontColor);
-	        		holder.radioBtnA.setBackgroundColor(RectifyBackground);
-	        	}
-	           	if (bValue[1]) {
-	           		holder.radioBtnB.setTextColor(RectifyFontColor);
-	        		holder.radioBtnB.setBackgroundColor(RectifyBackground);	           		
-	           	}
-	           	if (bValue[2]) {
-	           		holder.radioBtnC.setTextColor(RectifyFontColor);
-	        		holder.radioBtnC.setBackgroundColor(RectifyBackground);	           		
-	           	}
-	           	if (bValue[3]) {
-	           		holder.radioBtnD.setTextColor(RectifyFontColor);
-	           		holder.radioBtnD.setBackgroundColor(RectifyBackground);	           		
-	           	}
-        	}
-    	}*/
 	}
 
 	@Override

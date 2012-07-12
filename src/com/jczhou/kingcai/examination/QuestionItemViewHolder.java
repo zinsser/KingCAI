@@ -1,5 +1,7 @@
 package com.jczhou.kingcai.examination;
 
+import java.util.ArrayList;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 
 import com.jczhou.kingcai.R;
+import com.jczhou.kingcai.examination.QuestionManager.QuestionListener;
 
 public class QuestionItemViewHolder extends ItemViewHolder{
 	protected ImageView mMark = null;
@@ -31,13 +34,34 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	    mLinearLayoutBlanks = (LinearLayout)rawView.findViewById(R.id.linearLayoutBlanks);
 	    
 	    mImageView_1 = (ImageView)rawView.findViewById(R.id.imageView_1);
-	    mImageView_2 = (ImageView)rawView.findViewById(R.id.imageView_2);	    
+	    mImageView_2 = (ImageView)rawView.findViewById(R.id.imageView_2);
+	    
+	    mQuestionMgr.AddListener(new QuestionListener(){
+
+			public void OnQuestionArrayChanged(ArrayList<Integer> ids) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void OnAddQuestion(Integer id) {
+				// TODO Auto-generated method stub
+			}
+
+			public void OnClearQuestion() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void OnImageReady(Bitmap bmp) {
+				mImageView_1.setImageBitmap(bmp);
+			}
+	    });
 	}
 	
 	@Override
     public void doGettingItemViews(Integer id, int fontSize, onSubViewClickListener listener){
     	super.doGettingItemViews(id, fontSize);
-    	doLayoutSubViews();
+    	doLayoutSubViews(id);
 
     	mMarkIcon = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.mark_icon);
     	mUnMarkIcon  = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.unmark_icon);
@@ -50,13 +74,13 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 			mMark.setImageBitmap(mMarkIcon);	
 		}
 
-	    mMark.setOnClickListener(new PanelClickListener(this, listener));	    
+	    mMark.setOnClickListener(new PanelClickListener(this, listener));	
 	}
 
 	@Override
     public void doGettingItemViews(Integer id, int fontSize){
     	super.doGettingItemViews(id, fontSize);
-    	doLayoutSubViews();
+    	doLayoutSubViews(id);
     	
 		AnswerManager answerMgr = mHostActivity.getAnswerManager();
 		
@@ -76,7 +100,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	    }
     }
 
-	private void doLayoutSubViews(){
+	private void doLayoutSubViews(Integer id){
     	if (mLinearLayoutAnswerArea != null){
     		mLinearLayoutAnswerArea.setVisibility(View.VISIBLE);
     	}
@@ -92,6 +116,12 @@ public class QuestionItemViewHolder extends ItemViewHolder{
     	if (mRatingBarHardness != null){
     		mRatingBarHardness.setVisibility(View.GONE);
     	}
+    	
+	    QuestionInfo question = mQuestionMgr.GetQuestionItem(id);
+	    if (question.HasImage()){
+	    	mLinearLayoutImage.setVisibility(View.VISIBLE);
+	    	mImageView_1.setVisibility(View.VISIBLE);
+	    }
 	}
 	
 	private class PanelClickListener implements  View.OnClickListener{
