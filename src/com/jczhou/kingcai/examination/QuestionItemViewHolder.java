@@ -74,7 +74,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 			mMark.setImageBitmap(mMarkIcon);	
 		}
 
-	    mMark.setOnClickListener(new PanelClickListener(this, listener));	
+	    mMark.setOnClickListener(new PanelClickListener(listener));	
 	}
 
 	@Override
@@ -125,11 +125,9 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	}
 	
 	private class PanelClickListener implements  View.OnClickListener{
-		private QuestionItemViewHolder mHost = null;
 		private onSubViewClickListener mSubViewListener = null;
 
-		public PanelClickListener(QuestionItemViewHolder host, onSubViewClickListener l){
-			mHost   = host;
+		public PanelClickListener(onSubViewClickListener l){
 			mSubViewListener = l;
 		}
 		
@@ -137,7 +135,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 			if (v.getId() == R.id.imageViewMarker){
 				ImageView imgMask = (ImageView)v;
 				Integer qId = (Integer)imgMask.getTag();
-				Answer answer = mHost.mHostActivity.getAnswerManager().GetAnswer(qId);
+				Answer answer = mHostActivity.getAnswerManager().GetAnswer(qId);
 				answer.mIsMark = !answer.mIsMark;
 				imgMask.setImageBitmap(answer.mIsMark ? mMarkIcon : mUnMarkIcon);
 				mSubViewListener.onViewClick(qId, answer);
