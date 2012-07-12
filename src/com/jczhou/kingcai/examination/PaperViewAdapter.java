@@ -3,7 +3,6 @@ package com.jczhou.kingcai.examination;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.BaseAdapter;
 import android.view.View;
@@ -13,14 +12,13 @@ import android.view.LayoutInflater;
 import com.jczhou.kingcai.R;
 
 public class PaperViewAdapter extends BaseAdapter {
-	private Context mContext = null;
+	private PaperActivity mHostActivity = null;
     private LayoutInflater mInflater;
     private int mFontSize = 22;
     private ArrayList<Integer> mIDs = new ArrayList<Integer>();
     private QuestionManager mQuestionMgr = null;
-//    private AnswerManager mAnswerMgr = null;
     
-    public QuestionListListener mQuestionListener = new QuestionListListener();
+    private QuestionListListener mQuestionListener = new QuestionListListener();
 
     public class QuestionListListener implements QuestionManager.QuestionListener{
     	@SuppressWarnings("unchecked")
@@ -58,22 +56,23 @@ public class PaperViewAdapter extends BaseAdapter {
     private PaperViewAdapter(){
     }
     
-	public PaperViewAdapter(Context context, QuestionManager questionMgr/*, AnswerManager answerMgr*/) {
-		mContext = context;
-        mInflater = LayoutInflater.from(mContext);
+	public PaperViewAdapter(PaperActivity hostActivity, 
+				QuestionManager questionMgr, AnswerManager answerMgr) {
+		mHostActivity = hostActivity;
+        mInflater = LayoutInflater.from(mHostActivity);
         mQuestionMgr = questionMgr;
-  //      mAnswerMgr = answerMgr;
+		mQuestionMgr.AddListener(mQuestionListener);
     }
     
     @SuppressWarnings("unchecked")
 	public PaperViewAdapter CloneAdapter(ArrayList<Integer> ids){
     	PaperViewAdapter retAdapter = new PaperViewAdapter();
 
-        retAdapter.mContext = this.mContext;
+        retAdapter.mHostActivity = this.mHostActivity;
     	retAdapter.mInflater = this.mInflater;
         retAdapter.mFontSize = this.mFontSize;
         retAdapter.mQuestionMgr = this.mQuestionMgr;
-//        retAdapter.mAnswerMgr = this.mAnswerMgr;
+        retAdapter.mQuestionMgr.AddListener(retAdapter.mQuestionListener);
         
         retAdapter.mIDs = (ArrayList<Integer>) ids.clone();
         Collections.sort(retAdapter.mIDs);
@@ -119,14 +118,14 @@ public class PaperViewAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.filters, null);
-        	if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsPaperTitle()){
-        		holder = new ItemViewHolder(mContext, convertView, mQuestionMgr, null/*mAnswerMgr*/);       		
-        	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsOption()){
-        		holder = new OptionItemViewHolder(mContext, convertView, mQuestionMgr, null/*mAnswerMgr*/);
+        	if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsOption()){
+        		holder = new OptionItemViewHolder(mHostActivity, convertView, mQuestionMgr);
         	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsBlank()){
-        		holder = new BlankItemViewHolder(mContext, convertView, mQuestionMgr, null/*mAnswerMgr*/);
+        		holder = new BlankItemViewHolder(mHostActivity, convertView, mQuestionMgr);
         	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsLogic()){
         		
+        	}else{
+        		holder = new ItemViewHolder(mHostActivity, convertView, mQuestionMgr);
         	}
            
             convertView.setTag(holder);
@@ -134,9 +133,8 @@ public class PaperViewAdapter extends BaseAdapter {
             holder = (ItemViewHolder) convertView.getTag();
         }
         
-        if (holder != null){
-        	holder.doGettingItemView(mIDs.get(position), mFontSize);
-        }
+        mHostActivity.getPaperStatus().doGettingItemView(holder, mIDs.get(position), mFontSize);
+
         return convertView;
     }
     

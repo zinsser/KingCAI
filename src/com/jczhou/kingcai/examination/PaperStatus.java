@@ -56,7 +56,7 @@ public abstract class PaperStatus{
 		Integer viewID = v.getId();
 		if(viewID == R.id.txtQuestionDetail) {
 			Integer questionID = (Integer)((TextView)v).getTag();
-			mStatusOwner.OnQuestionDetailClick(questionID);
+//			mStatusOwner.OnQuestionDetailClick(questionID);
 		}
 	}	
 
@@ -69,6 +69,8 @@ public abstract class PaperStatus{
 	
 	public abstract void onCommitClick();
 	public abstract void onFilterClick(ListView listView, PaperViewAdapter fullAdapter);
+
+	public abstract void doGettingItemView(ItemViewHolder holder, Integer id, int fontsize);	
 
 	public abstract void onLayoutMarkButton(ItemViewHolder holder, Answer answer);
 	public abstract void onBlankInputDone(Integer questionID, final Answer answer);

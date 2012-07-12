@@ -32,8 +32,8 @@
     <string name="ModifyPassword">修改密码</string>
     <string name="LoginOffline">离线模式</string> 
     <string name="RefAnswer">参考答案</string>  
-    <string name="CurrentQuestion">第 %d 道题</string>
-    <string name="CurrentBlankQuestion">第%1$d(%2$d)道题</string>
+    <string name="CurrentQuestion">请输入第 %d 道题答案</string>
+    <string name="CurrentBlankQuestion">请输入第%1$d(%2$d)道题答案</string>
     <string name="ServerNotFound">无法找到服务器</string>        
     <string name="SelectClassTip">请选择班级！</string>   
     <string name="InputCorrectIDTip">请输入正确的学号及密码！</string>   

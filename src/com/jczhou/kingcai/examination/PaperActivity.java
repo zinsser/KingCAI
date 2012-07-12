@@ -24,7 +24,6 @@ import android.os.Parcel;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,16 +34,13 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jczhou.kingcai.R;
 import com.jczhou.kingcai.common.ComunicableActivity;
-import com.jczhou.kingcai.examination.ItemViewHolder;
 import com.jczhou.kingcai.examination.PaperViewAdapter;
 import com.jczhou.kingcai.messageservice.AnswerMessage;
-import com.jczhou.kingcai.messageservice.LoginFinishedMessage;
 import com.jczhou.kingcai.messageservice.LogoutRequestMessage;
 import com.jczhou.kingcai.messageservice.RequestPaperMessage;
 import com.jczhou.platform.KingCAIConfig;
@@ -94,33 +90,25 @@ public class PaperActivity  extends ComunicableActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
         
+		ParseIntentExtraParam();
+		
+		mAnswerMgr = new AnswerManager(mQuestionMgr);
+		mPaperStatus = new AnswerStatus(this, mQuestionMgr);
+		
         mListView = (ListView)findViewById(R.id.lstQuestions);
-        mFullAdapter = new PaperViewAdapter(this, mQuestionMgr);
-        mListView.setOnScrollListener(new QuestionListScrollListener());
+        mFullAdapter = new PaperViewAdapter(this, mQuestionMgr, mAnswerMgr);
+ //       mListView.setOnScrollListener(new QuestionListScrollListener());
 		mListView.setCacheColorHint(0);
         mListView.setAdapter(mFullAdapter);
         
         mBtnCommit = (Button)findViewById(R.id.btnCommit);
         mBtnCommit.setOnClickListener(new CommitClickListener());
-        findViewById(R.id.btnDown).setOnClickListener(new DownClickListener());
-        findViewById(R.id.btnUP).setOnClickListener(new UPClickListener());  
-        
+       
         mBtnFilter = (Button)findViewById(R.id.btnFilter);
         mBtnFilter.setOnClickListener(new FilterClickListener());
         
-		findViewById(R.id.tableInput).setVisibility(View.GONE);
-		findViewById(R.id.tableReference).setVisibility(View.GONE);
-		((EditText)findViewById(R.id.txtOption)).setOnEditorActionListener(new BlankInputListener());
-
 		((EditText)findViewById(R.id.txtGoto)).setOnEditorActionListener(new SearchEditorListener());
-		ParseIntentExtraParam();
-
-		mPaperStatus = new AnswerStatus(this, mQuestionMgr);
-//		mServiceChannel.sendMessage(new LoginFinishedMessage("Answer Status Ready"), 0);
-		mAnswerMgr = new AnswerManager(mQuestionMgr);
-		mQuestionMgr.AddListener(mFullAdapter.mQuestionListener);
 		
         mServiceChannel.sendMessage(new RequestPaperMessage(), 0);		
     }
@@ -261,7 +249,7 @@ public class PaperActivity  extends ComunicableActivity {
 					Integer offset = mQuestionMgr.GetUnQuestionCount(gotoItem);
 					
 					mListView.setAdapter(mFullAdapter);
-					ChangeFilterButtonText(R.string.AllQuestions);					
+//					ChangeFilterButtonText(R.string.AllQuestions);					
 					mPaperStatus.onSearchFinished();
 					
 					if (gotoItem > 0 && gotoItem <= mListView.getCount() - offset){
@@ -437,10 +425,9 @@ public class PaperActivity  extends ComunicableActivity {
     
     public class FilterClickListener implements View.OnClickListener{
 
-
 		public void onClick(View v) {
-    		HiddenKeyBoard(findViewById(R.id.tableInput));
-    //		mPaperStatus.onFilterClick(mListView, mFullAdapter);
+ //   		HiddenKeyBoard(findViewById(R.id.tableInput));
+    		mPaperStatus.onFilterClick(mListView, mFullAdapter);
 		}
     }
     
@@ -454,7 +441,7 @@ public class PaperActivity  extends ComunicableActivity {
 
     private HashMap<Integer, String> mMultiBlankAnswer = new HashMap<Integer, String>();    
     private HashMap<Integer, String> mMultiBlankRefAnswer = new HashMap<Integer, String>();
-    
+ /*   
     public class BlankInputListener implements TextView.OnEditorActionListener{
 
 		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -554,7 +541,7 @@ public class PaperActivity  extends ComunicableActivity {
 			}
 		}
     }
-    
+  
     public void OnQuestionDetailClick(Integer id){
 		QuestionInfo info  = mQuestionMgr.GetQuestionItem(id);
 		if (info != null && (info.mType == QuestionInfo.QUESTION_TYPE_BLANK
@@ -599,6 +586,7 @@ public class PaperActivity  extends ComunicableActivity {
 		}
 		
 	}
+ */ 	
 	/*
 	public class OptionPanelListener 
 					extends PaperViewAdapter.AdapterListener 
@@ -705,7 +693,7 @@ public class PaperActivity  extends ComunicableActivity {
 		((TextView)findViewById(R.id.txtAnswerInfo)).setText(Html.fromHtml(info));
 
 		mListView.setAdapter(mFullAdapter);
-		ChangeFilterButtonText(R.string.AllQuestions);
+//		ChangeFilterButtonText(R.string.AllQuestions);
 	}	
 	 
 	public void FetchUndoneList(ArrayList<Integer> undonelist){
@@ -731,6 +719,10 @@ public class PaperActivity  extends ComunicableActivity {
     	mMultiBlankAnswer.clear(); 
 	}
 	
+	public void ChangeFilterButtonText(int resID){
+		((Button)findViewById(R.id.btnFilter)).setText(resID);
+	}	
+	/*		
 	public void ShowAnswerContent(Integer id){
 		Parcel answerContent = mAnswerMgr.GetAnswer(id).GetAnswer();
 		Integer cnt = answerContent.readInt();
@@ -744,7 +736,7 @@ public class PaperActivity  extends ComunicableActivity {
 
 		ChangeCurrentBlankParam(mMultiBlankAnswer.get(1), 1);		
 	}
-	
+
 	public void ShowReferenceContent(Integer id){
 		Parcel refContent = mAnswerMgr.GetAnswer(id).GetRefAnswer();
 		Integer cnt = refContent.readInt();
@@ -760,10 +752,7 @@ public class PaperActivity  extends ComunicableActivity {
 
 		findViewById(R.id.txtOption).setEnabled(false);
 	}
-	
-	public void ChangeFilterButtonText(int resID){
-		((Button)findViewById(R.id.btnFilter)).setText(resID);
-	}
+
 	
 	public void ChangeCurrentBlankParam(String answer, Integer subid){
 		Integer id = (Integer)findViewById(R.id.txtOption).getTag();
@@ -786,4 +775,12 @@ public class PaperActivity  extends ComunicableActivity {
 			((EditText)findViewById(R.id.txtOption)).setText("");
 		}
 	}	
+	*/
+	public PaperStatus getPaperStatus(){
+		return mPaperStatus;
+	}
+	
+	public AnswerManager getAnswerManager(){
+		return mAnswerMgr;
+	}
 }

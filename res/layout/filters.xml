@@ -119,8 +119,7 @@
 	    android:id="@+id/linearLayoutImage" 
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:layout_weight="0.8"
-        android:visibility="visible"	    
+	    android:layout_weight="0.8"	    
     	android:background="#DCDCDC"    
 	    android:orientation="vertical" >
         <ImageView
@@ -130,21 +129,18 @@
             android:layout_marginRight="2dp"
     		android:layout_gravity="center" 
 			android:scaleType="fitCenter"		    		    
-            android:visibility="visible"
             android:src="@drawable/spinner_black_48"/>	    
 	    <TextView
 	        android:id="@+id/textViewTip_Grap1"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"	        
-            android:visibility="visible"	        
+            android:layout_gravity="center_horizontal"	                
 	        android:text="Grap.1"/>
 	        
         <ImageView
             android:id="@+id/imageView_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible"
     		android:layout_gravity="center" 
 			android:scaleType="fitCenter"		    
             android:src="@drawable/spinner_black_48"/>	
@@ -152,7 +148,6 @@
 	        android:id="@+id/textViewTip_Grap2"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-            android:visibility="visible"
             android:layout_gravity="center_horizontal"
 	        android:text="Grap.2"/> 
 	</LinearLayout>  

@@ -27,9 +27,7 @@ public class CommitedStatus extends PaperStatus{
 	@Override
 	public void onFilterClick(ListView listView,
 			PaperViewAdapter fullAdapter) {
-		mStatusOwner.findViewById(R.id.tableInput).setVisibility(View.GONE);
-		mStatusOwner.findViewById(R.id.tableReference).setVisibility(View.GONE);
-		
+	
 		mFilterLevel = (mFilterLevel + 1) % 3;
 		if (mFilterLevel == 0){
 			listView.setAdapter(fullAdapter);				
@@ -48,6 +46,11 @@ public class CommitedStatus extends PaperStatus{
 		mStatusOwner.showToast(R.string.CommitTips);		
 	}
 
+	@Override
+	public void doGettingItemView(ItemViewHolder holder, Integer id, int fontsize){
+		holder.doGettingItemViews(id, fontsize);
+	}	
+	
 	@Override
 	protected void LoadOptionIcon(Context context) {
         mMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_bullet_key_permission);        
@@ -121,7 +124,7 @@ public class CommitedStatus extends PaperStatus{
 
 	@Override
 	public void onBlankInputShow(Integer questionID, Answer answer) {
-		mStatusOwner.ShowAnswerContent(questionID);		
-		mStatusOwner.ShowReferenceContent(questionID);
+//		mStatusOwner.ShowAnswerContent(questionID);		
+//		mStatusOwner.ShowReferenceContent(questionID);
 	}	
 }

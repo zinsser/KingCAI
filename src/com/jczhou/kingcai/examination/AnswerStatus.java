@@ -36,6 +36,15 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 		mStatusOwner.ShowDoneInfo(mListFirst.size());
 		startTimeTicker(true);
 	}
+	
+	public void doGettingItemView(ItemViewHolder holder, Integer id, int fontsize){
+		holder.doGettingItemViews(id, fontsize, new ItemViewHolder.onSubViewClickListener() {
+			
+			public void onViewClick(Integer questionID, Answer answer) {
+				PostClicked(questionID, answer);
+			}
+		});
+	}
 
     private void startTimeTicker(final boolean bCountDown){
     	//TODO:倒计时器可以顺利执行Finished，但如何停止累加计时器？
@@ -71,8 +80,6 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	
 	@Override
 	public void onFilterClick(ListView listView, PaperViewAdapter fullAdapter) {
-		mStatusOwner.findViewById(R.id.tableInput).setVisibility(View.GONE);
-		mStatusOwner.findViewById(R.id.tableReference).setVisibility(View.GONE);
 		
 		mFilterLevel = (mFilterLevel + 1) % 3;
 		if (mFilterLevel == 0){
@@ -216,7 +223,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 
 	@Override
 	public void onBlankInputShow(Integer questionID, Answer answer){
-		mStatusOwner.ShowAnswerContent(questionID);
+//		mStatusOwner.ShowAnswerContent(questionID);
 	}
 
 

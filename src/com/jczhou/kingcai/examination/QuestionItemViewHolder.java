@@ -1,12 +1,13 @@
 package com.jczhou.kingcai.examination;
 
-import com.jczhou.kingcai.R;
-
-import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+
+import com.jczhou.kingcai.R;
 
 public class QuestionItemViewHolder extends ItemViewHolder{
 	protected ImageView mMark = null;
@@ -15,14 +16,16 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	protected LinearLayout mLinearLayoutBlanks = null;
 	protected ImageView mImageView_1 = null;
 	protected ImageView mImageView_2 = null;
-	public QuestionItemViewHolder(Context context, View rawView,
-    		QuestionManager questionMgr, AnswerManager answerMgr) {
-		super(context, rawView, questionMgr, answerMgr);
+	
+	protected Bitmap mMarkIcon = null;
+    protected Bitmap mUnMarkIcon = null;	
+    
+	public QuestionItemViewHolder(PaperActivity hostActivity, View rawView,
+    		QuestionManager questionMgr) {
+		super(hostActivity, rawView, questionMgr);
 		
 	    mMark = (ImageView) rawView.findViewById(R.id.imageViewMarker);
 	    mRatingBarHardness = (RatingBar)rawView.findViewById(R.id.ratingBarHardness);
-	    
-	    mMark.setOnClickListener(mPanelListener);
 	    
 	    mLinearLayoutOptions = (LinearLayout)rawView.findViewById(R.id.linearLayoutOption);
 	    mLinearLayoutBlanks = (LinearLayout)rawView.findViewById(R.id.linearLayoutBlanks);
@@ -32,8 +35,48 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	}
 	
 	@Override
-    public void doGettingItemView(Integer id, int fontSize){
-    	super.doGettingItemView(id, fontSize);
+    public void doGettingItemViews(Integer id, int fontSize, onSubViewClickListener listener){
+    	super.doGettingItemViews(id, fontSize);
+    	doLayoutSubViews();
+
+    	mMarkIcon = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.mark_icon);
+    	mUnMarkIcon  = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.unmark_icon);
+    	
+    	mMark.setTag(id);
+    	
+		Answer answer = mHostActivity.getAnswerManager().GetAnswer(id);
+		mMark.setImageBitmap(mUnMarkIcon);
+		if (answer != null && answer.mIsMark){
+			mMark.setImageBitmap(mMarkIcon);	
+		}
+
+	    mMark.setOnClickListener(new PanelClickListener(this, listener));	    
+	}
+
+	@Override
+    public void doGettingItemViews(Integer id, int fontSize){
+    	super.doGettingItemViews(id, fontSize);
+    	doLayoutSubViews();
+    	
+		AnswerManager answerMgr = mHostActivity.getAnswerManager();
+		
+    	if (mRatingBarHardness != null){
+    		mRatingBarHardness.setVisibility(View.VISIBLE);
+    	}
+    	
+    	mMarkIcon = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.ic_bullet_key_permission);
+    	mUnMarkIcon  = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.ic_delete);
+    	
+    	mMark.setEnabled(false);
+    	Answer answer = answerMgr.GetAnswer(id);
+    	if (answer != null && answer.IsCorrect()){
+	    	mMark.setImageBitmap(mMarkIcon);
+	    }else if (answer != null && !answer.IsCorrect()){
+	        mMark.setImageBitmap(mUnMarkIcon);
+	    }
+    }
+
+	private void doLayoutSubViews(){
     	if (mLinearLayoutAnswerArea != null){
     		mLinearLayoutAnswerArea.setVisibility(View.VISIBLE);
     	}
@@ -44,13 +87,31 @@ public class QuestionItemViewHolder extends ItemViewHolder{
     	
     	if (mLinearLayoutBlanks != null){
     		mLinearLayoutBlanks.setVisibility(View.GONE);
+    	} 	
+    	
+    	if (mRatingBarHardness != null){
+    		mRatingBarHardness.setVisibility(View.GONE);
     	}
-    }
+	}
 	
-	private View.OnClickListener mPanelListener = new View.OnClickListener() {
+	private class PanelClickListener implements  View.OnClickListener{
+		private QuestionItemViewHolder mHost = null;
+		private onSubViewClickListener mSubViewListener = null;
+
+		public PanelClickListener(QuestionItemViewHolder host, onSubViewClickListener l){
+			mHost   = host;
+			mSubViewListener = l;
+		}
 		
 		public void onClick(View v) {
-	    	//TODO:			
+			if (v.getId() == R.id.imageViewMarker){
+				ImageView imgMask = (ImageView)v;
+				Integer qId = (Integer)imgMask.getTag();
+				Answer answer = mHost.mHostActivity.getAnswerManager().GetAnswer(qId);
+				answer.mIsMark = !answer.mIsMark;
+				imgMask.setImageBitmap(answer.mIsMark ? mMarkIcon : mUnMarkIcon);
+				mSubViewListener.onViewClick(qId, answer);
+			}
 		}
-	}; 
+	}
 }
