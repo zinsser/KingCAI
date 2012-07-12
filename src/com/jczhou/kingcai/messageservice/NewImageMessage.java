@@ -37,18 +37,6 @@ public class NewImageMessage  extends ActiveMessage{
 
 	@Override
 	public void Execute(EventProcessListener l) {
-		if (false){
-			String pack = super.FromPack(mMsgPack);		
-			//[id]xxx[length]xxx[data]xxxx
-			int lenPos = pack.indexOf("[length]");
-			Integer id = Integer.parseInt(pack.substring("[id]".length(), lenPos));
-			int dataPos = pack.indexOf("[data]");
-			Integer len = Integer.parseInt(pack.substring(lenPos + "[length]".length(), dataPos));
-	//		ByteBuffer dataBuf = ByteBuffer.allocate(len);
-	//		String rawData = pack.substring(dataPos+"[data]".length(), pack.length());
-	//		dataBuf.put(rawData.getBytes());
-			l.onNewImage(id, mImageBuffer);
-		}
 		l.onNewImage(0, mImageBuffer);
 	}
 }

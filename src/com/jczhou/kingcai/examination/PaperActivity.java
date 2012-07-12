@@ -135,11 +135,13 @@ public class PaperActivity  extends ComunicableActivity {
     	super.onSaveInstanceState(outState);
 //TODO:   		finish();	
     }
+    
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState){
     	super.onRestoreInstanceState(savedInstanceState);
 //TODO:    	GetConfig();
     }
+    
 	public void SaveConfig(boolean bStatus){
 		//–¥»Î
 		SharedPreferences sp = getSharedPreferences(s_ConfigFileName, 0);
@@ -271,7 +273,6 @@ public class PaperActivity  extends ComunicableActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
     	menu.add(GROUP_NORMAL, MENU_FONT_SIZE, 0, R.string.FontSize);
-//    	menu.add(GROUP_NORMAL, MENU_COLOR_SCHEME, 0, R.string.ColorScheme);
     	menu.add(GROUP_NORMAL, MENU_WIFI_MANAGER, 0, R.string.ManagerWifi);
     	menu.add(GROUP_NORMAL, MENU_ABOUT, 0, R.string.About);
     	
@@ -656,7 +657,7 @@ public class PaperActivity  extends ComunicableActivity {
 	
 	public void ChangeFilterButtonText(int resID){
 		((Button)findViewById(R.id.btnFilter)).setText(resID);
-	}	
+	}
 	/*		
 	public void ShowAnswerContent(Integer id){
 		Parcel answerContent = mAnswerMgr.GetAnswer(id).GetAnswer();

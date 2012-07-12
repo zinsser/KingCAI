@@ -27,7 +27,9 @@ public class QuestionManager {
         	if (i == 0 || i == 6){
         		mQuestions.put(i, new QuestionInfo(0, null, Questions.sQuestions[i]));        		
         	}else if (i == 2){
-        		mQuestions.put(i, new QuestionInfo(3, "#123#abc#def#", Questions.sQuestions[i]));        		
+        		mQuestions.put(i, new QuestionInfo(3, "#123#abc#", Questions.sQuestions[i]));        		
+        	}else if (i == 3){
+        		mQuestions.put(i, new QuestionInfo(3, "#123#", Questions.sQuestions[i]));        		
         	}else{
         		mQuestions.put(i, new QuestionInfo(1, "#A#", Questions.sQuestions[i]));        		
         	}

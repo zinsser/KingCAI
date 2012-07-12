@@ -31,8 +31,8 @@
         <activity
             android:name=".examination.PaperActivity" 
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
-            android:configChanges="orientation|keyboardHidden">
-         <!--    android:screenOrientation="portrait" > -->
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
          </activity>	
         <activity
             android:name=".AppEnumActivity"
