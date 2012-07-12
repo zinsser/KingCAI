@@ -60,9 +60,9 @@ public class QuestionManager {
 
 	public void AddQuestionImage(Integer id, Bitmap bmp){
 		mQuestions.get(id).AddGraphic(bmp);
-//		for (QuestionListener l : mListeners){
-//			l.OnImageReady(bmp);
-//		}			
+		for (QuestionListener l : mListeners){
+			l.OnImageReady(bmp);
+		}
 	}
 	
 	public  ArrayList<Integer> GetIDs(){
