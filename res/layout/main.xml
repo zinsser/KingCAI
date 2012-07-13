@@ -73,7 +73,8 @@
         android:layout_height="0dip"
         android:layout_weight="0.72"
 		android:divider="#DCDCDC"
-    	android:background="#DCDCDC" 		
+    	android:background="#DCDCDC"
+    	android:descendantFocusability="beforeDescendants"
         android:dividerHeight="2dip">
 
     </ListView>

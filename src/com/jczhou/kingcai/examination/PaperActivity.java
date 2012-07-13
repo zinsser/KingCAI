@@ -23,12 +23,17 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -95,8 +100,11 @@ public class PaperActivity  extends ComunicableActivity {
 		
         mListView = (ListView)findViewById(R.id.lstQuestions);
         mFullAdapter = new PaperViewAdapter(this, mQuestionMgr, mAnswerMgr);
-        mListView.setOnScrollListener(new QuestionListScrollListener());
-		mListView.setCacheColorHint(0);
+        QuestionListScrollListener listener = new QuestionListScrollListener();
+        mListView.setOnScrollListener(listener);
+        mListView.setOnItemSelectedListener(listener);
+
+        mListView.setCacheColorHint(0);
         mListView.setAdapter(mFullAdapter);
         
         mBtnCommit = (Button)findViewById(R.id.btnCommit);
@@ -570,7 +578,7 @@ public class PaperActivity  extends ComunicableActivity {
 		} 		
 	}
    */
-	public class QuestionListScrollListener implements OnScrollListener {
+	public class QuestionListScrollListener implements OnScrollListener, OnItemSelectedListener {
 
 		public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
 		}
@@ -578,6 +586,29 @@ public class PaperActivity  extends ComunicableActivity {
 		public void onScrollStateChanged(AbsListView arg0, int arg1) {
 
 			HiddenKeyBoard(findViewById(R.id.txtGoto));
+		}
+
+		public void onItemSelected(AdapterView<?> arg0, View arg1, int position,
+				long arg3) {
+			if (mListView.getAdapter().getItemViewType(position) == QuestionInfo.QUESTION_TYPE_MULTIBLANK
+					||mListView.getAdapter().getItemViewType(position) == QuestionInfo.QUESTION_TYPE_BLANK){
+				mListView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+				arg1.performClick();
+			}else{
+		        if (!mListView.isFocused())
+		        {
+		            // listView.setItemsCanFocus(false);
+
+		            // Use beforeDescendants so that the EditText doesn't re-take focus
+		        	mListView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+		        	mListView.requestFocus();
+		        }
+		    }
+		}
+
+		public void onNothingSelected(AdapterView<?> arg0) {
+			// TODO Auto-generated method stub
+			
 		}
 		
 	}
@@ -587,7 +618,7 @@ public class PaperActivity  extends ComunicableActivity {
 		//按下键盘上返回按钮
 		showToast("keyCode:"+keyCode);
 		if(keyCode == KeyEvent.KEYCODE_BACK ){
-			new AlertDialog.Builder(this)
+			AlertDialog dlg = new AlertDialog.Builder(this)
 				.setTitle(R.string.ExitPromptTitle)
 				.setMessage(R.string.ExitPromptMsg)
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -598,7 +629,9 @@ public class PaperActivity  extends ComunicableActivity {
 				})
 				.setNegativeButton(android.R.string.cancel, null)
 				.setCancelable(false)
-				.show();
+				.create();
+			dlg.show();
+			dlg.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);			
 			return true;
 		}else if (keyCode == KeyEvent.KEYCODE_HOME){
 			showToast("you should commit the paper first then exit");

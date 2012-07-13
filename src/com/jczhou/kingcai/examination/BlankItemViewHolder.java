@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -34,12 +35,20 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
 	
 	@Override
     public void doGettingItemViews(Integer id, int fontSize, onSubViewClickListener listener){
-    	super.doGettingItemViews(id, fontSize, listener);
+		if ((Integer)mLinearLayoutBlanks.getTag() == id) return;
+		super.doGettingItemViews(id, fontSize, listener);
     	doLayoutSubViews();
-
+    	mLinearLayoutBlanks.setTag(id);
 		BlankInputListener inputListener = new BlankInputListener();
 		mEditTextor.setOnEditorActionListener(inputListener);
-		
+		mEditTextor.setOnClickListener(new OnClickListener(){
+
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+	            mEditTextor.requestFocus();
+			}
+			
+		});
     	if (mQuestionMgr.GetQuestionItem(id).GetType() == QuestionInfo.QUESTION_TYPE_MULTIBLANK){
     		String tipQuestion = String.format(mHostActivity.getResources().getString(R.string.CurrentBlankQuestion), id, 1);
     		mEditTextor.setHint(tipQuestion);
@@ -54,8 +63,16 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     	    	editText.setHint(tipQuestion);
     	    	editText.setTag(new TagParam(id, i + 1));
     	    	editText.setOnEditorActionListener(inputListener);
-        		mEditTextor.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+    	    	editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         		mLinearLayoutBlanks.addView(editText);
+        		editText.setOnClickListener(new OnClickListener(){
+
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						((EditText)v).requestFocus();
+					}
+        			
+        		});
     		}
     		((EditText)mLinearLayoutBlanks.getChildAt(i-1)).setImeOptions(EditorInfo.IME_ACTION_NEXT);
     	}else{
