@@ -57,7 +57,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     	    	editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
     	    	editText.setSingleLine(false);
     	    	editText.setMaxLines(3);
-
+    	    	editText.setBackgroundResource(R.drawable.bak_input_bg);
     	    	mLinearLayoutBlanks.addView(editText);  	    	
     		}
     		((EditText)mLinearLayoutBlanks.getChildAt(i-1)).setImeOptions(EditorInfo.IME_ACTION_NEXT);
@@ -90,6 +90,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
 	    		TextView refText = new TextView(mHostActivity);
 	    		refText.setText(mMultiBlankRefAnswer.get(1));
 	    		refText.setPadding(10, 0, 0, 0);
+	    		refText.setTextColor(okTextColor);
 		    	mLinearLayoutBlanks.addView(refText);    		
     		}
 	    	Parcel parcelValues  = mHostActivity.getAnswerManager().GetAnswer(id).GetRefAnswer();
@@ -102,6 +103,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     	    	editText.setSingleLine(false);
     	    	editText.setMaxLines(3);
     	    	editText.setText(mMultiBlankAnswer.get(i+1));
+    	    	editText.setBackgroundResource(R.drawable.bak_input_bg);
     	    	mLinearLayoutBlanks.addView(editText);
     	    	if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
     	    			&& mMultiBlankAnswer.get(i+1) != null && mMultiBlankRefAnswer.get(i+1) != null

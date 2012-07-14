@@ -47,7 +47,7 @@
             </intent-filter>                            
         </service>
         <receiver android:enabled="true" 
-            android:name="com.jczhou.kingcai.BootCompleteReceiver" 
+            android:name=".BootCompleteReceiver" 
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
 			<intent-filter> 
         		<action android:name="android.intent.action.BOOT_COMPLETED" /> 

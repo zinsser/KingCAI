@@ -2,9 +2,7 @@ package com.jczhou.kingcai.examination;
 
 import java.util.ArrayList;
 
-import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.text.Html;
 import android.widget.ListView;
 
@@ -19,14 +17,11 @@ public abstract class PaperStatus{
 	//0:All;  1:correct;   2:incorrect
 	protected int mFilterLevel = 0;  	 	
 
-	protected Bitmap mMarkIcon = null;
-    protected Bitmap mUnMarkIcon = null;	
 	protected PaperActivity mStatusOwner = null;
 	
 	protected PaperStatus(PaperActivity owner){
 		mStatusOwner = owner;
 		InitStatus();
-		LoadOptionIcon(mStatusOwner);
 	}
 
 	protected String MakeMixString(int iField, int resid){
@@ -38,16 +33,11 @@ public abstract class PaperStatus{
 		mStatusOwner.ChangeFilterButtonText(R.string.AllQuestions);
 		mFilterLevel = 0;
 	}
-
-	public abstract void onBlankInputShow(Integer questinID, Answer answer);
 	
 	public abstract void onCommitClick();
 	public abstract void onFilterClick(ListView listView, PaperViewAdapter fullAdapter);
 
 	public abstract void doGettingItemView(ItemViewHolder holder, Integer id, int fontsize);	
-
-	public abstract void onBlankInputDone(Integer questionID, final Answer answer);
 	
-	protected abstract void LoadOptionIcon(Context context);
 	protected abstract void InitStatus();
 }

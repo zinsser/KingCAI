@@ -1,7 +1,5 @@
 package com.jczhou.kingcai.examination;
 
-import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.widget.ListView;
 
 import com.jczhou.kingcai.R;
@@ -46,21 +44,5 @@ public class CommitedStatus extends PaperStatus{
 	@Override
 	public void doGettingItemView(ItemViewHolder holder, Integer id, int fontsize){
 		holder.doGettingItemViews(id, fontsize);
-	}	
-	
-	@Override
-	protected void LoadOptionIcon(Context context) {
-        mMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_bullet_key_permission);        
-        mUnMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_delete);
-	}
-
-	@Override
-	public void onBlankInputDone(Integer questionID, final Answer answer) {
-	}
-
-	@Override
-	public void onBlankInputShow(Integer questionID, Answer answer) {
-//		mStatusOwner.ShowAnswerContent(questionID);		
-//		mStatusOwner.ShowReferenceContent(questionID);
 	}	
 }

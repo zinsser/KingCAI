@@ -376,13 +376,11 @@ public class PaperActivity  extends ComunicableActivity {
 
 
 		public void onPaperTitleReceived(String title) {
-			Log.d("PaperActivity", title);
 			mQuestionMgr.AddQuestion(new QuestionInfo(QuestionInfo.QUESTION_TYPE_TITLE, null, title));
 		}
 
 
 		public void onNewQuestion(String answer, int type, String content) {
-			Log.d("PaperActivity", content);
 			mQuestionMgr.AddQuestion(new QuestionInfo(type, answer, content));
 		}
 
@@ -480,6 +478,7 @@ public class PaperActivity  extends ComunicableActivity {
 	}	
 
 	public void CommitAnswers(){
+		HiddenKeyBoard(findViewById(R.id.txtGoto));
 		mServiceChannel.sendMessage(new AnswerMessage(mAnswerMgr.toString()), 0);
 	}
 	

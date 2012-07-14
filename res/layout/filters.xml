@@ -88,7 +88,8 @@
 		            android:layout_height="match_parent" 
 		            android:maxLines="3"
 		            android:textAppearance="?android:attr/textAppearanceMedium"
-		            android:textColor="#000000" />
+		            android:textColor="#000000" 
+		            android:background="@drawable/bak_input_bg"/>
 		    </LinearLayout>
 		    <LinearLayout
 	            android:id="@+id/linearLayoutOtherInfo"

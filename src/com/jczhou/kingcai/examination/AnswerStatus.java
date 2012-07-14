@@ -4,10 +4,8 @@ package com.jczhou.kingcai.examination;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.CountDownTimer;
 import android.widget.ListView;
 
@@ -133,23 +131,6 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 			}
 		}
 	}
-
-	@Override
-	protected void LoadOptionIcon(Context context) {
-        mMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.mark_icon);        
-        mUnMarkIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.unmark_icon);
-	}
-
-	@Override
-	public void onBlankInputDone(Integer questionID, final Answer answer) {
-		PostClicked(questionID, answer);
-	}
-
-	@Override
-	public void onBlankInputShow(Integer questionID, Answer answer){
-//		mStatusOwner.ShowAnswerContent(questionID);
-	}
-
 
 	public void OnQuestionArrayChanged(ArrayList<Integer> ids) {
 		mStatusOwner.FetchUndoneList(mListFirst);
