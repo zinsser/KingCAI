@@ -26,10 +26,15 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
    	}
 	
 	@Override
-	protected void InitStatus() {
-		mStatusOwner.FetchUndoneList(mListFirst);
+	public void EnterStatus() {
+    	FetchUndoneList(mListFirst);
 		mStatusOwner.ShowDoneInfo(mListFirst.size());
 		startTimeTicker(true);
+	}
+	
+	@Override
+	public void LeaveStatus(){
+		mTickTimer.cancel();
 	}
 	
 	public void doGettingItemView(ItemViewHolder holder, Integer id, int fontsize){
@@ -42,7 +47,6 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	}
 
     private void startTimeTicker(final boolean bCountDown){
-    	//TODO:倒计时器可以顺利执行Finished，但如何停止累加计时器？
     	long TotalTickTime = bCountDown ? 2700000 : 86400000;
     	mTickTimer = new CountDownTimer(TotalTickTime, 1000) {
 			private String rawtitle = mStatusOwner.mTextViewTitle.getText().toString();
@@ -95,12 +99,8 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 			.setTitle(R.string.CommittingTitle)
 			.setMessage(R.string.CommitPromptMsg)
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				private CountDownTimer tickTimer = mTickTimer;
 
 				public void onClick(DialogInterface dialog, int which) {
-					if (tickTimer != null){
-						tickTimer.cancel();
-					}
 					mStatusOwner.SwitchPaperStatus();
 				}
 			})
@@ -133,10 +133,17 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	}
 
 	public void OnQuestionArrayChanged(ArrayList<Integer> ids) {
-		mStatusOwner.FetchUndoneList(mListFirst);
+		FetchUndoneList(mListFirst);
 		mStatusOwner.ShowDoneInfo(mListFirst.size());
 	}
 
+	private void FetchUndoneList(ArrayList<Integer> undonelist){
+    	for (Integer id : mQuestionMgr.GetIDs()){
+    		if (!mQuestionMgr.GetQuestionItem(id).IsPaperTitle()){
+    			mListFirst.add(id);
+    		}
+    	}		
+	}
 
 	public void OnAddQuestion(Integer id) {
 		if (!mQuestionMgr.GetQuestionItem(id).IsPaperTitle()){
@@ -152,7 +159,6 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	}
 
 	public void OnImageReady(Bitmap bmp) {
-		// TODO Auto-generated method stub
 		
 	}	
 }

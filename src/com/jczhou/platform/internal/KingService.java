@@ -30,9 +30,11 @@ public class KingService extends Service{
     private Thread mUDPReceiver = null;
     private Thread mMulticastReceiver = null;
     private Thread mImageReceiver = null;
+    private TCPSocketReceiver mImageReceiverRoutine = null;
     private Thread mTCPThread = null;
     private TCPSocketReceiver mReceiverRoutine = null;
     private Socket mTCPTextChannelSocket = null;
+
     private String mServerIP = null;
     
     @Override  
@@ -41,7 +43,8 @@ public class KingService extends Service{
     	mUDPReceiver = new Thread(new UDPSocketReceiver(this, KingCAIConfig.mUDPPort));
     	mReceiverRoutine = new TCPSocketReceiver(this, KingCAIConfig.mTextReceivePort);
     	mTCPThread = new Thread(mReceiverRoutine);    	
-		mImageReceiver = new Thread(new TCPSocketReceiver(this, KingCAIConfig.mImageReceivePort));
+    	mImageReceiverRoutine = new TCPSocketReceiver(this, KingCAIConfig.mImageReceivePort);
+    	mImageReceiver = new Thread(mImageReceiverRoutine);
   
         super.onCreate();  
     }  
@@ -82,7 +85,7 @@ public class KingService extends Service{
 //			mMulticastReceiver.stop();
 		}
 		if (mImageReceiver != null && mImageReceiver.isAlive()){
-//			mImageReceiver.stop();
+			mImageReceiverRoutine.stopRunner();
 		}
         super.onDestroy();
     } 

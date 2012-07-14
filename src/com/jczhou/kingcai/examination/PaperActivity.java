@@ -91,10 +91,9 @@ public class PaperActivity  extends ComunicableActivity {
 		mTextViewTitle = (TextView)findViewById(R.id.textViewTitle);        
 		ParseIntentExtraParam();
 		
-
-		
 		mAnswerMgr = new AnswerManager(mQuestionMgr);
 		mPaperStatus = new AnswerStatus(this, mQuestionMgr);
+		mPaperStatus.EnterStatus();
 		
         mListView = (ListView)findViewById(R.id.lstQuestions);
         mFullAdapter = new PaperViewAdapter(this, mQuestionMgr, mAnswerMgr);
@@ -119,34 +118,22 @@ public class PaperActivity  extends ComunicableActivity {
     @Override
     public void onDestroy (){
     	mServiceChannel.sendMessage(new LogoutRequestMessage(), 0);
+    	mPaperStatus.LeaveStatus();
     	mPaperStatus = null;
     	super.onDestroy();        
     }
-    
     @Override
-    public void onResume(){
-   		super.onResume();
+    public void onStart(){
+    	super.onStart();
    		GetConfig();
-   		ResetAdapterFontSize(mFullAdapter);
+   		ResetAdapterFontSize(mFullAdapter);    	
     }
 
     @Override
-    public void onPause(){
+    public void onStop(){
     	SaveConfig(true);
-   		super.onPause();    	
+   		super.onStop();    	
     }    
-
-    @Override
-    public void onSaveInstanceState(Bundle outState){
-    	super.onSaveInstanceState(outState);
-//TODO:   		finish();	
-    }
-    
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState){
-    	super.onRestoreInstanceState(savedInstanceState);
-//TODO:    	GetConfig();
-    }
     
 	public void SaveConfig(boolean bStatus){
 		//–¥»Î
@@ -484,8 +471,10 @@ public class PaperActivity  extends ComunicableActivity {
 	
 	public void SwitchPaperStatus(){
 		CommitAnswers();
+		mPaperStatus.LeaveStatus();
 		mPaperStatus = null;
 		mPaperStatus = new CommitedStatus(this);
+		mPaperStatus.EnterStatus();
 	}
 	
 	public void ShowDoneInfo(int undoneCount){
@@ -501,15 +490,7 @@ public class PaperActivity  extends ComunicableActivity {
 		mListView.setAdapter(mFullAdapter);
 		ChangeFilterButtonText(R.string.AllQuestions);
 	}	
-	 
-	public void FetchUndoneList(ArrayList<Integer> undonelist){
-    	for (Integer id : mQuestionMgr.GetIDs()){
-    		if (!mQuestionMgr.GetQuestionItem(id).IsPaperTitle()){
-    			undonelist.add(id);
-    		}
-    	}
-	}
-	
+	 	
 	public void InitUncorrectList(ArrayList<Integer> correctList, 
 									ArrayList<Integer> uncorrectList){
 		Answer aAnswer = null;

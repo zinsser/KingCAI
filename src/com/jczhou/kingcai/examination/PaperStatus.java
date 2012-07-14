@@ -21,7 +21,7 @@ public abstract class PaperStatus{
 	
 	protected PaperStatus(PaperActivity owner){
 		mStatusOwner = owner;
-		InitStatus();
+//		InitStatus();
 	}
 
 	protected String MakeMixString(int iField, int resid){
@@ -39,5 +39,6 @@ public abstract class PaperStatus{
 
 	public abstract void doGettingItemView(ItemViewHolder holder, Integer id, int fontsize);	
 	
-	protected abstract void InitStatus();
+	public abstract void EnterStatus();
+	public abstract void LeaveStatus();
 }

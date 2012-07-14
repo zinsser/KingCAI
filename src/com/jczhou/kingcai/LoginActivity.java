@@ -102,7 +102,7 @@ public class LoginActivity  extends ComunicableActivity  {
         	
         });
         mTextViewBaseInfo = (TextView)findViewById(R.id.textViewBaseInfo);
-        
+        mTextViewBaseInfo.setText(R.string.NoInfo);
         cleanForm();
     }
 

@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Parcel;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,7 +40,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
 
 		BlankInputListener inputListener = new BlankInputListener();
 		mEditTextor.setOnEditorActionListener(inputListener);
-		
+		mEditTextor.setOnFocusChangeListener(inputListener);
 		if (mQuestionMgr.GetQuestionItem(id).GetType() == QuestionInfo.QUESTION_TYPE_MULTIBLANK){
     		String tipQuestion = String.format(mHostActivity.getResources().getString(R.string.CurrentBlankQuestion), id, 1);
     		mEditTextor.setHint(tipQuestion);
@@ -57,6 +58,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     	    	editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
     	    	editText.setSingleLine(false);
     	    	editText.setMaxLines(3);
+    	    	editText.setOnFocusChangeListener(inputListener);
     	    	editText.setBackgroundResource(R.drawable.bak_input_bg);
     	    	mLinearLayoutBlanks.addView(editText);  	    	
     		}
@@ -144,18 +146,20 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     private HashMap<Integer, String> mMultiBlankAnswer = new HashMap<Integer, String>();
     private HashMap<Integer, String> mMultiBlankRefAnswer = new HashMap<Integer, String>();
     
-    private class BlankInputListener implements OnEditorActionListener{
+    private class BlankInputListener implements OnEditorActionListener, OnFocusChangeListener{
 		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 			TagParam param = (TagParam)v.getTag();
 			Integer qId = param.mId;
 			Integer subId = param.mSubId;
 			
-			if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED 
-					|| actionId == EditorInfo.IME_ACTION_DONE){
+			if ((actionId == EditorInfo.IME_ACTION_UNSPECIFIED 
+					|| actionId == EditorInfo.IME_ACTION_DONE)
+					&& event.equals(KeyEvent.ACTION_DOWN)){
 				mMultiBlankAnswer.put(subId, new String(v.getText().toString()));				
-				doSaveToAnswer(qId);
+				doSaveAnswers(qId);
 				return true;
-			}else if (actionId == EditorInfo.IME_ACTION_NEXT){
+			}else if (actionId == EditorInfo.IME_ACTION_NEXT
+					&& event.equals(KeyEvent.ACTION_DOWN)){
 				QuestionInfo info = mQuestionMgr.GetQuestionItem(qId);
 				if (info != null && info.GetType() == QuestionInfo.QUESTION_TYPE_MULTIBLANK){
 					mMultiBlankAnswer.put(subId, new String(v.getText().toString()));					
@@ -163,10 +167,19 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
 				return true;
 			}
 			return false;
+		}
+		public void onFocusChange(View v, boolean hasFocus) {
+			if (!hasFocus){
+				TagParam param = (TagParam)((EditText)v).getTag();
+				Integer qId = param.mId;
+				Integer subId = param.mSubId;
+				mMultiBlankAnswer.put(subId, new String(((EditText)v).getText().toString()));				
+				doSaveAnswers(qId);				
+			}
 		}	
     }
 
-	private void doSaveToAnswer(Integer id){
+	private void doSaveAnswers(Integer id){
 		Parcel answer = Parcel.obtain();
 		answer.writeInt(mMultiBlankAnswer.size());
 		for (Iterator<Integer> iter = mMultiBlankAnswer.keySet().iterator(); 

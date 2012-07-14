@@ -12,13 +12,18 @@ public class CommitedStatus extends PaperStatus{
 	}
 	
 	@Override
-	protected void InitStatus() {
+	public void EnterStatus() {
 		mStatusOwner.InitUncorrectList(mListFirst, mListSecond);
 
 		//TODO:打开或注释此行代码可以实现立即显示正确与否
 		mStatusOwner.ShowCorrectInfo(mListFirst.size());
 	}		
 
+	@Override
+	public void LeaveStatus(){
+		
+	}
+	
 	@Override
 	public void onFilterClick(ListView listView,
 			PaperViewAdapter fullAdapter) {

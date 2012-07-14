@@ -45,5 +45,6 @@
 	<string name="BaseInfo">Base Information</string>	
 	<string name="About">About</string>		
 	<string name="AboutDetail">Software Name:\n %1$s \nVersion:\n %2$s \nAndroid Version:\n %3$s \nDistribute Date:\n %4$s \n</string>	
-	<string name="CompanyName">Company Name</string>		
+	<string name="CompanyName">Company Name</string>
+	<string name="NoInfo">你尚未登录系统进行学习！\n如果不具备网络学习环境，建议你离线登录。</string>			
 </resources>
