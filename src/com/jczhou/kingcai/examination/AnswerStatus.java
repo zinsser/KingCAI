@@ -47,7 +47,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
     	//TODO:倒计时器可以顺利执行Finished，但如何停止累加计时器？
     	long TotalTickTime = bCountDown ? 2700000 : 86400000;
     	mTickTimer = new CountDownTimer(TotalTickTime, 1000) {
-			private String rawtitle = mStatusOwner.getTitle().toString();
+			private String rawtitle = mStatusOwner.mTextViewTitle.getText().toString();
 			private long mTotalTicks = 0;
 		
 			public void onTick(long millis) {
@@ -58,11 +58,11 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 					mStatusOwner.SavePaper();
 					mStatusOwner.CommitAnswers();
 				}
-				mStatusOwner.setTitle(rawtitle + "  - " + SecondsToString(mTotalTicks));
+				mStatusOwner.mTextViewTitle.setText(rawtitle + "  - " + SecondsToString(mTotalTicks));
 			}
 
 			public void onFinish() {
-				mStatusOwner.setTitle(rawtitle + "  - " + SecondsToString(mTotalTicks));
+				mStatusOwner.mTextViewTitle.setText(rawtitle + "  - " + SecondsToString(mTotalTicks));
 			}
 			
 			private String SecondsToString(long seconds){

@@ -80,7 +80,7 @@ public abstract class ComunicableActivity extends Activity{
     
     public void showToast(String msg){
     	Toast toast = Toast.makeText(this, msg, 2000); 
-    	toast.setGravity(Gravity.CENTER, 0, -80);
+    	toast.setGravity(Gravity.CENTER, 0, -150);
     	toast.show();
     }
 

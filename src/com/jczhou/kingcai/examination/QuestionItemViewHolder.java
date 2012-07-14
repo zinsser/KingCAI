@@ -60,7 +60,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	
 	@Override
     public void doGettingItemViews(Integer id, int fontSize, onSubViewClickListener listener){
-    	super.doGettingItemViews(id, fontSize);
+    	super.doGettingItemViews(id, fontSize, listener);
     	doLayoutSubViews(id);
 
     	mMarkIcon = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.mark_icon);

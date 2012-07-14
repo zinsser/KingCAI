@@ -74,6 +74,7 @@ public class PaperActivity  extends ComunicableActivity {
 	private final static int s_PaperIdx_Reference = 3;
 	private final static int s_PaperIdx_Answer = 4;
 	
+	public TextView mTextViewTitle = null;
 	private ListView mListView = null;
 	private Button mBtnCommit = null;
 	private Button mBtnFilter = null;
@@ -92,17 +93,19 @@ public class PaperActivity  extends ComunicableActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
+		mTextViewTitle = (TextView)findViewById(R.id.textViewTitle);        
 		ParseIntentExtraParam();
+		
+
 		
 		mAnswerMgr = new AnswerManager(mQuestionMgr);
 		mPaperStatus = new AnswerStatus(this, mQuestionMgr);
 		
         mListView = (ListView)findViewById(R.id.lstQuestions);
         mFullAdapter = new PaperViewAdapter(this, mQuestionMgr, mAnswerMgr);
-        QuestionListScrollListener listener = new QuestionListScrollListener();
+        QuestionListListener listener = new QuestionListListener();
         mListView.setOnScrollListener(listener);
-        mListView.setOnItemSelectedListener(listener);
+//        mListView.setOnItemSelectedListener(listener);
 
         mListView.setCacheColorHint(0);
         mListView.setAdapter(mFullAdapter);
@@ -256,7 +259,7 @@ public class PaperActivity  extends ComunicableActivity {
 					Integer offset = mQuestionMgr.GetUnQuestionCount(gotoItem);
 					
 					mListView.setAdapter(mFullAdapter);
-//					ChangeFilterButtonText(R.string.AllQuestions);					
+					ChangeFilterButtonText(R.string.AllQuestions);					
 					mPaperStatus.onSearchFinished();
 					
 					if (gotoItem > 0 && gotoItem <= mListView.getCount() - offset){
@@ -406,7 +409,7 @@ public class PaperActivity  extends ComunicableActivity {
         if (getIntent().hasExtra(KingCAIConfig.StudentInfo)){
             Bundle extra = getIntent().getExtras();
             mStudentInfo = extra.getString(KingCAIConfig.StudentInfo);
-        	setTitle(mStudentInfo + "  - " + getTitle());
+            mTextViewTitle.setText(mStudentInfo + "  - " + getTitle());
         }
         
         if (getIntent().hasExtra(KingCAIConfig.ServerIP)){
@@ -430,7 +433,7 @@ public class PaperActivity  extends ComunicableActivity {
     public class FilterClickListener implements View.OnClickListener{
 
 		public void onClick(View v) {
- //   		HiddenKeyBoard(findViewById(R.id.tableInput));
+    		HiddenKeyBoard(findViewById(R.id.txtGoto));
     		mPaperStatus.onFilterClick(mListView, mFullAdapter);
 		}
     }
@@ -578,13 +581,12 @@ public class PaperActivity  extends ComunicableActivity {
 		} 		
 	}
    */
-	public class QuestionListScrollListener implements OnScrollListener, OnItemSelectedListener {
+	public class QuestionListListener implements OnScrollListener, OnItemSelectedListener {
 
 		public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
 		}
 
 		public void onScrollStateChanged(AbsListView arg0, int arg1) {
-
 			HiddenKeyBoard(findViewById(R.id.txtGoto));
 		}
 
@@ -597,8 +599,6 @@ public class PaperActivity  extends ComunicableActivity {
 			}else{
 		        if (!mListView.isFocused())
 		        {
-		            // listView.setItemsCanFocus(false);
-
 		            // Use beforeDescendants so that the EditText doesn't re-take focus
 		        	mListView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
 		        	mListView.requestFocus();
@@ -606,9 +606,7 @@ public class PaperActivity  extends ComunicableActivity {
 		    }
 		}
 
-		public void onNothingSelected(AdapterView<?> arg0) {
-			// TODO Auto-generated method stub
-			
+		public void onNothingSelected(AdapterView<?> arg0) {			
 		}
 		
 	}

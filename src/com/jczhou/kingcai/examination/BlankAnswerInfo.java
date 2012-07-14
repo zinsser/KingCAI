@@ -28,9 +28,13 @@ public class BlankAnswerInfo extends Answer{
 	private void String2Map(String answer, HashMap<Integer, String> destMap){
 		if (answer != null){
 			String[] refs = answer.substring(1).split("#");
-			for (int i = 0; i < refs.length; ++i){
-				destMap.put(i+1, refs[i]);
-			}		
+			if (refs.length > 1){
+				for (int i = 0; i < refs.length; ++i){
+					destMap.put(i+1, refs[i]);
+				}		
+			}else if (refs.length == 1){
+				destMap.put(0, refs[0]);
+			}
 		}
 	}
 	

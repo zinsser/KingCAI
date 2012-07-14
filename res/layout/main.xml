@@ -5,9 +5,17 @@
     android:layout_gravity="center_vertical"
     android:background="#EEEEEE"
     android:orientation="vertical" >
-
+   	<TextView
+		android:id="@+id/textViewTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="6dp"
+        android:layout_gravity="center"
+        android:background="#8B8B8B"
+        android:text="@string/app_name"
+        android:textColor="#EFEFEF"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
     <TableRow
-        android:id="@+id/tableRow4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
