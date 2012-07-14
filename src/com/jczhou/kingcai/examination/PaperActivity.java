@@ -23,17 +23,12 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -445,143 +440,8 @@ public class PaperActivity  extends ComunicableActivity {
 			mPaperStatus.onCommitClick();
 		}
     }
-    /*
-    private HashMap<Integer, String> mMultiBlankAnswer = new HashMap<Integer, String>();    
-    private HashMap<Integer, String> mMultiBlankRefAnswer = new HashMap<Integer, String>();
-   
-    public class BlankInputListener implements TextView.OnEditorActionListener{
 
-		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-			if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED 
-					|| actionId == EditorInfo.IME_ACTION_DONE){
-				if (v.getText().toString().length() != 0){
-					Integer id = (Integer)v.getTag();
-					Integer subID = (Integer)findViewById(R.id.txtCurrent).getTag();
-
-					mMultiBlankAnswer.put(subID, new String(v.getText().toString()));
-
-					DoSaveToAnswer(id);
-
-					mPaperStatus.onBlankInputDone(id, mAnswerMgr.GetAnswer(id));
-				}
-			}else if (actionId == EditorInfo.IME_ACTION_NEXT){
-				EditText et = ((EditText)findViewById(R.id.txtOption));
-				Integer questionID = (Integer)et.getTag();
-				QuestionInfo info = mQuestionMgr.GetQuestionItem(questionID);
-				if (info != null && info.mType == QuestionInfo.QUESTION_TYPE_MULTIBLANK){
-					Integer subID = (Integer)findViewById(R.id.txtCurrent).getTag();
-					mMultiBlankAnswer.put(subID, new String(et.getText().toString()));
-
-					Integer cnt = (Integer)findViewById(R.id.btnDown).getTag();						
-					if (++subID == cnt){
-						((EditText)findViewById(R.id.txtOption)).setImeOptions(EditorInfo.IME_ACTION_DONE);					
-					}
-					findViewById(R.id.txtCurrent).setTag(subID);
-					ChangeCurrentBlankParam(mMultiBlankAnswer.get(subID), subID);					
-				}
-			}
-			return false;
-		}
-		
-		private void DoSaveToAnswer(Integer id){
-			Parcel answer = Parcel.obtain();
-			answer.writeInt(mMultiBlankAnswer.size());
-			for (Iterator<Integer> iter = mMultiBlankAnswer.keySet().iterator(); 
-					iter.hasNext(); ){
-				Integer subid = iter.next();
-				answer.writeInt(subid);
-				answer.writeString(mMultiBlankAnswer.get(subid));			
-			}
-			answer.setDataPosition(0);
-			mAnswerMgr.GetAnswer(id).AddAnswer(answer);
-		}
-    }      
- 
-    public class DownClickListener implements View.OnClickListener{
-
-
-		public void onClick(View v) {
-			Integer questionID = (Integer)(findViewById(R.id.txtOption).getTag());
-			QuestionInfo info = mQuestionMgr.GetQuestionItem(questionID);
-			Integer subID = (Integer)findViewById(R.id.txtCurrent).getTag();			
-			if (info != null && info.mType == QuestionInfo.QUESTION_TYPE_MULTIBLANK
-					&& subID < (Integer)v.getTag()){
-
-				ChangeCurrentBlankParam(mMultiBlankAnswer.get(++subID), subID);
-				if (!mMultiBlankRefAnswer.isEmpty()){
-					((TextView)findViewById(R.id.txtReference)).setText(mMultiBlankRefAnswer.get(subID));
-				}
-				
-				if (subID == (Integer)v.getTag()){
-					((EditText)findViewById(R.id.txtOption)).setImeOptions(EditorInfo.IME_ACTION_DONE);					
-				}else{
-					((EditText)findViewById(R.id.txtOption)).setImeOptions(EditorInfo.IME_ACTION_NEXT);
-				}
-				findViewById(R.id.txtCurrent).setTag(subID);
-			}
-		}
-    }
-    
-    public class UPClickListener implements View.OnClickListener{
-
-		public void onClick(View v) {
-			Integer questionID = (Integer)(findViewById(R.id.txtOption).getTag());
-			QuestionInfo info = mQuestionMgr.GetQuestionItem(questionID);
-			Integer subID = (Integer)findViewById(R.id.txtCurrent).getTag();			
-			if (info != null && info.mType == QuestionInfo.QUESTION_TYPE_MULTIBLANK
-					&& subID > 1){
-				if (--subID == 0){
-					subID = 1;
-				}
-				ChangeCurrentBlankParam(mMultiBlankAnswer.get(subID), subID);
-				if (!mMultiBlankRefAnswer.isEmpty()){
-					((TextView)findViewById(R.id.txtReference)).setText(mMultiBlankRefAnswer.get(subID));
-				}
-				
-				if (subID == (Integer)v.getTag()){
-					((EditText)findViewById(R.id.txtOption)).setImeOptions(EditorInfo.IME_ACTION_DONE);					
-				}else{
-					((EditText)findViewById(R.id.txtOption)).setImeOptions(EditorInfo.IME_ACTION_NEXT);
-				}
-
-				findViewById(R.id.txtCurrent).setTag(subID);
-			}
-		}
-    }
-  
-    public void OnQuestionDetailClick(Integer id){
-		QuestionInfo info  = mQuestionMgr.GetQuestionItem(id);
-		if (info != null && (info.mType == QuestionInfo.QUESTION_TYPE_BLANK
-				|| info.mType == QuestionInfo.QUESTION_TYPE_MULTIBLANK)
-				&& !findViewById(R.id.tableInput).isShown()){ 
-			findViewById(R.id.tableInput).setVisibility(View.VISIBLE);
-			findViewById(R.id.tableReference).setVisibility(View.VISIBLE);
-			findViewById(R.id.txtOption).setTag(id);
-			findViewById(R.id.txtCurrent).setTag(1);//µÚÒ»¿Õ
-
-			Parcel parcelValues  = mAnswerMgr.GetAnswer(id).GetRefAnswer();
-			Integer cnt = (Integer)parcelValues.readInt();		
-			findViewById(R.id.btnUP).setTag(cnt);
-			findViewById(R.id.btnDown).setTag(cnt);
-			
-			if (info.mType == QuestionInfo.QUESTION_TYPE_MULTIBLANK){
-				((EditText)findViewById(R.id.txtOption)).setImeOptions(EditorInfo.IME_ACTION_NEXT);
-			}else {
-				((EditText)findViewById(R.id.txtOption)).setImeOptions(EditorInfo.IME_ACTION_DONE);
-			}
-			
-			mMultiBlankAnswer.clear();
-			mMultiBlankRefAnswer.clear();
-			
-			mPaperStatus.onBlankInputShow(id, mAnswerMgr.GetAnswer(id));
-        }else{
-			findViewById(R.id.tableInput).setVisibility(View.GONE);
-			findViewById(R.id.tableReference).setVisibility(View.GONE);
-			HiddenKeyBoard(findViewById(R.id.tableInput));
-		} 		
-	}
-   */
-	public class QuestionListListener implements OnScrollListener, OnItemSelectedListener {
+    public class QuestionListListener implements OnScrollListener{
 
 		public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
 		}
@@ -589,26 +449,6 @@ public class PaperActivity  extends ComunicableActivity {
 		public void onScrollStateChanged(AbsListView arg0, int arg1) {
 			HiddenKeyBoard(findViewById(R.id.txtGoto));
 		}
-
-		public void onItemSelected(AdapterView<?> arg0, View arg1, int position,
-				long arg3) {
-			if (mListView.getAdapter().getItemViewType(position) == QuestionInfo.QUESTION_TYPE_MULTIBLANK
-					||mListView.getAdapter().getItemViewType(position) == QuestionInfo.QUESTION_TYPE_BLANK){
-				mListView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-				arg1.performClick();
-			}else{
-		        if (!mListView.isFocused())
-		        {
-		            // Use beforeDescendants so that the EditText doesn't re-take focus
-		        	mListView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
-		        	mListView.requestFocus();
-		        }
-		    }
-		}
-
-		public void onNothingSelected(AdapterView<?> arg0) {			
-		}
-		
 	}
  	
 	@Override
@@ -669,7 +509,6 @@ public class PaperActivity  extends ComunicableActivity {
     			undonelist.add(id);
     		}
     	}
- //   	mMultiBlankRefAnswer.clear();
 	}
 	
 	public void InitUncorrectList(ArrayList<Integer> correctList, 
@@ -683,66 +522,12 @@ public class PaperActivity  extends ComunicableActivity {
     			uncorrectList.add(id);
     		}
     	}
- //   	mMultiBlankAnswer.clear(); 
 	}
 	
 	public void ChangeFilterButtonText(int resID){
 		((Button)findViewById(R.id.btnFilter)).setText(resID);
 	}
-	/*		
-	public void ShowAnswerContent(Integer id){
-		Parcel answerContent = mAnswerMgr.GetAnswer(id).GetAnswer();
-		Integer cnt = answerContent.readInt();
 
-		mMultiBlankAnswer.clear();
-		for (int i = 0; i < cnt; ++i){
-			Integer subid = answerContent.readInt();
-			String answer = answerContent.readString();
-			mMultiBlankAnswer.put(subid, answer);
-		}
-
-		ChangeCurrentBlankParam(mMultiBlankAnswer.get(1), 1);		
-	}
-
-	public void ShowReferenceContent(Integer id){
-		Parcel refContent = mAnswerMgr.GetAnswer(id).GetRefAnswer();
-		Integer cnt = refContent.readInt();
-
-		mMultiBlankRefAnswer.clear();
-		for (int i = 0; i < cnt; ++i){
-			Integer subid = refContent.readInt();
-			String answer = refContent.readString();
-			mMultiBlankRefAnswer.put(subid, answer);
-		}
-
-		((TextView)findViewById(R.id.txtReference)).setText(mMultiBlankRefAnswer.get(1));
-
-		findViewById(R.id.txtOption).setEnabled(false);
-	}
-
-	
-	public void ChangeCurrentBlankParam(String answer, Integer subid){
-		Integer id = (Integer)findViewById(R.id.txtOption).getTag();
-		String curTitle = String.format(getResources().getString(R.string.CurrentBlankQuestion), id, subid);
-		((TextView)findViewById(R.id.txtCurrent)).setText(curTitle);
-		if (answer != null){
-			((EditText)findViewById(R.id.txtOption)).setText(answer);
-		}else{
-			((EditText)findViewById(R.id.txtOption)).setText("");
-		}
-	}
-	
-	public void ChangeCurrentBlankParam(String answer){
-		Integer id = (Integer)findViewById(R.id.txtOption).getTag();
-		String curTitle = String.format(getResources().getString(R.string.CurrentQuestion), id);		
-		((TextView)findViewById(R.id.txtCurrent)).setText(curTitle);
-		if (answer != null){
-			((EditText)findViewById(R.id.txtOption)).setText(answer);
-		}else{
-			((EditText)findViewById(R.id.txtOption)).setText("");
-		}
-	}	
-	*/
 	public PaperStatus getPaperStatus(){
 		return mPaperStatus;
 	}

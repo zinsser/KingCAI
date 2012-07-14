@@ -78,7 +78,6 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 	}
 
 	public void OnImageReady(Bitmap bmp) {
-		// TODO Auto-generated method stub
 		
 	}
 }
