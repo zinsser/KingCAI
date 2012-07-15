@@ -38,11 +38,11 @@ public class TCPSocketReceiver extends FireMessageReceiver{
 	}
 	
 	public void run() {
-		boolean bLocalStopped = false;
+/*		boolean bLocalStopped = false;
 		synchronized (mStopped){
 			bLocalStopped = mStopped;
 		}
-		while (!bLocalStopped) {
+	*/	while (!mStopped) {
 			Socket socket = null;
 			try{
 			    socket = mTcpSocket.accept();
@@ -68,7 +68,8 @@ public class TCPSocketReceiver extends FireMessageReceiver{
 				            byte[] buffer = null;
 				            buffer = new byte[2000];
 
-			            	while ((readSize = in.read(buffer, 0, 2000)) != -1){
+			            	while ((readSize = in.read(buffer, 0, 2000)) != -1
+			            			&& length < mRemain){
 					            mImageBuf.put(buffer, 0, readSize);   
 					            length += readSize;
 				            }
@@ -92,7 +93,7 @@ public class TCPSocketReceiver extends FireMessageReceiver{
 					}
 				}
 			}
-
+/*
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
@@ -101,7 +102,7 @@ public class TCPSocketReceiver extends FireMessageReceiver{
 			
 			synchronized (mStopped){
 				bLocalStopped = mStopped;
-			}			
+			}*/			
 		}
 		try {
 			mTcpSocket.close();

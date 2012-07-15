@@ -29,7 +29,7 @@ public class QuestionManager {
         	}else if (i == 2){
         		mQuestions.put(i, new QuestionInfo(3, "#123#abc#", Questions.sQuestions[i], false));        		
         	}else if (i == 3){
-        		mQuestions.put(i, new QuestionInfo(3, "#123#", Questions.sQuestions[i], false));        		
+        		mQuestions.put(i, new QuestionInfo(3, "#123#", Questions.sQuestions[i], true));        		
         	}else{
         		mQuestions.put(i, new QuestionInfo(1, "#A#", Questions.sQuestions[i], false));        		
         	}

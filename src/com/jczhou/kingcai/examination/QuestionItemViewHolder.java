@@ -53,6 +53,8 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 			}
 
 			public void OnImageReady(Bitmap bmp) {
+				mLinearLayoutImage.setVisibility(View.VISIBLE);
+				mImageView_1.setVisibility(View.VISIBLE);
 				mImageView_1.setImageBitmap(bmp);
 			}
 	    });

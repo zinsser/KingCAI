@@ -65,7 +65,7 @@ public class NewQuestionMessage  extends ActiveMessage{
 						int type = Integer.parseInt(question.substring(TypePos+"[type]".length(), TypePos+"[type]".length()+1));
 						String hasImage = question.substring(imagePos + "[image]".length(), contentPos);
 						String content = question.substring(contentPos + "[content]".length(), question.length());
-						publishProgress(new ProgressObject(type, answer, content, Boolean.parseBoolean(hasImage)));
+						publishProgress(new ProgressObject(type, answer, content, "1".equals(hasImage)));
 					}
 				}
 			}
