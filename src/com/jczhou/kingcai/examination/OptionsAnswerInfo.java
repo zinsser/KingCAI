@@ -72,7 +72,8 @@ public class OptionsAnswerInfo extends Answer{
 
 	@Override
 	public boolean IsCorrect() {
-		return toString().equals(mRefAnswer);
+		String temp = toString();
+		return temp.equals(mRefAnswer);
 	}
 
 	private void String2BooleanArray(String strAnswer, boolean[] boolAnswers){

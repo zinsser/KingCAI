@@ -227,7 +227,7 @@ public abstract class ComunicableActivity extends Activity{
 		public abstract void  onLoginSuccess(final String studentinfo);
 		public abstract void  onLoginFail();	
 		public abstract void  onPaperTitleReceived(String title);	
-		public abstract void  onNewQuestion(String answer, int type, String content);
+		public abstract void  onNewQuestion(String answer, int type, String content, boolean bHasImage);
 		public abstract void  onCleanPaper();
 		public abstract void  onNewImage(Integer id, ByteBuffer buf);
 	}

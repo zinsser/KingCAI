@@ -32,10 +32,12 @@ public class NewQuestionMessage  extends ActiveMessage{
 		int mType;
 		String mAnswer;
 		String mContent;
-		ProgressObject(int type, String answer, String content){
+		boolean mHasImage;
+		ProgressObject(int type, String answer, String content, boolean hasImage){
 			mType = type;
 			mAnswer = answer;
 			mContent = content;
+			mHasImage = hasImage;
 		}
 	}
 	
@@ -50,16 +52,19 @@ public class NewQuestionMessage  extends ActiveMessage{
 				String[] questions = subpack.split("@");
 
 				for (String question : questions){
-					//[answer]xxx[type]x[content]xxx
 					//[id]xx[answer]xxx[type]x[image]1/0[content]xxx
 					if (question.contains("[type]") && question.contains("[content]")
 							&& question.contains("[answer]")){
+						int answerPos = question.indexOf("[answer]");
 						int TypePos = question.indexOf("[type]");
-						String answer = question.substring("[answer]".length(), TypePos);
+						int imagePos = question.indexOf("[image]");
+						int contentPos = question.indexOf("[content]");
+						String qId = question.substring("[id]".length(), answerPos);
+						String answer = question.substring(answerPos+"[answer]".length(), TypePos);
 						int type = Integer.parseInt(question.substring(TypePos+"[type]".length(), TypePos+"[type]".length()+1));
-						int ContentPos = question.indexOf("[content]");
-						String content = question.substring(ContentPos + "[content]".length(), question.length());
-						publishProgress(new ProgressObject(type, answer, content));
+						String hasImage = question.substring(imagePos + "[image]".length(), contentPos);
+						String content = question.substring(contentPos + "[content]".length(), question.length());
+						publishProgress(new ProgressObject(type, answer, content, Boolean.parseBoolean(hasImage)));
 					}
 				}
 			}
@@ -82,7 +87,7 @@ public class NewQuestionMessage  extends ActiveMessage{
 			// 更新进度
 			//setProgress
 			for (ProgressObject obj : values){
-				mProcessListener.onNewQuestion(obj.mAnswer, obj.mType, obj.mContent);					
+				mProcessListener.onNewQuestion(obj.mAnswer, obj.mType, obj.mContent, obj.mHasImage);					
 			}
 		}
 	};

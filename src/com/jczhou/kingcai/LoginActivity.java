@@ -359,7 +359,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		}
 
 
-		public void onNewQuestion(String answer, int type, String content) {
+		public void onNewQuestion(String answer, int type, String content, boolean bHasImage) {
 			Log.d("PaperActivity", content);
 		}
 

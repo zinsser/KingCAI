@@ -25,13 +25,13 @@ public class QuestionManager {
 		mQuestions.clear();
         for (int i = 0; i < Questions.sQuestions.length; ++i){
         	if (i == 0 || i == 6){
-        		mQuestions.put(i, new QuestionInfo(0, null, Questions.sQuestions[i]));        		
+        		mQuestions.put(i, new QuestionInfo(0, null, Questions.sQuestions[i], false));        		
         	}else if (i == 2){
-        		mQuestions.put(i, new QuestionInfo(3, "#123#abc#", Questions.sQuestions[i]));        		
+        		mQuestions.put(i, new QuestionInfo(3, "#123#abc#", Questions.sQuestions[i], false));        		
         	}else if (i == 3){
-        		mQuestions.put(i, new QuestionInfo(3, "#123#", Questions.sQuestions[i]));        		
+        		mQuestions.put(i, new QuestionInfo(3, "#123#", Questions.sQuestions[i], false));        		
         	}else{
-        		mQuestions.put(i, new QuestionInfo(1, "#A#", Questions.sQuestions[i]));        		
+        		mQuestions.put(i, new QuestionInfo(1, "#A#", Questions.sQuestions[i], false));        		
         	}
         }
         
@@ -44,8 +44,8 @@ public class QuestionManager {
 		}
 	}
 	
-	public void AddQuestion(int id, int type, String reference, String detail){
-		mQuestions.put(id, new QuestionInfo(type, reference, detail));
+	public void AddQuestion(int id, int type, String reference, String detail, boolean bHasImage){
+		mQuestions.put(id, new QuestionInfo(type, reference, detail, bHasImage));
 
 		for (QuestionListener l : mListeners){
 			l.OnAddQuestion(id);

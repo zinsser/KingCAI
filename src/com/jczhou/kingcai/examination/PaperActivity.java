@@ -217,7 +217,7 @@ public class PaperActivity  extends ComunicableActivity {
 			int type = c.getInt(s_PaperIdx_Type);
 			String reference = c.getString(s_PaperIdx_Reference);
 			String answer = c.getString(s_PaperIdx_Answer);
-			mQuestionMgr.AddQuestion(id, type, reference, detail);
+			mQuestionMgr.AddQuestion(id, type, reference, detail, false);
 			mAnswerMgr.AddAnswer(id, mQuestionMgr.GetQuestionItem(id), answer);
 			c.moveToNext();
 		}
@@ -375,16 +375,17 @@ public class PaperActivity  extends ComunicableActivity {
 
 
 		public void onPaperTitleReceived(String title) {
-			mQuestionMgr.AddQuestion(new QuestionInfo(QuestionInfo.QUESTION_TYPE_TITLE, null, title));
+			mQuestionMgr.AddQuestion(new QuestionInfo(QuestionInfo.QUESTION_TYPE_TITLE, null, title, false));
 		}
 
 
-		public void onNewQuestion(String answer, int type, String content) {
+		public void onNewQuestion(String answer, int type, String content, boolean bHasImage) {
 			Message msg = mNewQuestionHandler.obtainMessage(NEW_QUESTION);
     		Bundle bundle = new Bundle();
     		bundle.putString("Answer", answer);
     		bundle.putInt("Type", type);
     		bundle.putString("Content", content);
+    		bundle.putBoolean("HasImage", bHasImage);
     		msg.setData(bundle);
     		msg.sendToTarget();
 		}
@@ -412,7 +413,8 @@ public class PaperActivity  extends ComunicableActivity {
     			Integer type = bundle.getInt("Type");
     			String answer = bundle.getString("Answer");
     			String content = bundle.getString("Content");
-    			mQuestionMgr.AddQuestion(new QuestionInfo(type, answer, content));
+    			boolean bHasImage = bundle.getBoolean("HasImage");
+    			mQuestionMgr.AddQuestion(new QuestionInfo(type, answer, content, bHasImage));
     		}
     	}
 	};

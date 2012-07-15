@@ -16,12 +16,13 @@ public class QuestionInfo {
 	public int mType;
 	public String mDetail;
 	public String mReference;
+	public boolean mHasImage;
 	public ArrayList<Bitmap> mGraphics = new ArrayList<Bitmap>();
 	
-	public QuestionInfo(int type, String reference, String detail){
+	public QuestionInfo(int type, String reference, String detail, boolean bHasImage){
 		mDetail = detail;
 		mReference = reference;
-		
+		mHasImage = bHasImage;
 		mType = AnalysisDetailTypeByReference(type, reference);
 	}
 	
