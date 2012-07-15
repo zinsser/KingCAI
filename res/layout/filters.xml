@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/txtQuestionDetail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="5dip"
         android:layout_marginRight="5dip"	        
         android:paddingLeft="5dip"
@@ -19,13 +19,15 @@
         android:textColor="#000000"/>
 	<LinearLayout 
 	    android:id="@+id/linearLayoutImage" 
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"   
-    	android:background="#DCDCDC"    
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"   
+    	android:background="#DCDCDC"
+    	android:layout_marginLeft="10dip"    
 	    android:orientation="horizontal" >
 		<LinearLayout 
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"    
+		    android:id="@+id/linearLayoutImage_1" 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"    
 	    	android:background="#DCDCDC"    
 		    android:orientation="vertical" >
 		    <ImageView
@@ -44,6 +46,7 @@
 		        android:text="Grap.1"/>
 		</LinearLayout>
 		<LinearLayout 
+		    android:id="@+id/linearLayoutImage_2"		    
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"    
 	    	android:background="#DCDCDC"    

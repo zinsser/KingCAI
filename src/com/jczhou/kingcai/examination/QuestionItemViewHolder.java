@@ -19,7 +19,8 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	protected LinearLayout mLinearLayoutBlanks = null;
 	protected ImageView mImageView_1 = null;
 	protected ImageView mImageView_2 = null;
-	
+	protected LinearLayout mLinearLayout_ImageView_1 = null;
+	protected LinearLayout mLinearLayout_ImageView_2 = null;	
 	protected Bitmap mMarkIcon = null;
     protected Bitmap mUnMarkIcon = null;	
     
@@ -35,7 +36,8 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	    
 	    mImageView_1 = (ImageView)rawView.findViewById(R.id.imageView_1);
 	    mImageView_2 = (ImageView)rawView.findViewById(R.id.imageView_2);
-	    
+	    mLinearLayout_ImageView_1 = (LinearLayout)rawView.findViewById(R.id.linearLayoutImage_1);
+	    mLinearLayout_ImageView_2 = (LinearLayout)rawView.findViewById(R.id.linearLayoutImage_2);
 	    mQuestionMgr.AddListener(new QuestionListener(){
 
 			public void OnQuestionArrayChanged(ArrayList<Integer> ids) {
@@ -123,6 +125,8 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	    if (question.HasImage()){
 	    	mLinearLayoutImage.setVisibility(View.VISIBLE);
 	    	mImageView_1.setVisibility(View.VISIBLE);
+	    	
+	    	mLinearLayout_ImageView_2.setVisibility(View.GONE);
 	    }
 	}
 	
