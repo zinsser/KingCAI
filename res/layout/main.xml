@@ -68,16 +68,6 @@
             android:text="@string/AllQuestions" />
 
     </TableRow>
- 
-    <ImageView
-        android:id="@+id/imageViewGrap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-  		android:layout_gravity="center" 
-		android:scaleType="fitCenter"	
-		android:layout_marginTop="3dip"	    		    
-  		android:layout_marginLeft="5dip"           
-        android:src="@drawable/unmark_icon" />
 
     <View
         android:layout_width="match_parent"
