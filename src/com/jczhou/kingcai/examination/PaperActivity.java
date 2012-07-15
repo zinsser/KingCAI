@@ -45,6 +45,7 @@ import com.jczhou.kingcai.examination.PaperViewAdapter;
 import com.jczhou.kingcai.messageservice.ActiveMessageManager;
 import com.jczhou.kingcai.messageservice.AnswerMessage;
 import com.jczhou.kingcai.messageservice.LogoutRequestMessage;
+import com.jczhou.kingcai.messageservice.RequestImageMessage;
 import com.jczhou.kingcai.messageservice.RequestPaperMessage;
 import com.jczhou.platform.KingCAIConfig;
 
@@ -90,16 +91,12 @@ public class PaperActivity  extends ComunicableActivity {
 	private QuestionManager mQuestionMgr = new QuestionManager();;
 	private AnswerManager mAnswerMgr = null;	
 	
-	private ImageView mGraph = null;
-	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 		mTextViewTitle = (TextView)findViewById(R.id.textViewTitle);        
 		ParseIntentExtraParam();
-		
-		mGraph = (ImageView)findViewById(R.id.imageViewGrap);
 		
 		mAnswerMgr = new AnswerManager(mQuestionMgr);
 		mPaperStatus = new AnswerStatus(this, mQuestionMgr);
@@ -424,6 +421,7 @@ public class PaperActivity  extends ComunicableActivity {
     			String content = bundle.getString("Content");
     			boolean bHasImage = bundle.getBoolean("HasImage");
     			mQuestionMgr.AddQuestion(new QuestionInfo(type, answer, content, bHasImage));
+    			if (bHasImage)mServiceChannel.sendMessage(new RequestImageMessage(0), 0);
     		}else if (msg.what == NEW_IMAGE){
     			Bundle bundle = msg.getData();
     			Integer id = bundle.getInt("ID");
