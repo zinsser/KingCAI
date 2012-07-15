@@ -8,7 +8,7 @@
    	<TextView
 		android:id="@+id/textViewTitle"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:paddingLeft="6dp"
         android:layout_gravity="center"
         android:background="#8B8B8B"

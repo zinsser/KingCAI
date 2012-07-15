@@ -89,7 +89,7 @@
 		            android:maxLines="3"
 		            android:textAppearance="?android:attr/textAppearanceMedium"
 		            android:textColor="#000000" 
-		            android:background="@drawable/bak_input_bg"/>
+		            android:background="@drawable/reference_bk"/>
 		    </LinearLayout>
 		    <LinearLayout
 	            android:id="@+id/linearLayoutOtherInfo"

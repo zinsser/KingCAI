@@ -59,7 +59,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     	    	editText.setSingleLine(false);
     	    	editText.setMaxLines(3);
     	    	editText.setOnFocusChangeListener(inputListener);
-    	    	editText.setBackgroundResource(R.drawable.bak_input_bg);
+    	    	editText.setBackgroundResource(R.drawable.reference_bk);
     	    	mLinearLayoutBlanks.addView(editText);  	    	
     		}
     		((EditText)mLinearLayoutBlanks.getChildAt(i-1)).setImeOptions(EditorInfo.IME_ACTION_NEXT);
@@ -105,7 +105,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     	    	editText.setSingleLine(false);
     	    	editText.setMaxLines(3);
     	    	editText.setText(mMultiBlankAnswer.get(i+1));
-    	    	editText.setBackgroundResource(R.drawable.bak_input_bg);
+    	    	editText.setBackgroundResource(R.drawable.reference_bk);
     	    	mLinearLayoutBlanks.addView(editText);
     	    	if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
     	    			&& mMultiBlankAnswer.get(i+1) != null && mMultiBlankRefAnswer.get(i+1) != null

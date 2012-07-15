@@ -79,12 +79,13 @@ public class LoginActivity  extends ComunicableActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         
+        BtnClickListener btnListener = new BtnClickListener();
         mBtnLogin = (Button)findViewById(R.id.btnLogin);
-        mBtnLogin.setOnClickListener(new BtnClickListener());  
+        mBtnLogin.setOnClickListener(btnListener);  
          
         mCheckBoxOffline = (CheckBox)findViewById(R.id.checkBoxOffline);
         mImgViewHeader = (ImageView)findViewById(R.id.imageViewHeaderPhoto);
-        mImgViewHeader.setOnClickListener(new BtnClickListener());
+        mImgViewHeader.setOnClickListener(btnListener);
         
         mTxtStudentID = (EditText)findViewById(R.id.txtStudentID);
         mTxtPassword = (EditText)findViewById(R.id.txtPassword);
@@ -109,6 +110,7 @@ public class LoginActivity  extends ComunicableActivity  {
     @Override
     public void onStart(){
     	super.onStart();
+    	ReadLastLogin();
     	mWifiStateMgr.Register(getApplication());
         mWifiStateMgr.StartScanServer();
     }
@@ -119,7 +121,18 @@ public class LoginActivity  extends ComunicableActivity  {
     	SaveLastLogin();
     	super.onStop();    	
     }
-
+    
+	private void ReadLastLogin(){
+		//
+		String id;
+		String ssid;
+		SharedPreferences sp = getSharedPreferences(s_ConfigFileName, 0);
+		id = sp.getString(s_Tag_Number, "9527");
+		ssid = sp.getString(s_Tag_Grade, "一年级");
+		
+		mTxtStudentID.setText(id);
+	}
+	
     private void SaveLastLogin(){
 		//写入
 		SharedPreferences sp = getSharedPreferences(s_ConfigFileName, 0);
@@ -324,10 +337,9 @@ public class LoginActivity  extends ComunicableActivity  {
 			mServerIP = serverip;
 	//		mSSID = mSpinnerSSID.getAdapter().mSpinnerSSID.getSelectedItemPosition()
 			mServiceChannel.setServerIPAddr(mServerIP);
-			mServiceChannel.sendMessage(new LoginRequestMessage(
+			mServiceChannel.connectServer(/*new LoginRequestMessage(*/
 												mTxtStudentID.getText().toString(), 
-												mTxtPassword.getText().toString())
-										);
+												mTxtPassword.getText().toString());
 		}
 
 

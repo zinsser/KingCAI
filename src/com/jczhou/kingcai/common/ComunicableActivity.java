@@ -168,16 +168,20 @@ public abstract class ComunicableActivity extends Activity{
     	}    	
     }
 	
-
+	protected void doServiceReady(){
+		
+	}
+	
     protected myServiceChannel mServiceChannel = new myServiceChannel();
     protected class myServiceChannel implements ServiceConnection{     
     	private KingService mKingService = null;
     	public void onServiceConnected(ComponentName name, IBinder service) { 
-        	mKingService = ((KingService.MyBinder)service).getService();  
+        	mKingService = ((KingService.MyBinder)service).getService();
+        	doServiceReady();
         }
         
         public void onServiceDisconnected(ComponentName name) {  
-        	mKingService = null;
+ //       	mKingService = null;
         }
         
         public void sendMessage(RequestMessage msg, String ip){

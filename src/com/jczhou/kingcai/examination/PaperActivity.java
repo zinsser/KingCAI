@@ -18,6 +18,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -36,7 +39,9 @@ import android.widget.TextView;
 
 import com.jczhou.kingcai.R;
 import com.jczhou.kingcai.common.ComunicableActivity;
+import com.jczhou.kingcai.common.ComunicableActivity.ServiceMessageHandler;
 import com.jczhou.kingcai.examination.PaperViewAdapter;
+import com.jczhou.kingcai.messageservice.ActiveMessageManager;
 import com.jczhou.kingcai.messageservice.AnswerMessage;
 import com.jczhou.kingcai.messageservice.LogoutRequestMessage;
 import com.jczhou.kingcai.messageservice.RequestPaperMessage;
@@ -111,8 +116,6 @@ public class PaperActivity  extends ComunicableActivity {
         mBtnFilter.setOnClickListener(new FilterClickListener());
         
 		((EditText)findViewById(R.id.txtGoto)).setOnEditorActionListener(new SearchEditorListener());
-		
-        mServiceChannel.sendMessage(new RequestPaperMessage(), 0);		
     }
 	
     @Override
@@ -128,7 +131,16 @@ public class PaperActivity  extends ComunicableActivity {
    		GetConfig();
    		ResetAdapterFontSize(mFullAdapter);    	
     }
+    @Override
+    public void onResume(){
+    	super.onResume();
 
+    }
+    @Override
+	protected void doServiceReady(){
+        mServiceChannel.sendMessage(new RequestPaperMessage(), 0);		
+	}
+    
     @Override
     public void onStop(){
     	SaveConfig(true);
@@ -368,7 +380,13 @@ public class PaperActivity  extends ComunicableActivity {
 
 
 		public void onNewQuestion(String answer, int type, String content) {
-			mQuestionMgr.AddQuestion(new QuestionInfo(type, answer, content));
+			Message msg = mNewQuestionHandler.obtainMessage(NEW_QUESTION);
+    		Bundle bundle = new Bundle();
+    		bundle.putString("Answer", answer);
+    		bundle.putInt("Type", type);
+    		bundle.putString("Content", content);
+    		msg.setData(bundle);
+    		msg.sendToTarget();
 		}
 
 
@@ -384,7 +402,20 @@ public class PaperActivity  extends ComunicableActivity {
 			mQuestionMgr.AddQuestionImage(0, bmp);
 		}
 	}
-    
+    private static int NEW_QUESTION = 20;
+	private Handler mNewQuestionHandler = new Handler(){
+		
+    	@Override
+    	public void handleMessage(Message msg){
+    		if (msg.what == NEW_QUESTION){
+    			Bundle bundle = msg.getData();
+    			Integer type = bundle.getInt("Type");
+    			String answer = bundle.getString("Answer");
+    			String content = bundle.getString("Content");
+    			mQuestionMgr.AddQuestion(new QuestionInfo(type, answer, content));
+    		}
+    	}
+	};
     private void ParseIntentExtraParam(){
         if (getIntent().hasExtra(KingCAIConfig.StudentInfo)){
             Bundle extra = getIntent().getExtras();
