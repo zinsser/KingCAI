@@ -54,7 +54,8 @@ public class NewQuestionMessage  extends ActiveMessage{
 				for (String question : questions){
 					//[id]xx[answer]xxx[type]x[image]1/0[content]xxx
 					if (question.contains("[type]") && question.contains("[content]")
-							&& question.contains("[answer]")){
+							&& question.contains("[answer]") 
+							&& question.contains("[id]") && question.contains("[image]")){
 						int answerPos = question.indexOf("[answer]");
 						int TypePos = question.indexOf("[type]");
 						int imagePos = question.indexOf("[image]");

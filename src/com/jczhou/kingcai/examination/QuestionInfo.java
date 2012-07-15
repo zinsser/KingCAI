@@ -54,7 +54,7 @@ public class QuestionInfo {
 	}
 	
 	public boolean HasImage(){
-		return mGraphics.size() > 0;
+		return mHasImage;
 	}
 	
 	public int GetType(){

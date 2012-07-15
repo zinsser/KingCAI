@@ -61,9 +61,11 @@ public class QuestionManager {
 	}
 
 	public void AddQuestionImage(Integer id, Bitmap bmp){
-		mQuestions.get(id).AddGraphic(bmp);
-		for (QuestionListener l : mListeners){
-			l.OnImageReady(bmp);
+		if (bmp != null && mQuestions.get(id) != null){
+			mQuestions.get(id).AddGraphic(bmp);
+			for (QuestionListener l : mListeners){
+				l.OnImageReady(bmp);
+			}
 		}
 	}
 	
