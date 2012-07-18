@@ -20,14 +20,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:paddingTop="5dip" >
-
+
         <Button
             android:id="@+id/btnCommit"
             android:layout_width="100dip"
             android:layout_height="40dip"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.4"
-            android:background="@drawable/btn_style_two_normal"
+            android:background="@drawable/button_commit_filter"
             android:text="@string/Commit"
             android:textColor="#000000" />
 
@@ -57,14 +57,14 @@
             android:text="0/0"
             android:textColor="#000000"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
-
+
         <Button
             android:id="@+id/btnFilter"
             android:layout_width="100dip"
             android:layout_height="40dip"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.4"
-            android:background="@drawable/btn_style_two_normal"
+            android:background="@drawable/button_commit_filter"
             android:text="@string/AllQuestions" />
 
     </TableRow>

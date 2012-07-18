@@ -92,8 +92,8 @@ public class QuestionItemViewHolder extends ItemViewHolder{
     		mRatingBarHardness.setVisibility(View.VISIBLE);
     	}
     	
-    	mMarkIcon = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.ic_bullet_key_permission);
-    	mUnMarkIcon  = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.ic_delete);
+    	mMarkIcon = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.ok_result);
+    	mUnMarkIcon  = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.err_result);
     	
     	mMark.setEnabled(false);
     	Answer answer = answerMgr.GetAnswer(id);

@@ -14,7 +14,7 @@
         android:layout_marginRight="5dip"	        
         android:paddingLeft="5dip"
         android:paddingTop="3dip"
-   		android:background="@drawable/buddy_head_frame"
+   		android:background="@drawable/question_detail_bg"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#000000"/>
 	<LinearLayout 
@@ -22,13 +22,14 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"   
     	android:background="#DCDCDC"
+	   	android:layout_gravity="center"     	
     	android:layout_marginLeft="10dip"    
 	    android:orientation="horizontal" >
 		<LinearLayout 
 		    android:id="@+id/linearLayoutImage_1" 
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"    
-	    	android:background="#DCDCDC"    
+	    	android:background="#DCDCDC"  	    	  
 		    android:orientation="vertical" >
 		    <ImageView
 	            android:id="@+id/imageView_1"
@@ -37,11 +38,11 @@
 	            android:layout_marginRight="2dp"
 	    		android:layout_gravity="center" 
 				android:scaleType="fitCenter"		    		    
-	            android:src="@drawable/spinner_black_48"/>	    
+	            android:src="@drawable/image_loading_holder"/>	    
 		    <TextView
 		        android:id="@+id/textViewTip_Grap1"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
 	            android:layout_gravity="center_horizontal"	                
 		        android:text="Grap.1"/>
 		</LinearLayout>
@@ -57,7 +58,7 @@
 	            android:layout_height="wrap_content"
 	    		android:layout_gravity="center" 
 				android:scaleType="fitCenter"		    
-	            android:src="@drawable/spinner_black_48"/>	
+	            android:src="@drawable/image_loading_holder"/>	
 		    <TextView
 		        android:id="@+id/textViewTip_Grap2"
 		        android:layout_width="wrap_content"
@@ -70,7 +71,7 @@
         android:id="@+id/linearLayoutAnswerAera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:background="#DCDCDC"	            
+    	android:background="#DCDCDC"            
         android:orientation="horizontal" > 
 
 	    <LinearLayout
@@ -120,16 +121,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
     		android:background="#DCDCDC"
-            android:layout_marginLeft="15dp"	    			            
+            android:layout_marginLeft="15dp"
+            android:paddingTop="5dip"	    			            
             android:orientation="vertical" > 
+
 	        <EditText
 	            android:id="@+id/editTextAnswer"
 	            android:layout_width="262dp"
-	            android:layout_height="match_parent" 
+	            android:layout_height="wrap_content"
 	            android:maxLines="3"
 	            android:textAppearance="?android:attr/textAppearanceMedium"
-	            android:textColor="#000000" 
-	            android:background="@drawable/reference_bk"/>
+	            android:textColor="#000000" />
+
 	    </LinearLayout>
 	    <LinearLayout
             android:id="@+id/linearLayoutOtherInfo"
@@ -143,7 +146,7 @@
 	            android:layout_height="wrap_content"
 	    		android:layout_gravity="center" 
 				android:scaleType="fitCenter"	
-				android:layout_marginTop="3dip"	    		    
+				android:layout_marginTop="5dip"	    		    
 	    		android:layout_marginLeft="5dip"           
 	            android:src="@drawable/unmark_icon" />
 

@@ -59,7 +59,6 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     	    	editText.setSingleLine(false);
     	    	editText.setMaxLines(3);
     	    	editText.setOnFocusChangeListener(inputListener);
-    	    	editText.setBackgroundResource(R.drawable.reference_bk);
     	    	mLinearLayoutBlanks.addView(editText);  	    	
     		}
     		((EditText)mLinearLayoutBlanks.getChildAt(i-1)).setImeOptions(EditorInfo.IME_ACTION_NEXT);
@@ -82,6 +81,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     	if (mQuestionMgr.GetQuestionItem(id).GetType() == QuestionInfo.QUESTION_TYPE_MULTIBLANK){
         	mEditTextor.setEnabled(false);
         	mEditTextor.setText(mMultiBlankAnswer.get(1));
+        	mEditTextor.setBackgroundResource(R.drawable.reference_bk);        	
     		mEditTextor.setTag(new TagParam(id, 1));
     		if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
 	    			&& mMultiBlankAnswer.get(1) != null && mMultiBlankRefAnswer.get(1) != null
@@ -122,6 +122,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
         	mEditTextor.setEnabled(false);
         	mEditTextor.setText(mMultiBlankAnswer.get(0));
         	mEditTextor.setTag(new TagParam(id, 0));
+        	mEditTextor.setBackgroundResource(R.drawable.reference_bk);            	
     		if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
 	    			&& mMultiBlankAnswer.get(1) != null && mMultiBlankRefAnswer.get(1) != null
 	    			&& !mMultiBlankAnswer.get(1).equals(mMultiBlankRefAnswer.get(1))){
