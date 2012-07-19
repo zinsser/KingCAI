@@ -124,8 +124,8 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
         	mEditTextor.setTag(new TagParam(id, 0));
         	mEditTextor.setBackgroundResource(R.drawable.reference_bk);            	
     		if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
-	    			&& mMultiBlankAnswer.get(1) != null && mMultiBlankRefAnswer.get(1) != null
-	    			&& !mMultiBlankAnswer.get(1).equals(mMultiBlankRefAnswer.get(1))){
+	    			&& mMultiBlankAnswer.get(0) != null && mMultiBlankRefAnswer.get(0) != null
+	    			&& !mMultiBlankAnswer.get(0).equals(mMultiBlankRefAnswer.get(0))){
     			mEditTextor.setTextColor(errTextColor);
     		}
     		if (mLinearLayoutBlanks.getChildCount() < 2){

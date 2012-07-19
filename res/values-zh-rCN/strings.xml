@@ -47,4 +47,17 @@
 	<string name="AboutDetail">软件名称:\n  %1$s \n版本号:\n  %2$s \nAndroid 平台最低兼容版本:\n  %3$s \n软件发布时间:\n  %4$s</string>	
 	<string name="CompanyName">深圳市智源科技有限公司</string>
 	<string name="NoInfo">你尚未登录系统进行学习！\n如果不具备网络学习环境，建议你离线登录。</string>
+	<string name="AppInitStatus">应用启动成功，请输入用户名密码</string>	
+	<string name="FindSSIDStatus">正在查找wifi热点......</string>
+	<string name="FindFailSSIDStatus">未找到wifi热点</string>	
+	<string name="FoundSSIDStatus">已找到wifi热点</string>		
+	<string name="ConnectSSIDStatus">正在连接wifi热点</string>	
+	<string name="ConnectedSSIDStatus">已连接到wifi热点</string>
+	<string name="ConnectedFailSSIDStatus">wifi热点连接失败</string>		
+	<string name="QueryServerStatus">正在查找教师服务器</string>	
+	<string name="FailQueryServerStatus">未找到教师服务器</string>	
+	<string name="FoundServerStatus">教师服务器已找到，正在请求登录</string>	
+	<string name="LoginServerStatus">正在请求登录教师服务器</string>	
+	<string name="SuccessLoginStatus">登录成功，即将进入考试界面</string>	
+	<string name="FailLoginStatus">登录失败，请检查用户名密码</string>	
 </resources>

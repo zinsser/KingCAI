@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:paddingTop="5dip" >
+        android:paddingTop="3dip" >
 
         <Button
             android:id="@+id/btnCommit"
@@ -42,6 +42,7 @@
             android:id="@+id/txtGoto"
             android:layout_width="80dip"
             android:layout_height="40dip"
+            android:layout_marginTop="3dip"
             android:imeOptions="actionDone"
             android:numeric="integer"
             android:layout_gravity="center_vertical"             
@@ -53,7 +54,8 @@
             android:layout_width="100dip"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:paddingLeft="20dip"
+            android:paddingLeft="30dip"
+            android:paddingRight="30dip"
             android:text="0/0"
             android:textColor="#000000"
             android:textAppearance="?android:attr/textAppearanceMedium"/>

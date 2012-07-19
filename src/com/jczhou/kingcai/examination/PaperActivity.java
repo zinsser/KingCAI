@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -90,11 +91,23 @@ public class PaperActivity  extends ComunicableActivity {
 	
 	private QuestionManager mQuestionMgr = new QuestionManager();;
 	private AnswerManager mAnswerMgr = null;	
-	
+	private View mWrapperView = null;
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+ //       mWrapperView = View.inflate(this, R.layout.main, null);  
+        
+//		WindowManager  mWindowManager = getWindowManager();  
+//		LayoutParams  mLockViewLayoutParams = new LayoutParams();  
+//        mLockViewLayoutParams.width = LayoutParams.MATCH_PARENT;  
+//        mLockViewLayoutParams.height = LayoutParams.MATCH_PARENT;  
+        //实现关键  
+//        mLockViewLayoutParams.type = LayoutParams.TYPE_SYSTEM_ERROR;  
+        //apktool value，这个值具体是哪个变量还请网友帮忙  
+//        mLockViewLayoutParams.flags = 1280; 
+//        mWindowManager.addView(mWrapperView, mLockViewLayoutParams);        
+        
 		mTextViewTitle = (TextView)findViewById(R.id.textViewTitle);        
 		ParseIntentExtraParam();
 		
@@ -118,8 +131,20 @@ public class PaperActivity  extends ComunicableActivity {
         mBtnFilter.setOnClickListener(new FilterClickListener());
         
 		((EditText)findViewById(R.id.txtGoto)).setOnEditorActionListener(new SearchEditorListener());
+		
+
     }
 	
+	@Override
+	public View findViewById(int id){
+		View retView = super.findViewById(id);
+		if (mWrapperView != null){
+			retView = mWrapperView.findViewById(id);
+		}
+		return retView;
+	}
+
+
     @Override
     public void onDestroy (){
     	mServiceChannel.sendMessage(new LogoutRequestMessage(), 0);

@@ -73,6 +73,7 @@ public class LoginActivity  extends ComunicableActivity  {
 	private Spinner mSpinnerSSID = null;
 	private WifiStateManager mWifiStateMgr = null;
 	private TextView mTextViewBaseInfo = null;
+	private TextView mTextViewStatus = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,6 +105,9 @@ public class LoginActivity  extends ComunicableActivity  {
         });
         mTextViewBaseInfo = (TextView)findViewById(R.id.textViewBaseInfo);
         mTextViewBaseInfo.setText(R.string.NoInfo);
+        
+        mTextViewStatus = (TextView)findViewById(R.id.textViewStatus);
+        
         cleanForm();
     }
 
@@ -112,6 +116,7 @@ public class LoginActivity  extends ComunicableActivity  {
     	super.onStart();
     	ReadLastLogin();
     	mWifiStateMgr.Register(getApplication());
+    	mTextViewStatus.setText(R.string.FindSSIDStatus);
         mWifiStateMgr.StartScanServer();
     }
     
@@ -206,7 +211,6 @@ public class LoginActivity  extends ComunicableActivity  {
 
 
 		public void onServerInfoChanged(String wifiInfo) {
-			// TODO Auto-generated method stub
 		}
     }
 
@@ -215,7 +219,7 @@ public class LoginActivity  extends ComunicableActivity  {
     	public void handleMessage(Message msg){
     		switch (msg.what){
     		case EVENT_QUERY_TIME_OUT:
-    			showToast(R.string.ServerNotFound);
+    			mTextViewStatus.setText(R.string.FailQueryServerStatus);
     			break;
     		}
     	}
@@ -230,21 +234,20 @@ public class LoginActivity  extends ComunicableActivity  {
 				im.hideSoftInputFromWindow(mTxtPassword.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				if (!mCheckBoxOffline.isChecked()){
 					if (mSpinnerSSID.getSelectedItemPosition() != 0){
+		    			mTextViewStatus.setText(R.string.QueryServerStatus);						
 						mServiceChannel.QueryServer();						
 						Message msg = mInnerHandler.obtainMessage(EVENT_QUERY_TIME_OUT);
 						mInnerHandler.sendMessageDelayed(msg, DELAY_QUERY_TIME);
 					}else{
 						mSpinnerSSID.performClick();
-						showToast(R.string.SelectClassTip);					
+		    			mTextViewStatus.setText(R.string.SelectClassTip);
 					}
 				}else{
 				    StartPaperActivity("初三一班  张三丰", mCheckBoxOffline.isChecked());					
 				}
 	    	}else if (btn == mImgViewHeader){
-	    		Intent intent = new Intent();  
- 	            intent.setType("image/*");  
-	            intent.setAction(Intent.ACTION_GET_CONTENT);  
-	            startActivityForResult(intent, RESULT_LOAD_HEADER_PHOTO);      		
+	    		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);  
+	            startActivityForResult(intent, RESULT_LOAD_HEADER_PHOTO);    
 	    	}
 	    }
     };
@@ -270,6 +273,7 @@ public class LoginActivity  extends ComunicableActivity  {
     private void cleanForm(){
     	mTxtStudentID.setText("");
     	mTxtPassword.setText("");
+    	mTextViewStatus.setText(R.string.AppInitStatus);
     }
 
     @Override
@@ -336,6 +340,7 @@ public class LoginActivity  extends ComunicableActivity  {
 			mInnerHandler.removeMessages(EVENT_QUERY_TIME_OUT);
 			mServerIP = serverip;
 	//		mSSID = mSpinnerSSID.getAdapter().mSpinnerSSID.getSelectedItemPosition()
+			mTextViewStatus.setText(R.string.FoundServerStatus);
 			mServiceChannel.setServerIPAddr(mServerIP);
 			mServiceChannel.connectServer(/*new LoginRequestMessage(*/
 												mTxtStudentID.getText().toString(), 
@@ -344,11 +349,13 @@ public class LoginActivity  extends ComunicableActivity  {
 
 
 		public void onLoginSuccess(String studentinfo) {
+			mTextViewStatus.setText(R.string.SuccessLoginStatus);
 			StartPaperActivity(studentinfo, mCheckBoxOffline.isChecked());
 		}
 
 
 		public void onLoginFail() {
+			mTextViewStatus.setText(R.string.FailLoginStatus);
 			showToast(R.string.InputCorrectIDTip);			
 			cleanForm();
 		}
