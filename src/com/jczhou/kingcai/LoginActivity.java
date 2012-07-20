@@ -51,6 +51,8 @@ import android.widget.TextView;
 public class LoginActivity  extends ComunicableActivity  {
 	private final static int GROUP_NORMAL = 0;
 	private final static int MENU_MODIFY_PASSWORD = 1;
+	private final static int MENU_SETTING = 2;
+	private final static int MENU_WIFI_SETTING = 3;	
 	
 	private final static int DIALOG_MODIFY_PASSWORD = 1;
 	
@@ -279,7 +281,8 @@ public class LoginActivity  extends ComunicableActivity  {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
     	menu.add(GROUP_NORMAL, MENU_MODIFY_PASSWORD, 0, R.string.ModifyPassword);
-
+    	menu.add(GROUP_NORMAL, MENU_SETTING, 0, R.string.Setting);
+    	menu.add(GROUP_NORMAL, MENU_WIFI_SETTING, 0, R.string.WifiSetting);
     	return super.onCreateOptionsMenu(menu);
     }
     
@@ -298,7 +301,18 @@ public class LoginActivity  extends ComunicableActivity  {
     		TransDialog dlg = new TransDialog(this, R.xml.style);
     		dlg.setContentView(R.layout.modifypassword);
     		dlg.show();
-    		
+    		break;
+    	case MENU_SETTING:
+    		Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+    		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | 
+    				Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+    		startActivity(intent);
+    		break;
+    	case MENU_WIFI_SETTING:
+    		Intent intentWifi = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
+    		intentWifi.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | 
+    				Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+    		startActivity(intentWifi);
     		break;
     	}
     	

@@ -1,5 +1,6 @@
 package com.jczhou.platform.internal;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.DatagramPacket;
@@ -10,6 +11,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import com.jczhou.kingcai.AppEnumActivity;
 import com.jczhou.kingcai.messageservice.LoginRequestMessage;
 import com.jczhou.kingcai.messageservice.QueryServerMessage;
 import com.jczhou.kingcai.messageservice.RequestMessage;
@@ -17,12 +19,16 @@ import com.jczhou.platform.internal.UDPSocketReceiver;
 import com.jczhou.platform.KingCAIConfig;
 
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 public class KingService extends Service{
     private static final String TAG = "KingService"; 
@@ -45,7 +51,7 @@ public class KingService extends Service{
     	mTCPThread = new Thread(mReceiverRoutine);    	
     	mImageReceiverRoutine = new TCPSocketReceiver(this, KingCAIConfig.mImageReceivePort);
     	mImageReceiver = new Thread(mImageReceiverRoutine);
-  
+
         super.onCreate();  
     }  
       
@@ -67,7 +73,9 @@ public class KingService extends Service{
 		if (mImageReceiver != null && mImageReceiver.isAlive()){
 			mImageReceiver.start();
 		}    	
-        super.onStart(intent, startId);
+
+   // 	setDefaultLauncher();
+		super.onStart(intent, startId);
     }  
       
     @Override  
@@ -107,6 +115,51 @@ public class KingService extends Service{
     public boolean onUnbind(Intent intent) {  
         return super.onUnbind(intent);  
     }
+    
+    private void setDefaultLauncher(){
+    	PackageManager pm = getPackageManager();
+
+    	IntentFilter filter = new IntentFilter();
+    	filter.addAction("android.intent.action.MAIN");
+    	filter.addCategory("android.intent.category.HOME");
+    	filter.addCategory("android.intent.category.DEFAULT"); 
+    	Context context = getApplicationContext();
+    	ComponentName component = new ComponentName(context.getPackageName(), 
+    									AppEnumActivity.class.getName());
+    	ComponentName[] components = new ComponentName[] {
+    			new ComponentName("com.android.launcher", "com.android.launcher.Launcher"), 
+    			component};
+
+    	pm.clearPackagePreferredActivities("com.android.launcher");
+    	pm.addPreferredActivity(filter, IntentFilter.MATCH_CATEGORY_EMPTY, components, component);    	
+    }
+    
+    public static boolean runRootCommand(String command) {  
+        Process process = null;  
+        DataOutputStream os = null;  
+            try {  
+            process = Runtime.getRuntime().exec("su");  
+            os = new DataOutputStream(process.getOutputStream());  
+            os.writeBytes(command+"\n");  
+            os.writeBytes("exit\n");  
+            os.flush();  
+            process.waitFor();  
+            } catch (Exception e) {  
+                    Log.d("*** DEBUG ***", "Unexpected error - Here is what I know: "+e.getMessage());  
+                    return false;  
+            }  
+            finally {  
+                    try {  
+                            if (os != null) {  
+                                    os.close();  
+                            }  
+                            process.destroy();  
+                    } catch (Exception e) {  
+                            // nothing  
+                    }  
+            }  
+            return true;  
+    }     
     
     public void setTextChannelSocket(Socket channel){
     	mTCPTextChannelSocket = channel;

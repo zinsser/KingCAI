@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="permdesc_write_settings">permdesc_write_settings</string>
+	<string name="permlab_write_settings">permlab_write_settings</string>
     <string name="hello">Hello World, KingCAIActivity!</string>
     <string name="app_name">KingCAI</string>
     <string name="Title">Classroom Testing</string>
@@ -60,4 +61,6 @@
 	<string name="LoginServerStatus">正在请求登录教师服务器</string>	
 	<string name="SuccessLoginStatus">登录成功，即将进入考试界面</string>	
 	<string name="FailLoginStatus">登录失败，请检查用户名密码</string>	
+	<string name="Setting">Setting</string>
+	<string name="WifiSetting">Wifi Setting</string>	
 </resources>
