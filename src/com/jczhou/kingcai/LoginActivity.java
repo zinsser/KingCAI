@@ -290,7 +290,7 @@ public class LoginActivity  extends ComunicableActivity  {
     public boolean onOptionsItemSelected(MenuItem item){
     	switch (item.getItemId()){
     	case MENU_MODIFY_PASSWORD:
- //   		showDialog(DIALOG_MODIFY_PASSWORD);
+//    		showDialog(DIALOG_MODIFY_PASSWORD);
  //   		LayoutInflater inflater = LayoutInflater.from(getApplication());
  //   		View modifyView = inflater.inflate(, null);
     	//    			.setTitle(R.string.ModifyPassword)	
@@ -298,8 +298,9 @@ public class LoginActivity  extends ComunicableActivity  {
   //  			.setPositiveButton(android.R.string.ok, null)
  //   			.setNegativeButton(android.R.string.cancel, null)
  //   			.setView(modifyView);
-    		TransDialog dlg = new TransDialog(this, R.xml.style);
-    		dlg.setContentView(R.layout.modifypassword);
+//    		TransDialog dlg = new TransDialog(this, R.xml.style);
+    		Dialog dlg = new Dialog(this, R.style.NoTitleDialog);
+    		dlg.setContentView(R.layout.modifypassword);  		
     		dlg.show();
     		break;
     	case MENU_SETTING:
