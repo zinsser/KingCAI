@@ -32,6 +32,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -128,6 +129,27 @@ public class LoginActivity  extends ComunicableActivity  {
     	SaveLastLogin();
     	super.onStop();    	
     }
+    
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (event.getKeyCode()) {
+                case KeyEvent.KEYCODE_BACK:
+                case KeyEvent.KEYCODE_HOME:
+                    return true;
+            }
+        } else if (event.getAction() == KeyEvent.ACTION_UP) {
+            switch (event.getKeyCode()) {
+                case KeyEvent.KEYCODE_BACK:
+                case KeyEvent.KEYCODE_HOME:
+                    return true;
+            }
+        }
+
+        return super.dispatchKeyEvent(event);
+    }
+
     
 	private void ReadLastLogin(){
 		//
@@ -283,6 +305,7 @@ public class LoginActivity  extends ComunicableActivity  {
     	menu.add(GROUP_NORMAL, MENU_MODIFY_PASSWORD, 0, R.string.ModifyPassword);
     	menu.add(GROUP_NORMAL, MENU_SETTING, 0, R.string.Setting);
     	menu.add(GROUP_NORMAL, MENU_WIFI_SETTING, 0, R.string.WifiSetting);
+    	
     	return super.onCreateOptionsMenu(menu);
     }
     
@@ -290,17 +313,32 @@ public class LoginActivity  extends ComunicableActivity  {
     public boolean onOptionsItemSelected(MenuItem item){
     	switch (item.getItemId()){
     	case MENU_MODIFY_PASSWORD:
-//    		showDialog(DIALOG_MODIFY_PASSWORD);
- //   		LayoutInflater inflater = LayoutInflater.from(getApplication());
- //   		View modifyView = inflater.inflate(, null);
-    	//    			.setTitle(R.string.ModifyPassword)	
- //   		AlertDialog.Builder builder = new AlertDialog.Builder(this)
-  //  			.setPositiveButton(android.R.string.ok, null)
- //   			.setNegativeButton(android.R.string.cancel, null)
- //   			.setView(modifyView);
-//    		TransDialog dlg = new TransDialog(this, R.xml.style);
-    		Dialog dlg = new Dialog(this, R.style.NoTitleDialog);
-    		dlg.setContentView(R.layout.modifypassword);  		
+    		LayoutInflater inflater = LayoutInflater.from(getApplication());
+    		final View modifyView = inflater.inflate(R.layout.modifypassword, null);
+    		final Dialog dlg = new Dialog(this, R.style.NoTitleDialog);
+    		dlg.setContentView(modifyView);
+    		Button buttonOK = (Button)modifyView.findViewById(R.id.buttonOK);
+    		buttonOK.setOnClickListener(new View.OnClickListener() {
+				
+				public void onClick(View v) {
+					EditText textFirst = (EditText)modifyView.findViewById(R.id.editTextFirstPassword);
+					EditText textSecond = (EditText)modifyView.findViewById(R.id.editTextSecond);
+					EditText textOld = (EditText)modifyView.findViewById(R.id.editTextOldPassword);
+					//TODO:检查textOld是否正确
+					//TODO:检查前后两者是否相等
+					if (textFirst.getText().equals(textSecond.getText())){
+						//TODO:设置密码到数据库
+					}
+				}
+			});
+    		Button buttonCancel = (Button)modifyView.findViewById(R.id.buttonCancel);    		
+    		buttonCancel.setOnClickListener(new View.OnClickListener() {
+				
+				public void onClick(View v) {
+					dlg.dismiss();
+				}
+			});
+    		
     		dlg.show();
     		break;
     	case MENU_SETTING:
