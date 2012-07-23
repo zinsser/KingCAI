@@ -63,4 +63,5 @@
 	<string name="FailLoginStatus">登录失败，请检查用户名密码</string>	
 	<string name="Setting">Setting</string>
 	<string name="WifiSetting">Wifi Setting</string>	
+	<string name="SecretTitle">%s is modified</string>
 </resources>

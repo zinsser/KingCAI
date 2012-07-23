@@ -70,7 +70,7 @@ public class LoginActivity  extends ComunicableActivity  {
     private CheckBox mCheckBoxOffline = null;	
     private ImageView mImgViewHeader = null;
 	private String mServerIP;
-	private String mSSID;
+	private String mSSID = "一年级";
 	private Spinner mSpinnerSSID = null;
 	private WifiStateManager mWifiStateMgr = null;
 	private TextView mTextViewBaseInfo = null;
@@ -154,9 +154,18 @@ public class LoginActivity  extends ComunicableActivity  {
 		String id;
 		String ssid;
 		SharedPreferences sp = getSharedPreferences(s_ConfigFileName, 0);
-		id = sp.getString(s_Tag_Number, "9527");
-		ssid = sp.getString(s_Tag_Grade, "一年级");
-		
+		id = sp.getString(s_Tag_Number, "");
+		ssid = sp.getString(s_Tag_Grade, "");
+		if (ssid.length() == 0){
+			mSpinnerSSID.setSelection(0);
+		}else{
+			for (int i = 1; i < mSpinnerSSID.getAdapter().getCount(); ++i){
+				if (mSpinnerSSID.getAdapter().getItem(i).equals(ssid)){
+					mSpinnerSSID.setSelection(i);
+					break;
+				}
+			}
+		}
 		mTxtStudentID.setText(id);
 	}
 	
@@ -198,6 +207,7 @@ public class LoginActivity  extends ComunicableActivity  {
         ReadSSIDFromConfig(adapter);
         mSpinnerSSID.setOnItemSelectedListener(new SpinnerItemClickListener());
         mSpinnerSSID.setAdapter(adapter);
+        
         mSpinnerSSID.setEnabled(false);
     }
     
@@ -315,6 +325,9 @@ public class LoginActivity  extends ComunicableActivity  {
     		final View modifyView = inflater.inflate(R.layout.modifypassword, null);
     		final Dialog dlg = new Dialog(this, R.style.NoTitleDialog);
     		dlg.setContentView(modifyView);
+        	String title = String.format(getResources().getString(R.string.SecretTitle), 
+        			mTxtStudentID.getText().toString());   		
+    		((TextView)modifyView.findViewById(R.id.textViewTitle)).setText(title);
     		Button buttonOK = (Button)modifyView.findViewById(R.id.buttonOK);
     		buttonOK.setOnClickListener(new View.OnClickListener() {
 				
@@ -374,7 +387,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		Intent openSheetActivity = new Intent(LoginActivity.this, PaperActivity.class);
 		openSheetActivity.putExtra(KingCAIConfig.StudentInfo, studentInfo);
 		openSheetActivity.putExtra(KingCAIConfig.ServerIP, mServerIP);
-		openSheetActivity.putExtra(KingCAIConfig.SSID, "一年级");
+		openSheetActivity.putExtra(KingCAIConfig.SSID, mSSID);
 		openSheetActivity.putExtra(KingCAIConfig.Offline, bOffline);
 		startActivity(openSheetActivity);
 		finish();
@@ -390,12 +403,11 @@ public class LoginActivity  extends ComunicableActivity  {
 		public void  onTalkingFinished(final String serverip){
 			mInnerHandler.removeMessages(EVENT_QUERY_TIME_OUT);
 			mServerIP = serverip;
-	//		mSSID = mSpinnerSSID.getAdapter().mSpinnerSSID.getSelectedItemPosition()
+			mSSID = (String)mSpinnerSSID.getAdapter().getItem(mSpinnerSSID.getSelectedItemPosition());
 			mTextViewStatus.setText(R.string.FoundServerStatus);
 			mServiceChannel.setServerIPAddr(mServerIP);
-			mServiceChannel.connectServer(/*new LoginRequestMessage(*/
-												mTxtStudentID.getText().toString(), 
-												mTxtPassword.getText().toString());
+			mServiceChannel.connectServer(mTxtStudentID.getText().toString(), 
+										  mTxtPassword.getText().toString());
 		}
 
 

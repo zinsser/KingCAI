@@ -350,10 +350,11 @@ public class PaperActivity  extends ComunicableActivity {
     } 
     
     private String GenAboutString(){
-        List<PackageInfo> pkgInfos = getPackageManager().getInstalledPackages(PackageManager.GET_ACTIVITIES);
+        List<PackageInfo> pkgInfos = getPackageManager().getInstalledPackages(0/*PackageManager.GET_ACTIVITIES*/);
         PackageInfo kingPackage = null;
+        String packageName =getPackageName(); 
         for(PackageInfo info : pkgInfos) {
-        	if ("com.jczhou.kingcai".equals(info.packageName)){
+        	if (packageName.equals(info.packageName)){
         		kingPackage = info;
         		break;
         	}
@@ -365,12 +366,13 @@ public class PaperActivity  extends ComunicableActivity {
         	about = "Software Name£º\n" + getResources().getString(R.string.app_name);
         }else{
         	about = String.format(getResources().getString(R.string.AboutDetail), 
-    				kingPackage.applicationInfo.loadLabel(getPackageManager()), 
-    				kingPackage.versionName + "." + kingPackage.versionCode,
-    				kingPackage.applicationInfo.targetSdkVersion == 8 ? "2.2" : 
-						kingPackage.applicationInfo.targetSdkVersion == 10 ? "2.3" :
-						   kingPackage.applicationInfo.targetSdkVersion == 11 ? "4.0" : "unknown",
-					new Date(new File(kingPackage.applicationInfo.sourceDir).lastModified()).toLocaleString());
+	    				kingPackage.applicationInfo.loadLabel(getPackageManager()), 
+	    				kingPackage.versionName + "." + kingPackage.versionCode,
+	    				kingPackage.applicationInfo.targetSdkVersion == 8 ? "2.2" : 
+							kingPackage.applicationInfo.targetSdkVersion == 10 ? "2.3" :
+							   kingPackage.applicationInfo.targetSdkVersion == 11 ? "4.0" : "unknown",
+						new Date(new File(kingPackage.applicationInfo.sourceDir).lastModified()).toLocaleString());
+        				//new Date(new File("PaperActivity.java").lastModified()).toLocaleString());
         }
 
     	return about;

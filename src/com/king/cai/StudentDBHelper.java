@@ -22,7 +22,7 @@ public class StudentDBHelper extends SQLiteOpenHelper {
     private SQLiteDatabase mDB;
     
     StudentDBHelper(Context c) {  
-        super(c, DB_PAPER, null, 2);  
+        super(c, DB_PAPER, null, 1);
     }  
     
     @Override  
@@ -37,12 +37,17 @@ public class StudentDBHelper extends SQLiteOpenHelper {
     
     @Override
     public void close() {
-    	super.close();
         if (mDB != null){ 
         	mDB.close(); 
         }
-    }  
+    	super.close();        
+    }
     
+	public void Update(ContentValues values, Integer id) {
+//		mDB.execSQL("update StudyInfo set id=? where id=?", 
+//				new Object[]{, id});
+	}
+	
     public long Insert(ContentValues values, Integer id) {  
         SQLiteDatabase db = getWritableDatabase();
         long ret = 0;
