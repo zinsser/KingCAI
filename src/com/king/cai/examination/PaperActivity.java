@@ -90,7 +90,6 @@ public class PaperActivity  extends ComunicableActivity {
 	
 	private QuestionManager mQuestionMgr = new QuestionManager();;
 	private AnswerManager mAnswerMgr = null;	
-	private View mWrapperView = null;
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -488,6 +487,7 @@ public class PaperActivity  extends ComunicableActivity {
 
 
 		public void onClick(View v) {
+			((EditText)findViewById(R.id.txtGoto)).requestFocus();//使得试卷界面的其余文本框失去焦点，从而保存答案到内存中
 			mPaperStatus.onCommitClick();
 		}
     } 
@@ -505,8 +505,8 @@ public class PaperActivity  extends ComunicableActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		//按下键盘上返回按钮
-		showToast("keyCode:"+keyCode);
 		if(keyCode == KeyEvent.KEYCODE_BACK ){
+			((EditText)findViewById(R.id.txtGoto)).requestFocus();
 			AlertDialog dlg = new AlertDialog.Builder(this)
 				.setTitle(R.string.ExitPromptTitle)
 				.setMessage(R.string.ExitPromptMsg)

@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.CountDownTimer;
+import android.view.WindowManager;
 import android.widget.ListView;
 
 
@@ -95,7 +96,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	
 	@Override
 	public void onCommitClick() {
-		new AlertDialog.Builder(mStatusOwner)
+		AlertDialog adlg = new AlertDialog.Builder(mStatusOwner)
 			.setTitle(R.string.CommittingTitle)
 			.setMessage(R.string.CommitPromptMsg)
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -105,7 +106,10 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 				}
 			})
 			.setNegativeButton(android.R.string.cancel, null)
-			.show();
+			.create();
+		
+		adlg.show();
+		adlg.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
 	}
 
 	private void PostClicked(Integer questionID, final Answer answer){
