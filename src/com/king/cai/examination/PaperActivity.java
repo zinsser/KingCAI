@@ -1,6 +1,5 @@
 package com.king.cai.examination;
 
-import java.io.DataOutputStream;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -12,34 +11,31 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.text.Html;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.king.cai.LoginActivity;
 import com.king.cai.R;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperViewAdapter;
@@ -515,6 +511,9 @@ public class PaperActivity  extends ComunicableActivity {
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int whichButton) {
+						Intent intent = new Intent();
+						intent.setClass(getApplication(), LoginActivity.class);
+						startActivity(intent);
 						finish();
 					}
 				})
