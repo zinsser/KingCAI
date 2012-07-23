@@ -71,6 +71,7 @@ public class LoginActivity  extends ComunicableActivity  {
     private ImageView mImgViewHeader = null;
 	private String mServerIP;
 	private String mSSID = "һ�꼶";
+	private Integer mID;
 	private Spinner mSpinnerSSID = null;
 	private WifiStateManager mWifiStateMgr = null;
 	private TextView mTextViewBaseInfo = null;
@@ -166,6 +167,7 @@ public class LoginActivity  extends ComunicableActivity  {
 				}
 			}
 		}
+		mID = Integer.parseInt(id);
 		mTxtStudentID.setText(id);
 	}
 	
@@ -384,6 +386,8 @@ public class LoginActivity  extends ComunicableActivity  {
     }
     
     public void StartPaperActivity(String studentInfo, boolean bOffline){
+    	SaveStudentInfo();
+    	
 		Intent openSheetActivity = new Intent(LoginActivity.this, PaperActivity.class);
 		openSheetActivity.putExtra(KingCAIConfig.StudentInfo, studentInfo);
 		openSheetActivity.putExtra(KingCAIConfig.ServerIP, mServerIP);
@@ -391,6 +395,14 @@ public class LoginActivity  extends ComunicableActivity  {
 		openSheetActivity.putExtra(KingCAIConfig.Offline, bOffline);
 		startActivity(openSheetActivity);
 		finish();
+    }
+    
+    private void SaveStudentInfo(){
+    	if (mID != 0){
+    		StudentDBHelper dbHelper = new StudentDBHelper(this);
+    		ContentValues values = dbHelper.FindItem(mID);
+    		values.put();
+    	}
     }
     
 	@Override    

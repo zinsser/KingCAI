@@ -20,9 +20,9 @@ public class StudentDBHelper extends SQLiteOpenHelper {
             + " StudyInfo(id integer primary key, name text, password text, infocontent text, photo text) ";  
       
     private SQLiteDatabase mDB;
-    
+    private StudentInfo mStudentInfo = new StudentInfo();
     StudentDBHelper(Context c) {  
-        super(c, DB_PAPER, null, 1);
+        super(c, StudentInfo.GetDBName(), null, 1);
     }  
     
     @Override  
@@ -30,11 +30,7 @@ public class StudentDBHelper extends SQLiteOpenHelper {
     	mDB = db;  
     	mDB.execSQL(CREATE_TBL);  
     } 
-    
-    @Override  
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {  
-    }
-    
+
     @Override
     public void close() {
         if (mDB != null){ 
@@ -43,6 +39,20 @@ public class StudentDBHelper extends SQLiteOpenHelper {
     	super.close();        
     }
     
+    public ContentValues FindItem(Integer id){
+		Cursor cursor=	mDB.rawQuery("select * from StudyInfo where id=?", new String[]{String.valueOf(id)});
+		if(cursor.moveToNext()){
+			ContentValues values = new ContentValues();
+			values.put(s_StudentTag_ID, cursor.getInt(0));
+			values.put(s_StudentTag_Name, cursor.getString(1));
+			values.put(s_StudentTag_Passwd, cursor.getString(2));
+			values.put(s_StudentTag_Info, cursor.getString(3));
+			values.put(s_StudentTag_Photo, cursor.getString(4));
+			return values;
+		}
+
+		return null;    	
+    }
 	public void Update(ContentValues values, Integer id) {
 //		mDB.execSQL("update StudyInfo set id=? where id=?", 
 //				new Object[]{, id});
@@ -70,5 +80,9 @@ public class StudentDBHelper extends SQLiteOpenHelper {
         if (mDB == null)  
         	mDB = getWritableDatabase();  
         mDB.delete(TBL_PAPER, "id=?", new String[] { String.valueOf(id) });  
-    } 
+    }
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	} 
 }  
