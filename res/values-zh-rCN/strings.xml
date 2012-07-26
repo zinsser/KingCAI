@@ -63,4 +63,5 @@
 	<string name="FailLoginStatus">登录失败，请检查用户名密码</string>	
 	<string name="Setting">设置</string>	
 	<string name="WifiSetting">设置Wifi网络</string>	
+	<string name="SecretTitle">修改 %s 的密码</string>	
 </resources>
