@@ -82,26 +82,30 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	}
 
 	@Override
-    public void doGettingItemViews(Integer id, int fontSize){
-    	super.doGettingItemViews(id, fontSize);
+    public void doGettingItemViews(Integer id, int fontSize, boolean bShowRefAnswer){
+    	super.doGettingItemViews(id, fontSize, bShowRefAnswer);
     	doLayoutSubViews(id);
     	
 		AnswerManager answerMgr = mHostActivity.getAnswerManager();
 		
-    	if (mRatingBarHardness != null){
+    	if (mRatingBarHardness != null && bShowRefAnswer){
     		mRatingBarHardness.setVisibility(View.VISIBLE);
     	}
     	
-    	mMarkIcon = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.ok_result);
-    	mUnMarkIcon  = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.err_result);
-    	
-    	mMark.setEnabled(false);
-    	Answer answer = answerMgr.GetAnswer(id);
-    	if (answer != null && answer.IsCorrect()){
-	    	mMark.setImageBitmap(mMarkIcon);
-	    }else if (answer != null && !answer.IsCorrect()){
-	        mMark.setImageBitmap(mUnMarkIcon);
-	    }
+    	if (!bShowRefAnswer){
+    		mMark.setVisibility(View.GONE);
+    	}else{
+	    	mMarkIcon = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.ok_result);
+	    	mUnMarkIcon  = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.err_result);
+	    	
+	    	mMark.setEnabled(false);
+	    	Answer answer = answerMgr.GetAnswer(id);
+	    	if (answer != null && answer.IsCorrect()){
+		    	mMark.setImageBitmap(mMarkIcon);
+		    }else if (answer != null && !answer.IsCorrect()){
+		        mMark.setImageBitmap(mUnMarkIcon);
+		    }
+    	}
     }
 
 	private void doLayoutSubViews(Integer id){

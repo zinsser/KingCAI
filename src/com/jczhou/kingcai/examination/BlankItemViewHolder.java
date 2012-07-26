@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -71,29 +72,32 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
 	}
 
 	@Override
-    public void doGettingItemViews(Integer id, int fontSize){
-		super.doGettingItemViews(id, fontSize);
+    public void doGettingItemViews(Integer id, int fontSize, boolean bShowRefAnswer){
+		super.doGettingItemViews(id, fontSize, bShowRefAnswer);
     	doLayoutSubViews();	
     	doLoadAnswers(id);
     	int okTextColor = Color.rgb(0, 128, 0);
     	int errTextColor = Color.rgb(220, 0, 0);
-    	
+    	LayoutParams param = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     	if (mQuestionMgr.GetQuestionItem(id).GetType() == QuestionInfo.QUESTION_TYPE_MULTIBLANK){
         	mEditTextor.setEnabled(false);
         	mEditTextor.setText(mMultiBlankAnswer.get(1));
         	mEditTextor.setBackgroundResource(R.drawable.reference_bk);        	
     		mEditTextor.setTag(new TagParam(id, 1));
-    		if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
-	    			&& mMultiBlankAnswer.get(1) != null && mMultiBlankRefAnswer.get(1) != null
-	    			&& !mMultiBlankAnswer.get(1).equals(mMultiBlankRefAnswer.get(1))){
-    			mEditTextor.setTextColor(errTextColor);
-    		}
-    		if (mLinearLayoutBlanks.getChildCount() < 2){
-	    		TextView refText = new TextView(mHostActivity);
-	    		refText.setText(mMultiBlankRefAnswer.get(1));
-	    		refText.setPadding(10, 0, 0, 0);
-	    		refText.setTextColor(okTextColor);
-		    	mLinearLayoutBlanks.addView(refText);    		
+    		if (bShowRefAnswer){
+	    		if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
+		    			&& mMultiBlankAnswer.get(1) != null && mMultiBlankRefAnswer.get(1) != null
+		    			&& !mMultiBlankAnswer.get(1).equals(mMultiBlankRefAnswer.get(1))){
+	    			mEditTextor.setTextColor(errTextColor);
+	    		}
+	    		if (mLinearLayoutBlanks.getChildCount() < 2){
+		    		TextView refText = new TextView(mHostActivity);
+		    		refText.setLayoutParams(param);
+		    		refText.setText(mMultiBlankRefAnswer.get(1));
+		    		refText.setPadding(10, 0, 0, 0);
+		    		refText.setTextColor(okTextColor);
+			    	mLinearLayoutBlanks.addView(refText);    		
+	    		}
     		}
 	    	Parcel parcelValues  = mHostActivity.getAnswerManager().GetAnswer(id).GetRefAnswer();
     		Integer cnt = (Integer)parcelValues.readInt();
@@ -107,34 +111,40 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     	    	editText.setText(mMultiBlankAnswer.get(i+1));
     	    	editText.setBackgroundResource(R.drawable.reference_bk);
     	    	mLinearLayoutBlanks.addView(editText);
-    	    	if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
-    	    			&& mMultiBlankAnswer.get(i+1) != null && mMultiBlankRefAnswer.get(i+1) != null
-    	    			&& !mMultiBlankAnswer.get(i+1).equals(mMultiBlankRefAnswer.get(i+1))){
-    	    		editText.setTextColor(errTextColor);
+    	    	if (bShowRefAnswer){
+	    	    	if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
+	    	    			&& mMultiBlankAnswer.get(i+1) != null && mMultiBlankRefAnswer.get(i+1) != null
+	    	    			&& !mMultiBlankAnswer.get(i+1).equals(mMultiBlankRefAnswer.get(i+1))){
+	    	    		editText.setTextColor(errTextColor);
+	    	    	}
+	    	    	TextView refText2 = new TextView(mHostActivity);
+		    		refText2.setLayoutParams(param);
+	    	    	refText2.setText(mMultiBlankRefAnswer.get(i+1));
+	    	    	refText2.setTextColor(okTextColor);
+	    	    	refText2.setPadding(10, 0, 0, 0);
+	    	    	mLinearLayoutBlanks.addView(refText2);
     	    	}
-    	    	TextView refText2 = new TextView(mHostActivity);
-    	    	refText2.setText(mMultiBlankRefAnswer.get(i+1));
-    	    	refText2.setTextColor(okTextColor);
-    	    	refText2.setPadding(10, 0, 0, 0);
-    	    	mLinearLayoutBlanks.addView(refText2);
     		}
     	}else{
         	mEditTextor.setEnabled(false);
         	mEditTextor.setText(mMultiBlankAnswer.get(0));
         	mEditTextor.setTag(new TagParam(id, 0));
-        	mEditTextor.setBackgroundResource(R.drawable.reference_bk);            	
-    		if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
-	    			&& mMultiBlankAnswer.get(0) != null && mMultiBlankRefAnswer.get(0) != null
-	    			&& !mMultiBlankAnswer.get(0).equals(mMultiBlankRefAnswer.get(0))){
-    			mEditTextor.setTextColor(errTextColor);
-    		}
-    		if (mLinearLayoutBlanks.getChildCount() < 2){
-	    		TextView refText = new TextView(mHostActivity);
-	    		refText.setText(mMultiBlankRefAnswer.get(0));
-	    		refText.setTextColor(okTextColor);
-	    		refText.setPadding(10, 0, 0, 0);
-		    	mLinearLayoutBlanks.addView(refText);
-    		}
+        	mEditTextor.setBackgroundResource(R.drawable.reference_bk);
+        	if (bShowRefAnswer){
+	    		if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
+		    			&& mMultiBlankAnswer.get(0) != null && mMultiBlankRefAnswer.get(0) != null
+		    			&& !mMultiBlankAnswer.get(0).equals(mMultiBlankRefAnswer.get(0))){
+	    			mEditTextor.setTextColor(errTextColor);
+	    		}
+	    		if (mLinearLayoutBlanks.getChildCount() < 2){
+		    		TextView refText = new TextView(mHostActivity);
+		    		refText.setLayoutParams(param);
+		    		refText.setText(mMultiBlankRefAnswer.get(0));
+		    		refText.setTextColor(okTextColor);
+		    		refText.setPadding(10, 0, 0, 0);
+			    	mLinearLayoutBlanks.addView(refText);
+	    		}
+        	}
     	}    	
 	}
 	

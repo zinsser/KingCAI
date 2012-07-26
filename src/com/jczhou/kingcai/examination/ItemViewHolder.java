@@ -50,7 +50,7 @@ public class ItemViewHolder{
     	showTextDetail(id, fontSize);
     }  
     
-    public void doGettingItemViews(Integer id, int fontSize){
+    public void doGettingItemViews(Integer id, int fontSize, boolean bShowRefAnswer){
     	doLayoutSubViews();
     	showTextDetail(id, fontSize);
     }

@@ -54,8 +54,8 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
 	}
 	
 	@Override
-    public void doGettingItemViews(Integer id, int fontSize){
-     	super.doGettingItemViews(id, fontSize);
+    public void doGettingItemViews(Integer id, int fontSize, boolean bShowRefAnswer){
+     	super.doGettingItemViews(id, fontSize, bShowRefAnswer);
      	doLayoutSubViews();
      	
      	mRadioButtonA.setEnabled(false);
@@ -77,6 +77,9 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
 	    	}
 		}
      	
+     	if (!bShowRefAnswer){
+     		return;
+     	}
     	int colorNormal = Color.rgb(0, 0, 0); 
     	int colorBackground = Color.rgb(220, 220, 220);
     	
