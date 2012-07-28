@@ -101,7 +101,10 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     		}
 	    	Parcel parcelValues  = mHostActivity.getAnswerManager().GetAnswer(id).GetRefAnswer();
     		Integer cnt = (Integer)parcelValues.readInt();
-    		for (int i = 1; mLinearLayoutBlanks.getChildCount() < cnt * 2 
+    		if (bShowRefAnswer){
+    			cnt = 2 * cnt;
+    		}
+    		for (int i = 1; mLinearLayoutBlanks.getChildCount() < cnt 
     				&& i < cnt; ++i){
     			EditText editText = new EditText(mHostActivity);
     			editText.setEnabled(false);

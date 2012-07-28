@@ -39,8 +39,8 @@ public class StudentDBHelper extends SQLiteOpenHelper {
     	super.close();        
     }
     
-    public ContentValues FindItem(Integer id){
-		Cursor cursor=	mDB.rawQuery("select * from StudyInfo where id=?", new String[]{String.valueOf(id)});
+    public ContentValues FindItem(String id){
+		Cursor cursor=	mDB.rawQuery("select * from StudyInfo where id=?", new String[]{id});
 		if(cursor.moveToNext()){
 			ContentValues values = new ContentValues();
 			values.put(s_StudentTag_ID, cursor.getInt(0));
@@ -53,7 +53,7 @@ public class StudentDBHelper extends SQLiteOpenHelper {
 
 		return null;    	
     }
-	public void Update(ContentValues values, Integer id) {
+	public void Update(ContentValues values, String id) {
 //		mDB.execSQL("update StudyInfo set id=? where id=?", 
 //				new Object[]{, id});
 	}

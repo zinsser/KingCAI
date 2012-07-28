@@ -71,7 +71,7 @@ public class LoginActivity  extends ComunicableActivity  {
     private ImageView mImgViewHeader = null;
 	private String mServerIP;
 	private String mSSID = "一年级";
-	private Integer mID;
+	private String mID;
 	private Spinner mSpinnerSSID = null;
 	private WifiStateManager mWifiStateMgr = null;
 	private TextView mTextViewBaseInfo = null;
@@ -151,11 +151,9 @@ public class LoginActivity  extends ComunicableActivity  {
 
     
 	private void ReadLastLogin(){
-		//
-		String id;
 		String ssid;
 		SharedPreferences sp = getSharedPreferences(s_ConfigFileName, 0);
-		id = sp.getString(s_Tag_Number, "");
+		mID = sp.getString(s_Tag_Number, "");
 		ssid = sp.getString(s_Tag_Grade, "");
 		if (ssid.length() == 0){
 			mSpinnerSSID.setSelection(0);
@@ -167,8 +165,7 @@ public class LoginActivity  extends ComunicableActivity  {
 				}
 			}
 		}
-		mID = Integer.parseInt(id);
-		mTxtStudentID.setText(id);
+		mTxtStudentID.setText(mID);
 	}
 	
     private void SaveLastLogin(){
@@ -181,7 +178,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		editor.commit();    	
     }
     
-    public void SaveStudent(String strID, String name, String password, Bitmap photo){
+    private void SaveStudentInfo(String strID, String name, String password, String photo){
 		StudentDBHelper helper = new StudentDBHelper(getApplicationContext());
 		ContentValues values = new ContentValues();		
 
@@ -191,17 +188,17 @@ public class LoginActivity  extends ComunicableActivity  {
 		values.put(StudentDBHelper.s_StudentTag_Passwd, password); 
 		values.put(StudentDBHelper.s_StudentTag_Info, "");
 		
-		 // 将Bitmap压缩成PNG编码，质量为100%存储            
-		final ByteArrayOutputStream os = new ByteArrayOutputStream(); 			
-        photo.compress(Bitmap.CompressFormat.PNG, 100, os);     			
-		values.put(StudentDBHelper.s_StudentTag_Photo, os.toByteArray());
+        // 将Bitmap压缩成PNG编码，质量为100%存储            
+		//final ByteArrayOutputStream os = new ByteArrayOutputStream(); 			
+//        photo.compress(Bitmap.CompressFormat.PNG, 100, os);     			
+		values.put(StudentDBHelper.s_StudentTag_Photo, /*os.toByteArray()*/photo);
 				
 		
 		helper.Insert(values, id);
 
 		helper.close();
 	}
-
+    
     private void initSpinnerBar(){
         mSpinnerSSID = (Spinner) findViewById(R.id.spinnerSSID);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
@@ -313,7 +310,7 @@ public class LoginActivity  extends ComunicableActivity  {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
     	menu.add(GROUP_NORMAL, MENU_MODIFY_PASSWORD, 0, R.string.ModifyPassword);
-    	menu.add(GROUP_NORMAL, MENU_SETTING, 0, R.string.Setting);
+//    	menu.add(GROUP_NORMAL, MENU_SETTING, 0, R.string.Setting);
     	menu.add(GROUP_NORMAL, MENU_WIFI_SETTING, 0, R.string.WifiSetting);
     	
     	return super.onCreateOptionsMenu(menu);
@@ -323,36 +320,45 @@ public class LoginActivity  extends ComunicableActivity  {
     public boolean onOptionsItemSelected(MenuItem item){
     	switch (item.getItemId()){
     	case MENU_MODIFY_PASSWORD:
-    		LayoutInflater inflater = LayoutInflater.from(getApplication());
-    		final View modifyView = inflater.inflate(R.layout.modifypassword, null);
-    		final Dialog dlg = new Dialog(this, R.style.NoTitleDialog);
-    		dlg.setContentView(modifyView);
-        	String title = String.format(getResources().getString(R.string.SecretTitle), 
-        			mTxtStudentID.getText().toString());   		
-    		((TextView)modifyView.findViewById(R.id.textViewTitle)).setText(title);
-    		Button buttonOK = (Button)modifyView.findViewById(R.id.buttonOK);
-    		buttonOK.setOnClickListener(new View.OnClickListener() {
-				
-				public void onClick(View v) {
-					EditText textFirst = (EditText)modifyView.findViewById(R.id.editTextFirstPassword);
-					EditText textSecond = (EditText)modifyView.findViewById(R.id.editTextSecond);
-					EditText textOld = (EditText)modifyView.findViewById(R.id.editTextOldPassword);
-					//TODO:检查textOld是否正确
-					//TODO:检查前后两者是否相等
-					if (textFirst.getText().equals(textSecond.getText())){
-						//TODO:设置密码到数据库
+    		if (mTxtStudentID != null && mTxtStudentID.getText().length() != 0){
+	    		LayoutInflater inflater = LayoutInflater.from(getApplication());
+	    		final View modifyView = inflater.inflate(R.layout.modifypassword, null);
+	    		final Dialog dlg = new Dialog(this, R.style.NoTitleDialog);
+	    		dlg.setContentView(modifyView);
+	        	String title = String.format(getResources().getString(R.string.SecretTitle), 
+	        			mTxtStudentID.getText().toString());   		
+	    		((TextView)modifyView.findViewById(R.id.textViewTitle)).setText(title);
+	    		Button buttonOK = (Button)modifyView.findViewById(R.id.buttonOK);
+	    		buttonOK.setOnClickListener(new View.OnClickListener() {
+					
+					public void onClick(View v) {
+						EditText textFirst = (EditText)modifyView.findViewById(R.id.editTextFirstPassword);
+						EditText textSecond = (EditText)modifyView.findViewById(R.id.editTextSecond);
+						EditText textOld = (EditText)modifyView.findViewById(R.id.editTextOldPassword);
+						//TODO:检查textOld是否正确
+			    		StudentDBHelper dbHelper = new StudentDBHelper(LoginActivity.this);
+			    		ContentValues values = dbHelper.FindItem(mID);
+						String oldPwd = (String)values.get(StudentDBHelper.s_StudentTag_Passwd);
+						if (oldPwd != null && oldPwd.equals(textOld)){
+							//TODO:检查前后两者是否相等
+							if (textFirst.getText().equals(textSecond.getText())){
+								//TODO:设置密码到数据库
+								values.put(StudentDBHelper.s_StudentTag_Passwd, textFirst.toString());
+								dbHelper.Update(values, mID);
+							}
+						}
 					}
-				}
-			});
-    		Button buttonCancel = (Button)modifyView.findViewById(R.id.buttonCancel);    		
-    		buttonCancel.setOnClickListener(new View.OnClickListener() {
-				
-				public void onClick(View v) {
-					dlg.dismiss();
-				}
-			});
-    		
-    		dlg.show();
+				});
+	    		Button buttonCancel = (Button)modifyView.findViewById(R.id.buttonCancel);    		
+	    		buttonCancel.setOnClickListener(new View.OnClickListener() {
+					
+					public void onClick(View v) {
+						dlg.dismiss();
+					}
+				});
+	    		
+	    		dlg.show();
+    		}
     		break;
     	case MENU_SETTING:
     		Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
@@ -386,7 +392,7 @@ public class LoginActivity  extends ComunicableActivity  {
     }
     
     public void StartPaperActivity(String studentInfo, boolean bOffline){
-    	SaveStudentInfo();
+    	SaveStudentInfo(mID, studentInfo, mTxtPassword.getText().toString(), mImgViewHeader.getDrawable().toString());
     	
 		Intent openSheetActivity = new Intent(LoginActivity.this, PaperActivity.class);
 		openSheetActivity.putExtra(KingCAIConfig.StudentInfo, studentInfo);
@@ -396,15 +402,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		startActivity(openSheetActivity);
 		finish();
     }
-    
-    private void SaveStudentInfo(){
-    	if (mID != 0){
-    		StudentDBHelper dbHelper = new StudentDBHelper(this);
-    		ContentValues values = dbHelper.FindItem(mID);
-    		values.put();
-    	}
-    }
-    
+       
 	@Override    
     protected EventProcessListener doGetEventProcessListener(){
     	return new LoginEventProcessListener();

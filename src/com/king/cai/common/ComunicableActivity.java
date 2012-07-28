@@ -25,6 +25,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -78,15 +79,21 @@ public abstract class ComunicableActivity extends Activity{
     	super.onPause();
     }
     
+    private int GetToastYPos(){
+		DisplayMetrics dm = new DisplayMetrics(); 
+		dm = getApplicationContext().getResources().getDisplayMetrics(); 
+		return dm.heightPixels / 4;
+    }
+    
     public void showToast(String msg){
-    	Toast toast = Toast.makeText(this, msg, 2000); 
-    	toast.setGravity(Gravity.CENTER, 0, -150);
+    	Toast toast = Toast.makeText(this, msg, 2000);
+    	toast.setGravity(Gravity.CENTER, 0, 0-GetToastYPos());
     	toast.show();
     }
 
     public void showToast(int resId){
     	Toast toast = Toast.makeText(this, resId, 2000);
-    	toast.setGravity(Gravity.CENTER, 0, -150);
+    	toast.setGravity(Gravity.CENTER, 0, 0-GetToastYPos());
     	toast.show();
     }    
     
@@ -181,7 +188,7 @@ public abstract class ComunicableActivity extends Activity{
         }
         
         public void onServiceDisconnected(ComponentName name) {  
- //       	mKingService = null;
+        	mKingService = null;
         }
         
         public void sendMessage(RequestMessage msg, String ip){
