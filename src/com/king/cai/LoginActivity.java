@@ -328,7 +328,7 @@ public class LoginActivity  extends ComunicableActivity  {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
     	menu.add(GROUP_NORMAL, MENU_MODIFY_PASSWORD, 0, R.string.ModifyPassword);
-//    	menu.add(GROUP_NORMAL, MENU_SETTING, 0, R.string.Setting);
+    	menu.add(GROUP_NORMAL, MENU_SETTING, 0, R.string.Setting);
     	menu.add(GROUP_NORMAL, MENU_WIFI_SETTING, 0, R.string.WifiSetting);
     	
     	return super.onCreateOptionsMenu(menu);
