@@ -43,6 +43,7 @@ import com.king.cai.messageservice.AnswerMessage;
 import com.king.cai.messageservice.LogoutRequestMessage;
 import com.king.cai.messageservice.RequestImageMessage;
 import com.king.cai.messageservice.RequestPaperMessage;
+import com.king.cai.platform.CommonDefine;
 import com.king.cai.platform.KingCAIConfig;
 
 public class PaperActivity  extends ComunicableActivity {
@@ -113,8 +114,6 @@ public class PaperActivity  extends ComunicableActivity {
         mBtnFilter.setOnClickListener(new FilterClickListener());
         
 		((EditText)findViewById(R.id.txtGoto)).setOnEditorActionListener(new SearchEditorListener());
-		
-
     }
 	
     @Override
@@ -135,18 +134,22 @@ public class PaperActivity  extends ComunicableActivity {
     }
 
     @Override
-    public void onDestroy (){
-    	mServiceChannel.sendMessage(new LogoutRequestMessage(), 0);
-    	mPaperStatus.LeaveStatus();
-    	mPaperStatus = null;
-    	super.onDestroy();        
-    }
-    @Override
     public void onStart(){
     	super.onStart();
    		GetConfig();
    		ResetAdapterFontSize(mFullAdapter);    	
     }
+
+    @Override
+    public void onStop(){
+    	SaveConfig(true);
+    	mServiceChannel.sendMessage(new LogoutRequestMessage(), 0);
+    	mPaperStatus.LeaveStatus();
+    	mPaperStatus = null;
+    	mServiceChannel.CleanSockets();
+   		super.onStop();
+    }    
+    
     @Override
     public void onResume(){
     	super.onResume();
@@ -157,11 +160,6 @@ public class PaperActivity  extends ComunicableActivity {
         mServiceChannel.sendMessage(new RequestPaperMessage(), 0);		
 	}
     
-    @Override
-    public void onStop(){
-    	SaveConfig(true);
-   		super.onStop();    	
-    }    
     
 	public void SaveConfig(boolean bStatus){
 		//–¥»Î
@@ -393,13 +391,14 @@ public class PaperActivity  extends ComunicableActivity {
 
 
 		public void onPaperTitleReceived(String title) {
-			mQuestionMgr.AddQuestion(new QuestionInfo(QuestionInfo.QUESTION_TYPE_TITLE, null, title, false));
+			mQuestionMgr.AddQuestion(new QuestionInfo("0", QuestionInfo.QUESTION_TYPE_TITLE, null, title, false));
 		}
 
 
-		public void onNewQuestion(String answer, int type, String content, boolean bHasImage) {
+		public void onNewQuestion(String id, String answer, int type, String content, boolean bHasImage) {
 			Message msg = mNewQuestionHandler.obtainMessage(NEW_QUESTION);
     		Bundle bundle = new Bundle();
+    		bundle.putString("ID", id);
     		bundle.putString("Answer", answer);
     		bundle.putInt("Type", type);
     		bundle.putString("Content", content);
@@ -408,16 +407,15 @@ public class PaperActivity  extends ComunicableActivity {
     		msg.sendToTarget();
 		}
 
-
 		public void onCleanPaper() {
 			finish();
 		}
 
 
-		public void onNewImage(Integer id, ByteBuffer buf) {
+		public void onNewImage(String id, ByteBuffer buf) {
 			Message msg = mNewQuestionHandler.obtainMessage(NEW_IMAGE);
     		Bundle bundle = new Bundle();
-    		bundle.putInt("ID", id);
+    		bundle.putString("ID", id);
     		bundle.putByteArray("Data", buf.array());
     		msg.setData(bundle);
     		msg.sendToTarget();
@@ -432,15 +430,16 @@ public class PaperActivity  extends ComunicableActivity {
     	public void handleMessage(Message msg){
     		if (msg.what == NEW_QUESTION){
     			Bundle bundle = msg.getData();
+    			String id = bundle.getString("ID");
     			Integer type = bundle.getInt("Type");
     			String answer = bundle.getString("Answer");
     			String content = bundle.getString("Content");
     			boolean bHasImage = bundle.getBoolean("HasImage");
-    			mQuestionMgr.AddQuestion(new QuestionInfo(type, answer, content, bHasImage));
-    			if (bHasImage)mServiceChannel.sendMessage(new RequestImageMessage(0), 0);
+    			mQuestionMgr.AddQuestion(new QuestionInfo(id, type, answer, content, bHasImage));
+    			if (bHasImage)mServiceChannel.sendMessage(new RequestImageMessage(id), 0);
     		}else if (msg.what == NEW_IMAGE){
     			Bundle bundle = msg.getData();
-    			Integer id = bundle.getInt("ID");
+    			String id = bundle.getString("ID");
     			byte[] data = bundle.getByteArray("Data");
 
     			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
@@ -511,9 +510,9 @@ public class PaperActivity  extends ComunicableActivity {
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int whichButton) {
-						Intent intent = new Intent();
-						intent.setClass(getApplication(), LoginActivity.class);
-						startActivity(intent);
+//						Intent intent = new Intent();
+//						intent.setClass(getApplication(), LoginActivity.class);
+//						startActivity(intent);
 						finish();
 					}
 				})

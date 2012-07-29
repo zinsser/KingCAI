@@ -18,8 +18,8 @@
 
 	<ImageView
 		android:id="@+id/imageViewLogo"
-		android:layout_width="15dip"
-		android:layout_height="20dip"
+		android:layout_width="150dip"
+		android:layout_height="200dip"
 		android:layout_gravity="center_horizontal"
 		android:scaleType="fitCenter"
 		android:background="#000000FF"

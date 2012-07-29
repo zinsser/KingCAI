@@ -29,11 +29,13 @@ public class NewQuestionMessage  extends ActiveMessage{
 	}
 	
 	public class ProgressObject{
+		String mID;
 		int mType;
 		String mAnswer;
 		String mContent;
 		boolean mHasImage;
-		ProgressObject(int type, String answer, String content, boolean hasImage){
+		ProgressObject(String id, int type, String answer, String content, boolean hasImage){
+			mID = id;
 			mType = type;
 			mAnswer = answer;
 			mContent = content;
@@ -65,7 +67,7 @@ public class NewQuestionMessage  extends ActiveMessage{
 						int type = Integer.parseInt(question.substring(TypePos+"[type]".length(), TypePos+"[type]".length()+1));
 						String hasImage = question.substring(imagePos + "[image]".length(), contentPos);
 						String content = question.substring(contentPos + "[content]".length(), question.length());
-						publishProgress(new ProgressObject(type, answer, content, "1".equals(hasImage)));
+						publishProgress(new ProgressObject(qId, type, answer, content, "1".equals(hasImage)));
 					}
 				}
 			}
@@ -88,7 +90,7 @@ public class NewQuestionMessage  extends ActiveMessage{
 			// 更新进度
 			//setProgress
 			for (ProgressObject obj : values){
-				mProcessListener.onNewQuestion(obj.mAnswer, obj.mType, obj.mContent, obj.mHasImage);					
+				mProcessListener.onNewQuestion(obj.mID, obj.mAnswer, obj.mType, obj.mContent, obj.mHasImage);					
 			}
 		}
 	};

@@ -2,8 +2,8 @@ package com.king.cai.messageservice;
 
 public class RequestImageMessage extends RequestMessage{
 	private final static String s_MsgTag = "[ImageRequest]";
-	private Integer mId;
-	public RequestImageMessage(Integer id){
+	private String mId;
+	public RequestImageMessage(String id){
 		super(s_MsgTag);
 		mId = id;
 	}

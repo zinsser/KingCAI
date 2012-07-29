@@ -54,10 +54,15 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 				
 			}
 
-			public void OnImageReady(Bitmap bmp) {
-				mLinearLayoutImage.setVisibility(View.VISIBLE);
-				mImageView_1.setVisibility(View.VISIBLE);
-				mImageView_1.setImageBitmap(bmp);
+			public void OnImageReady(String sid, Bitmap bmp) {
+				for (Integer qid : mQuestionMgr.GetIDs()){
+					if (mQuestionMgr.GetQuestionItem(qid).mID.equals(sid)){
+						ArrayList<Bitmap> bmpSaveds = mQuestionMgr.GetQuestionItem(qid).mGraphics; 
+						mImageView_1.setImageBitmap(bmpSaveds.get(0));
+						break;
+					}
+				}
+//				mImageView_1.setImageBitmap(bmp);
 			}
 	    });
 	}

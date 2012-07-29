@@ -20,9 +20,10 @@ public abstract class FireMessageReceiver implements Runnable{
     	mHostService.getApplication().sendBroadcast(intent);
 	}
 	
-	protected void FireMessage(String peerip, byte[] msgData){
+	protected void FireMessage(String peerip, String id, byte[] msgData){
     	Intent intent = new Intent(CommonDefine.BINARY_MESSAG_FROM_SERVICE_ACTION);
     	intent.putExtra("PEER", peerip);
+    	intent.putExtra("ID", id);
 		ByteBuffer buf = ByteBuffer.allocate(msgData.length);
 		buf.put(msgData);
 		intent.putExtra("CONTENT", buf.array());

@@ -56,7 +56,11 @@ public class LoginActivity  extends ComunicableActivity  {
 	private final static int DIALOG_MODIFY_PASSWORD = 1;
 	
 	private final static int EVENT_QUERY_TIME_OUT = 1;
+	private final static int EVENT_QUERY_SUCCESS = 2;	
+	private final static int EVENT_QUERY_FAIL = 3;
+	private final static int EVENT_LOGIN_TIME_OUT = 4;
 	private final static int DELAY_QUERY_TIME = 5000;
+	private final static int DELAY_LOGIN_TIME = 5000;
 	
 	private final static int RESULT_LOAD_HEADER_PHOTO= 1;
 	
@@ -134,13 +138,13 @@ public class LoginActivity  extends ComunicableActivity  {
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             switch (event.getKeyCode()) {
-                case KeyEvent.KEYCODE_BACK:
+//                case KeyEvent.KEYCODE_BACK:
                 case KeyEvent.KEYCODE_HOME:
                     return true;
             }
         } else if (event.getAction() == KeyEvent.ACTION_UP) {
             switch (event.getKeyCode()) {
-                case KeyEvent.KEYCODE_BACK:
+  //              case KeyEvent.KEYCODE_BACK:
                 case KeyEvent.KEYCODE_HOME:
                     return true;
             }
@@ -181,8 +185,10 @@ public class LoginActivity  extends ComunicableActivity  {
     private void SaveStudentInfo(String strID, String name, String password, String photo){
 		StudentDBHelper helper = new StudentDBHelper(getApplicationContext());
 		ContentValues values = new ContentValues();		
-
-		Integer id = Integer.parseInt(strID);
+		Integer id = 0;
+		if (strID != null && strID.length() > 0){
+			id = Integer.parseInt(strID);
+		}
 		values.put(StudentDBHelper.s_StudentTag_ID, id);  
 		values.put(StudentDBHelper.s_StudentTag_Name, name);  
 		values.put(StudentDBHelper.s_StudentTag_Passwd, password); 
@@ -194,7 +200,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		values.put(StudentDBHelper.s_StudentTag_Photo, /*os.toByteArray()*/photo);
 				
 		
-		helper.Insert(values, id);
+		helper.Insert(values, strID);
 
 		helper.close();
 	}
@@ -252,6 +258,12 @@ public class LoginActivity  extends ComunicableActivity  {
     		case EVENT_QUERY_TIME_OUT:
     			mTextViewStatus.setText(R.string.FailQueryServerStatus);
     			break;
+    		case EVENT_QUERY_SUCCESS:
+    			mTextViewStatus.setText(R.string.FoundServerStatus);
+    			break;
+    		case EVENT_QUERY_FAIL:
+    			mTextViewStatus.setText(R.string.SuccessLoginStatus);
+    			break;
     		}
     	}
     };
@@ -274,7 +286,13 @@ public class LoginActivity  extends ComunicableActivity  {
 		    			mTextViewStatus.setText(R.string.SelectClassTip);
 					}
 				}else{
-				    StartPaperActivity("初三一班  张三丰", mCheckBoxOffline.isChecked());					
+					mID = mTxtStudentID.getText().toString();
+					
+					if (mID == null || mID.length() <= 0){
+						showToast("Please input student number!!");
+					}else{
+						StartPaperActivity("初三一班  张三丰", mCheckBoxOffline.isChecked());
+					}
 				}
 	    	}else if (btn == mImgViewHeader){
 	    		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);  
@@ -392,7 +410,7 @@ public class LoginActivity  extends ComunicableActivity  {
     }
     
     public void StartPaperActivity(String studentInfo, boolean bOffline){
-    	SaveStudentInfo(mID, studentInfo, mTxtPassword.getText().toString(), mImgViewHeader.getDrawable().toString());
+//    	SaveStudentInfo(mID, studentInfo, mTxtPassword.getText().toString(), mImgViewHeader.getDrawable().toString());
     	
 		Intent openSheetActivity = new Intent(LoginActivity.this, PaperActivity.class);
 		openSheetActivity.putExtra(KingCAIConfig.StudentInfo, studentInfo);
@@ -414,15 +432,16 @@ public class LoginActivity  extends ComunicableActivity  {
 			mInnerHandler.removeMessages(EVENT_QUERY_TIME_OUT);
 			mServerIP = serverip;
 			mSSID = (String)mSpinnerSSID.getAdapter().getItem(mSpinnerSSID.getSelectedItemPosition());
-			mTextViewStatus.setText(R.string.FoundServerStatus);
+			mInnerHandler.obtainMessage(EVENT_QUERY_SUCCESS).sendToTarget();
 			mServiceChannel.setServerIPAddr(mServerIP);
 			mServiceChannel.connectServer(mTxtStudentID.getText().toString(), 
 										  mTxtPassword.getText().toString());
+			mInnerHandler.obtainMessage(EVENT_LOGIN_TIME_OUT).sendToTarget();
 		}
 
 
 		public void onLoginSuccess(String studentinfo) {
-			mTextViewStatus.setText(R.string.SuccessLoginStatus);
+			mInnerHandler.obtainMessage(EVENT_QUERY_FAIL).sendToTarget();
 			StartPaperActivity(studentinfo, mCheckBoxOffline.isChecked());
 		}
 
@@ -439,7 +458,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		}
 
 
-		public void onNewQuestion(String answer, int type, String content, boolean bHasImage) {
+		public void onNewQuestion(String id, String answer, int type, String content, boolean bHasImage) {
 			Log.d("PaperActivity", content);
 		}
 
@@ -449,7 +468,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		}
 
 
-		public void onNewImage(Integer id, ByteBuffer buf) {
+		public void onNewImage(String id, ByteBuffer buf) {
 			Log.d("PaperActivity", "new image");			
 		}
 	}    

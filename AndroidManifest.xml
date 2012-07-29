@@ -27,12 +27,12 @@
 	    	android:theme="@android:style/Theme.Light.NoTitleBar"  
 	    	android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" >
-          <intent-filter >
+              <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter> 
 
-    <!--           <intent-filter >
+ <!--          <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />

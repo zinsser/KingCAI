@@ -22,27 +22,39 @@ public class TCPSocketReceiver extends FireMessageReceiver{
 	protected TCPSocketReceiver(KingService s, int port) {
 		super(s);
 		mPort = port;
-		try{ 
-			mTcpSocket = new ServerSocket(mPort);
-			mTcpSocket.setReceiveBufferSize(8192);
-			mTcpSocket.setReuseAddress(true);
-		}catch (IOException e){
-			e.printStackTrace();
-		}
+		InitSocket();
 	}
 
+	public void InitSocket(){
+		if (mTcpSocket == null){
+			try{ 
+				mTcpSocket = new ServerSocket(mPort);
+				mTcpSocket.setReceiveBufferSize(8192);
+				mTcpSocket.setReuseAddress(true);
+			}catch (IOException e){
+				e.printStackTrace();
+			}		
+		}
+	}
+	
 	public void stopRunner(){
-		synchronized (mStopped){
-			mStopped = true;
-		};
+		mStopped = true;
+		try {
+			if (mTcpSocket != null) {
+				mTcpSocket.close();
+				mTcpSocket = null;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}  
+	}
+	
+	public boolean isRunning(){
+		return !mStopped;
 	}
 	
 	public void run() {
-/*		boolean bLocalStopped = false;
-		synchronized (mStopped){
-			bLocalStopped = mStopped;
-		}
-	*/	while (!mStopped) {
+		while (!mStopped) {
 			Socket socket = null;
 			try{
 			    socket = mTcpSocket.accept();
@@ -55,8 +67,10 @@ public class TCPSocketReceiver extends FireMessageReceiver{
 				    Log.d("TCPSocket", "msg:" + mReceiveBuf.array());
 			    	String msg = new String(mReceiveBuf.array(), KingCAIConfig.mCharterSet);
 			    	if (msg.contains(KingCAIConfig.NewImageMessageTag)){
-			    		int pos = msg.indexOf("\\");
-			    		mRemain = Integer.parseInt(msg.substring("[ImageBC]".length(), pos));
+			    		int posEnd = msg.indexOf("\\");
+			    		int posLen = msg.indexOf("[length]");
+			    		String id = msg.substring("[ImageBC]".length(), posLen);
+			    		mRemain = Integer.parseInt(msg.substring(posLen + "[length]".length(), posEnd));
 			    		mImageBuf = null;
 			    		mImageBuf = ByteBuffer.allocate(mRemain);
 			    		mImageBuf.clear();
@@ -75,7 +89,7 @@ public class TCPSocketReceiver extends FireMessageReceiver{
 				            }
 			            }while (length < mRemain);
 
-			            FireMessage(socket.getInetAddress().getHostAddress(), mImageBuf.array());				    		
+			            FireMessage(socket.getInetAddress().getHostAddress(), id, mImageBuf.array());				    		
 			    	}else{
 			    		FireMessage(socket.getInetAddress().getHostAddress(), msg);
 			    	}
@@ -92,20 +106,13 @@ public class TCPSocketReceiver extends FireMessageReceiver{
 						e.printStackTrace();
 					}
 				}
-			}
-/*
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-			synchronized (mStopped){
-				bLocalStopped = mStopped;
-			}*/			
+			}			
 		}
 		try {
-			mTcpSocket.close();
+			if (mTcpSocket != null) {
+				mTcpSocket.close();
+				mTcpSocket = null;
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}  

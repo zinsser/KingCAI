@@ -34,6 +34,7 @@ public class KingService extends Service{
     private static final String TAG = "KingService"; 
         
     private Thread mUDPReceiver = null;
+    private UDPSocketReceiver mUDPReceiverRoutine = null;
     private Thread mMulticastReceiver = null;
     private Thread mImageReceiver = null;
     private TCPSocketReceiver mImageReceiverRoutine = null;
@@ -45,58 +46,42 @@ public class KingService extends Service{
     
     @Override  
     public void onCreate() {  
-    	
-    	mUDPReceiver = new Thread(new UDPSocketReceiver(this, KingCAIConfig.mUDPPort));
-    	mReceiverRoutine = new TCPSocketReceiver(this, KingCAIConfig.mTextReceivePort);
-    	mTCPThread = new Thread(mReceiverRoutine);    	
-    	mImageReceiverRoutine = new TCPSocketReceiver(this, KingCAIConfig.mImageReceivePort);
-    	mImageReceiver = new Thread(mImageReceiverRoutine);
-
-        super.onCreate();  
+    	mUDPReceiverRoutine = new UDPSocketReceiver(this, KingCAIConfig.mUDPPort);
+    	mUDPReceiver = new Thread(mUDPReceiverRoutine);
+		mUDPReceiver.start();
+		InitSockets();
+		super.onCreate();  
     }  
       
-    @Override  
-    public void onStart(Intent intent, int startId) {
-
-		if (mUDPReceiver != null && !mUDPReceiver.isAlive()){
-			mUDPReceiver.start();
-		}
-		
-		if (mTCPThread != null && !mTCPThread.isAlive()){
+    public void InitSockets(){
+    	if (mReceiverRoutine == null && mTCPThread == null){
+	    	mReceiverRoutine = new TCPSocketReceiver(this, KingCAIConfig.mTextReceivePort);
+	    	mTCPThread = new Thread(mReceiverRoutine);    	
 			mTCPThread.start();
-		}
+    	}
 		
-		if (mMulticastReceiver != null && mMulticastReceiver.isAlive()){
-			mMulticastReceiver.start();
-		}
-		
-		if (mImageReceiver != null && mImageReceiver.isAlive()){
+    	if (mImageReceiverRoutine == null && mImageReceiver == null){
+	    	mImageReceiverRoutine = new TCPSocketReceiver(this, KingCAIConfig.mImageReceivePort);
+	    	mImageReceiver = new Thread(mImageReceiverRoutine);
 			mImageReceiver.start();
-		}    	
-
-   // 	setDefaultLauncher();
-		super.onStart(intent, startId);
-    }  
-      
+    	}
+	}
+    
     @Override  
     public void onDestroy() { 
-		if (mUDPReceiver != null && !mUDPReceiver.isAlive()){
-//			mUDPReceiver.stop();
-		}
-		
-		if (mReceiverRoutine != null 
-				&& mTCPThread != null && !mTCPThread.isAlive()){
-			mReceiverRoutine.stopRunner();
-		}
-		
-		if (mMulticastReceiver != null && mMulticastReceiver.isAlive()){
-//			mMulticastReceiver.stop();
-		}
-		if (mImageReceiver != null && mImageReceiver.isAlive()){
-			mImageReceiverRoutine.stopRunner();
-		}
+    	CleanSockets();
         super.onDestroy();
     } 
+    
+    public void CleanSockets(){
+    	mReceiverRoutine.stopRunner();
+    	mImageReceiverRoutine.stopRunner();
+    	
+    	mReceiverRoutine = null;
+    	mTCPThread = null;
+    	mImageReceiverRoutine = null;
+    	mImageReceiver = null;    	
+    }
     
     //这里定义吧一个Binder类，用在onBind()有方法里，这样Activity那边可以获取到 
     private MyBinder mBinder = new MyBinder();      

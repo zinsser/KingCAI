@@ -58,13 +58,13 @@ public class StudentDBHelper extends SQLiteOpenHelper {
 //				new Object[]{, id});
 	}
 	
-    public long Insert(ContentValues values, Integer id) {  
+    public long Insert(ContentValues values, String id) {  
         SQLiteDatabase db = getWritableDatabase();
         long ret = 0;
         try{
         	ret = db.insertOrThrow(TBL_PAPER, null, values);
         }catch (SQLException e){
-        	ret = db.update(TBL_PAPER, values, "id=?", new String[]{String.valueOf(id)});        	
+        	ret = db.update(TBL_PAPER, values, "id=?", new String[]{id});        	
         }
         db.close(); 
         return ret;

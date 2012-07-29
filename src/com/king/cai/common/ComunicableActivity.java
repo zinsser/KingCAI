@@ -79,6 +79,11 @@ public abstract class ComunicableActivity extends Activity{
     	super.onPause();
     }
     
+    @Override
+    public void onStop(){
+    	super.onStop();
+    } 
+    
     private int GetToastYPos(){
 		DisplayMetrics dm = new DisplayMetrics(); 
 		dm = getApplicationContext().getResources().getDisplayMetrics(); 
@@ -142,18 +147,19 @@ public abstract class ComunicableActivity extends Activity{
     		case EVENT_BINARY_MESSAGE:{
     			Bundle bundle = msg.getData();
             	String peerip = bundle.getString("PEER");
+            	String qid = bundle.getString("ID");
             	byte[] msgData = bundle.getByteArray("CONTENT");    			
-    			OnReceiveImage(peerip, msgData);
+    			OnReceiveImage(peerip, qid, msgData);
     			break;
     		}
     		}
     	}
     	
-    	private void OnReceiveImage(String peer, byte[] msgData){
+    	private void OnReceiveImage(String peer, String qid, byte[] msgData){
 			ByteBuffer buf = ByteBuffer.allocate(msgData.length);
 			buf.put(msgData);
 			NewImageMessage.NewImageFunctor functor = new NewImageMessage.NewImageFunctor();
-			NewImageMessage activeMsgExecutor = (NewImageMessage) functor.OnReceiveMessage(peer,  buf.array());
+			NewImageMessage activeMsgExecutor = (NewImageMessage) functor.OnReceiveMessage(peer,  qid, buf.array());
 			activeMsgExecutor.Execute(mEventProcessListener);
     	}
     	
@@ -184,11 +190,20 @@ public abstract class ComunicableActivity extends Activity{
     	private KingService mKingService = null;
     	public void onServiceConnected(ComponentName name, IBinder service) { 
         	mKingService = ((KingService.MyBinder)service).getService();
+        	mKingService.InitSockets();
         	doServiceReady();
         }
         
         public void onServiceDisconnected(ComponentName name) {  
         	mKingService = null;
+        }
+        
+        public void InitSockets(){
+        	mKingService.InitSockets();
+        }
+        
+        public void CleanSockets(){
+        	mKingService.CleanSockets();
         }
         
         public void sendMessage(RequestMessage msg, String ip){
@@ -234,8 +249,8 @@ public abstract class ComunicableActivity extends Activity{
 		public abstract void  onLoginSuccess(final String studentinfo);
 		public abstract void  onLoginFail();	
 		public abstract void  onPaperTitleReceived(String title);	
-		public abstract void  onNewQuestion(String answer, int type, String content, boolean bHasImage);
+		public abstract void  onNewQuestion(String id, String answer, int type, String content, boolean bHasImage);
 		public abstract void  onCleanPaper();
-		public abstract void  onNewImage(Integer id, ByteBuffer buf);
+		public abstract void  onNewImage(String id, ByteBuffer buf);
 	}
 }

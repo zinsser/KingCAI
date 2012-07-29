@@ -47,7 +47,7 @@ public class PaperViewAdapter extends BaseAdapter {
     	}
 
 
-		public void OnImageReady(Bitmap bmp) {
+		public void OnImageReady(String sid, Bitmap bmp) {
 			// TODO Auto-generated method stub
 			
 		}

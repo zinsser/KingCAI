@@ -17,22 +17,44 @@ public class UDPSocketReceiver extends FireMessageReceiver{
 	private DatagramPacket mDatagramPacket = null;
 	// 接收的字节大小，客户端发送的数据不能超过这个大小
 	private ByteBuffer mMsgBuffer = ByteBuffer.allocate(20480);
+	private int mPort;
 	
 	public UDPSocketReceiver(KingService s, int port){
 		super(s);
-		try {
-			// 建立Socket连接
-			mDatagramSocket = new DatagramSocket(port/*KingCAIConfig.mUDPPort*/);
-			mDatagramPacket = new DatagramPacket(mMsgBuffer.array(), mMsgBuffer.array().length);
-		}catch (SocketException e){
-			e.printStackTrace();
+		mPort = port;
+		InitSocket();
+	}
+
+	public void InitSocket(){
+		if (mDatagramSocket == null){
+			try {
+				// 建立Socket连接
+				mDatagramSocket = new DatagramSocket(mPort/*KingCAIConfig.mUDPPort*/);
+				mDatagramPacket = new DatagramPacket(mMsgBuffer.array(), mMsgBuffer.array().length);
+			}catch (SocketException e){
+				e.printStackTrace();
+			}
 		}
 	}
 	
+	public void stopRunner(){
+		if (mDatagramSocket != null) {
+			mDatagramSocket.close();
+			mDatagramSocket = null;
+		}
+		mDatagramPacket = null;
+	}	
+	
+	public boolean isRunning(){
+		return mDatagramPacket != null && mDatagramSocket != null;
+	}
+	
 	public void run(){
-		String result = "[Starting]";
-		do{
+		while (mDatagramPacket != null && mDatagramSocket != null){
 			try {
+				if (mDatagramPacket == null) break;
+				if (mDatagramSocket == null) break;
+				if (mMsgBuffer == null) break; 
 				mMsgBuffer.clear();
 				mDatagramSocket.receive(mDatagramPacket);
 				String remoteip = mDatagramPacket.getAddress().getHostAddress().toString();
@@ -44,9 +66,11 @@ public class UDPSocketReceiver extends FireMessageReceiver{
 			}catch(IOException e) {
 				e.printStackTrace();
 			}
-		}while (!result.contains("[NetLogout]")
-				|| !"".equals(result));
+		};
 		
-		mDatagramSocket.close();
+		if (mDatagramSocket != null) {
+			mDatagramSocket.close();
+			mDatagramSocket = null;
+		}
 	}
 }

@@ -77,7 +77,7 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 		mAnswers.clear();
 	}
 
-	public void OnImageReady(Bitmap bmp) {
+	public void OnImageReady(String sid, Bitmap bmp) {
 		
 	}
 }

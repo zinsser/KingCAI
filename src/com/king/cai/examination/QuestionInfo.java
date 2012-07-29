@@ -13,13 +13,15 @@ public class QuestionInfo {
 	public static final int QUESTION_TYPE_LOGIC = 5;
 	public static final int QUESTION_TYPE_MAX = QUESTION_TYPE_LOGIC + 1;
 	
+	public String mID;
 	public int mType;
 	public String mDetail;
 	public String mReference;
 	public boolean mHasImage;
 	public ArrayList<Bitmap> mGraphics = new ArrayList<Bitmap>();
 	
-	public QuestionInfo(int type, String reference, String detail, boolean bHasImage){
+	public QuestionInfo(String id, int type, String reference, String detail, boolean bHasImage){
+		mID = id;
 		mDetail = detail;
 		mReference = reference;
 		mHasImage = bHasImage;
