@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 
 import com.king.cai.R;
-import com.king.cai.ServerInfo;
-import com.king.cai.WifiStateManager;
+import com.king.cai.platform.internal.ServerInfo;
+import com.king.cai.platform.internal.WifiMonitor;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperActivity;
 import com.king.cai.platform.KingCAIConfig;
@@ -77,7 +77,7 @@ public class LoginActivity  extends ComunicableActivity  {
 	private String mSSID = "һ�꼶";
 	private String mID;
 	private Spinner mSpinnerSSID = null;
-	private WifiStateManager mWifiStateMgr = null;
+	private WifiMonitor mWifiStateMgr = null;
 	private TextView mTextViewBaseInfo = null;
 	private TextView mTextViewStatus = null;
 	
@@ -97,7 +97,7 @@ public class LoginActivity  extends ComunicableActivity  {
         mTxtStudentID = (EditText)findViewById(R.id.txtStudentID);
         mTxtPassword = (EditText)findViewById(R.id.txtPassword);
         
-        mWifiStateMgr = new WifiStateManager(this, new WifiStateEventListener());
+        mWifiStateMgr = new WifiMonitor(this, new WifiStateEventListener());
         
         initSpinnerBar();
         findViewById(R.id.imageViewSpinnerDown).setOnClickListener(new View.OnClickListener(){
@@ -239,7 +239,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		}
     }
     
-    public class WifiStateEventListener implements WifiStateManager.WifiStateListener{
+    public class WifiStateEventListener implements WifiMonitor.WifiStateListener{
 
 
 		public void onScanResultChanged(ArrayList<ServerInfo> serverInfos) {

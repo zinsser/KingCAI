@@ -6,21 +6,22 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
+import android.os.Message;
 import android.util.Log;
 
 import com.king.cai.platform.KingCAIConfig;
-import com.king.cai.platform.internal.FireMessageReceiver;
+import com.king.cai.platform.internal.FirableThread;
 
 
-public class UDPSocketReceiver extends FireMessageReceiver{
+public class UDPServerThread extends FirableThread{
 	private DatagramSocket mDatagramSocket = null;
 	private DatagramPacket mDatagramPacket = null;
 	// 接收的字节大小，客户端发送的数据不能超过这个大小
 	private ByteBuffer mMsgBuffer = ByteBuffer.allocate(20480);
 	private int mPort;
 	
-	public UDPSocketReceiver(KingService s, int port){
-		super(s);
+	public UDPServerThread(Message msg, int port){
+		super(msg);
 		mPort = port;
 		InitSocket();
 	}

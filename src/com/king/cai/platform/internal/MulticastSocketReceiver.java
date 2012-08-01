@@ -9,9 +9,9 @@ import java.nio.ByteBuffer;
 import android.util.Log;
 
 import com.king.cai.platform.KingCAIConfig;
-import com.king.cai.platform.internal.FireMessageReceiver;
+import com.king.cai.platform.internal.FirableThread;
 
-public class MulticastSocketReceiver extends FireMessageReceiver{
+public class MulticastSocketReceiver extends FirableThread{
 	private boolean mStopMultiReceiver = false;
     private MulticastSocket mMulticastSocket = null;
     private DatagramPacket mDatagramPacket = null;

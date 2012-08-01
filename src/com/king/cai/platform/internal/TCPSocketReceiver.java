@@ -11,7 +11,7 @@ import com.king.cai.platform.KingCAIConfig;
 
 import android.util.Log;
 
-public class TCPSocketReceiver extends FireMessageReceiver{
+public class TCPSocketReceiver extends FirableThread{
     private ServerSocket mTcpSocket = null;
     private Boolean mStopped = false;
 	private ByteBuffer mReceiveBuf = ByteBuffer.allocate(8192);

@@ -16,7 +16,7 @@ import com.king.cai.messageservice.LoginRequestMessage;
 import com.king.cai.messageservice.QueryServerMessage;
 import com.king.cai.messageservice.RequestMessage;
 import com.king.cai.platform.KingCAIConfig;
-import com.king.cai.platform.internal.UDPSocketReceiver;
+import com.king.cai.platform.internal.UDPServerThread;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -34,7 +34,7 @@ public class KingService extends Service{
     private static final String TAG = "KingService"; 
         
     private Thread mUDPReceiver = null;
-    private UDPSocketReceiver mUDPReceiverRoutine = null;
+    private UDPServerThread mUDPReceiverRoutine = null;
     private Thread mMulticastReceiver = null;
     private Thread mImageReceiver = null;
     private TCPSocketReceiver mImageReceiverRoutine = null;
@@ -46,7 +46,7 @@ public class KingService extends Service{
     
     @Override  
     public void onCreate() {  
-    	mUDPReceiverRoutine = new UDPSocketReceiver(this, KingCAIConfig.mUDPPort);
+    	mUDPReceiverRoutine = new UDPServerThread(this, KingCAIConfig.mUDPPort);
     	mUDPReceiver = new Thread(mUDPReceiverRoutine);
 		mUDPReceiver.start();
 		InitSockets();

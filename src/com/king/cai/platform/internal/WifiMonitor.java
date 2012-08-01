@@ -1,9 +1,9 @@
-package com.king.cai;
+package com.king.cai.platform.internal;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.king.cai.ServerInfo;
+import com.king.cai.platform.internal.ServerInfo;
 import com.king.cai.common.KingCAIUtils;
 
 import android.content.Context;
@@ -20,7 +20,7 @@ import android.net.NetworkInfo.State;
 import android.util.Log;
 import java.util.HashMap;
 
-public class WifiStateManager {
+public class WifiMonitor {
 	private final static int WIFI_STATUS_SCANNING = 10;
 	private final static int WIFI_STATUS_RESULT_RETRIVED = 11;	
 	private final static int WIFI_STATUS_SCANED = 12;	
@@ -38,7 +38,7 @@ public class WifiStateManager {
 		public void  onServerInfoChanged(final String wifiInfo);
 	}
 	
-	public WifiStateManager(Context ctx, WifiStateListener listener){
+	public WifiMonitor(Context ctx, WifiStateListener listener){
 		mWifiStateListener = listener;
 		mWifiService = (WifiManager)ctx.getSystemService(Context.WIFI_SERVICE);
 		mConnManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);		
