@@ -1,7 +1,6 @@
 package com.king.cai;
 
 
-import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
@@ -18,7 +17,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import android.app.AlertDialog;
@@ -77,7 +75,6 @@ public class LoginActivity  extends ComunicableActivity  {
 	private String mSSID = "一年级";
 	private String mID;
 	private Spinner mSpinnerSSID = null;
-	private WifiMonitor mWifiStateMgr = null;
 	private TextView mTextViewBaseInfo = null;
 	private TextView mTextViewStatus = null;
 	
@@ -96,8 +93,6 @@ public class LoginActivity  extends ComunicableActivity  {
         
         mTxtStudentID = (EditText)findViewById(R.id.txtStudentID);
         mTxtPassword = (EditText)findViewById(R.id.txtPassword);
-        
-        mWifiStateMgr = new WifiMonitor(this, new WifiStateEventListener());
         
         initSpinnerBar();
         findViewById(R.id.imageViewSpinnerDown).setOnClickListener(new View.OnClickListener(){
@@ -121,14 +116,11 @@ public class LoginActivity  extends ComunicableActivity  {
     public void onStart(){
     	super.onStart();
     	ReadLastLogin();
-    	mWifiStateMgr.Register(getApplication());
     	mTextViewStatus.setText(R.string.FindSSIDStatus);
-        mWifiStateMgr.StartScanServer();
     }
     
     @Override
     public void onStop(){
-    	mWifiStateMgr.UnRegister(getApplication());
     	SaveLastLogin();
     	super.onStop();    	
     }
@@ -231,7 +223,7 @@ public class LoginActivity  extends ComunicableActivity  {
 				long arg3) {
 			String tag = (String)arg0.getAdapter().getItem(arg2);
 			if (arg2 != 0){
-		        mWifiStateMgr.ConnectToWifi(tag);
+		        mServiceChannel.connectSSID(tag);
 			}
 		}
 
@@ -278,7 +270,7 @@ public class LoginActivity  extends ComunicableActivity  {
 				if (!mCheckBoxOffline.isChecked()){
 					if (mSpinnerSSID.getSelectedItemPosition() != 0){
 		    			mTextViewStatus.setText(R.string.QueryServerStatus);						
-						mServiceChannel.QueryServer();						
+						mServiceChannel.queryServer();						
 						Message msg = mInnerHandler.obtainMessage(EVENT_QUERY_TIME_OUT);
 						mInnerHandler.sendMessageDelayed(msg, DELAY_QUERY_TIME);
 					}else{
@@ -353,14 +345,12 @@ public class LoginActivity  extends ComunicableActivity  {
 						EditText textFirst = (EditText)modifyView.findViewById(R.id.editTextFirstPassword);
 						EditText textSecond = (EditText)modifyView.findViewById(R.id.editTextSecond);
 						EditText textOld = (EditText)modifyView.findViewById(R.id.editTextOldPassword);
-						//TODO:检查textOld是否正确
+
 			    		StudentDBHelper dbHelper = new StudentDBHelper(LoginActivity.this);
 			    		ContentValues values = dbHelper.FindItem(mID);
 						String oldPwd = (String)values.get(StudentDBHelper.s_StudentTag_Passwd);
 						if (oldPwd != null && oldPwd.equals(textOld)){
-							//TODO:检查前后两者是否相等
 							if (textFirst.getText().equals(textSecond.getText())){
-								//TODO:设置密码到数据库
 								values.put(StudentDBHelper.s_StudentTag_Passwd, textFirst.toString());
 								dbHelper.Update(values, mID);
 							}

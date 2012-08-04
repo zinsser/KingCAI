@@ -6,6 +6,8 @@ public class KingCAIConfig {
 	public final static int EVENT_CLIENT_LOGIN = 2;
 	public final static int EVENT_LOGIN_FINISHED = 3;
 	public final static int EVENT_RECEIVE_MESSAGE = 4;
+	public final static String  SOCKET_EVENT_ACTION = "com.king.cai.socket.event";
+	
 	
 	public final static String mCharterSet = "GBK";
 

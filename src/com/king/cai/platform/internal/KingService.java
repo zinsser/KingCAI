@@ -1,284 +1,141 @@
 package com.king.cai.platform.internal;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-
-import com.king.cai.AppEnumActivity;
 import com.king.cai.messageservice.LoginRequestMessage;
 import com.king.cai.messageservice.QueryServerMessage;
 import com.king.cai.messageservice.RequestMessage;
 import com.king.cai.platform.KingCAIConfig;
-import com.king.cai.platform.internal.UDPServerThread;
+import com.king.cai.platform.internal.UDPServerRunner;
 
 import android.app.Service;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.net.DhcpInfo;
-import android.net.wifi.WifiManager;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
+import android.os.Message;
 
-public class KingService extends Service{
-    private static final String TAG = "KingService"; 
+public class KingService extends Service{        
+    private UDPServerRunner mUdpReceiverRoutine = null;
+    private TCPClient mTcpClient = null;
+    
+    private String mServerAddr = null;
+    private String mActiveSSID = null;
         
-    private Thread mUDPReceiver = null;
-    private UDPServerThread mUDPReceiverRoutine = null;
-    private Thread mMulticastReceiver = null;
-    private Thread mImageReceiver = null;
-    private TCPSocketReceiver mImageReceiverRoutine = null;
-    private Thread mTCPThread = null;
-    private TCPSocketReceiver mReceiverRoutine = null;
-    private Socket mTCPTextChannelSocket = null;
-
-    private String mServerIP = null;
-    
-    @Override  
-    public void onCreate() {  
-    	mUDPReceiverRoutine = new UDPServerThread(this, KingCAIConfig.mUDPPort);
-    	mUDPReceiver = new Thread(mUDPReceiverRoutine);
-		mUDPReceiver.start();
-		InitSockets();
-		super.onCreate();  
-    }  
-      
-    public void InitSockets(){
-    	if (mReceiverRoutine == null && mTCPThread == null){
-	    	mReceiverRoutine = new TCPSocketReceiver(this, KingCAIConfig.mTextReceivePort);
-	    	mTCPThread = new Thread(mReceiverRoutine);    	
-			mTCPThread.start();
-    	}
-		
-    	if (mImageReceiverRoutine == null && mImageReceiver == null){
-	    	mImageReceiverRoutine = new TCPSocketReceiver(this, KingCAIConfig.mImageReceivePort);
-	    	mImageReceiver = new Thread(mImageReceiverRoutine);
-			mImageReceiver.start();
-    	}
-	}
-    
-    @Override  
-    public void onDestroy() { 
-    	CleanSockets();
-        super.onDestroy();
-    } 
-    
-    public void CleanSockets(){
-    	mReceiverRoutine.stopRunner();
-    	mImageReceiverRoutine.stopRunner();
-    	
-    	mReceiverRoutine = null;
-    	mTCPThread = null;
-    	mImageReceiverRoutine = null;
-    	mImageReceiver = null;    	
-    }
+    private WifiMonitor mWifiMonitor = null;
     
     //这里定义吧一个Binder类，用在onBind()有方法里，这样Activity那边可以获取到 
     private MyBinder mBinder = new MyBinder();      
-	@Override
-	public IBinder onBind(Intent intent) {
-        return mBinder;
-	}
 	
 	public class MyBinder extends Binder{
 		public KingService getService(){
             return KingService.this;
         }  
     }      
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		if (mWifiMonitor != null){
+		//	mWifiMonitor.registIntentFilter(getApplicationContext());
+		}
+        return mBinder;
+	}
       
     @Override  
-    public boolean onUnbind(Intent intent) {  
+    public boolean onUnbind(Intent intent) {
+    	if (mWifiMonitor != null){
+    		//mWifiMonitor.unRegistIntentFilter(getApplicationContext());
+    	}
         return super.onUnbind(intent);  
     }
     
-    private void setDefaultLauncher(){
-    	PackageManager pm = getPackageManager();
+    @Override  
+    public void onCreate() {  
+		super.onCreate();
+		mWifiMonitor = null;
+		mWifiMonitor = new WifiMonitor(getApplicationContext(), 
+										Message.obtain(mHandler, WIFI_EVENT));
+    }      
+    
+    public static final int SOCKET_EVENT = 0;
+    public static final int WIFI_EVENT = 1;
+    
+    private Handler mHandler = new Handler(){
+    	@Override
+    	public void handleMessage(Message msg){
+    		switch (msg.what){
+    		case SOCKET_EVENT:
+    			Intent intent = new Intent(KingCAIConfig.SOCKET_EVENT_ACTION);
+    			intent.putExtras(msg.getData());
+    			sendBroadcast(intent);
+    			break;
+    		case WIFI_EVENT:
+    			break;
+    		}
+    	}
+    };
 
-    	IntentFilter filter = new IntentFilter();
-    	filter.addAction("android.intent.action.MAIN");
-    	filter.addCategory("android.intent.category.HOME");
-    	filter.addCategory("android.intent.category.DEFAULT"); 
-    	Context context = getApplicationContext();
-    	ComponentName component = new ComponentName(context.getPackageName(), 
-    									AppEnumActivity.class.getName());
-    	ComponentName[] components = new ComponentName[] {
-    			new ComponentName("com.android.launcher", "com.android.launcher.Launcher"), 
-    			component};
-
-    	pm.clearPackagePreferredActivities("com.android.launcher");
-    	pm.addPreferredActivity(filter, IntentFilter.MATCH_CATEGORY_EMPTY, components, component);    	
+    public void scanSSID(){
+    	if (mWifiMonitor != null){
+    		mWifiMonitor.startScanServer();
+    	}
     }
     
-    public static boolean runRootCommand(String command) {  
-        Process process = null;  
-        DataOutputStream os = null;  
-            try {  
-            process = Runtime.getRuntime().exec("su");  
-            os = new DataOutputStream(process.getOutputStream());  
-            os.writeBytes(command+"\n");  
-            os.writeBytes("exit\n");  
-            os.flush();  
-            process.waitFor();  
-            } catch (Exception e) {  
-                    Log.d("*** DEBUG ***", "Unexpected error - Here is what I know: "+e.getMessage());  
-                    return false;  
-            }  
-            finally {  
-                    try {  
-                            if (os != null) {  
-                                    os.close();  
-                            }  
-                            process.destroy();  
-                    } catch (Exception e) {  
-                            // nothing  
-                    }  
-            }  
-            return true;  
-    }     
-    
-    public void setTextChannelSocket(Socket channel){
-    	mTCPTextChannelSocket = channel;
+    public void connectSSID(String ssid){
+    	mActiveSSID = ssid;
+    	if (mWifiMonitor != null){
+    		mWifiMonitor.connectToWifi(mActiveSSID);
+    	}
     }
-    
-    public void setBinaryChannelSocket(Socket channel){
-    	//TODO:
-    }
-
+        
 	public void queryServer(){
-		//1～2 见
-		//3：UDPReceiver：ReciveMessage
-		//4，消息接收线程收到服务器的响应消息后，将消息转发给主线程
-		//5，发送协商完成消息[FinishIPTalking]到对方
+		//0，学生终端和教师服务器连接到同一个SSID，组成无线局域网		
+		//1，学生终端向局域网广播发送教师服务器查询消息，同时启动UDP服务器
+		//2，教师服务器收到该消息后，将ip地址作为响应通过UDP消息返回
+		//3，学生终端通过UDP接收到该响应后，更新本地的服务器IP地址
+		//4，并启动TCPClient，通过TCP和教师服务器保持通信
 		sendMessage(new QueryServerMessage(getLocalIPAddress()));
+		startUDPServer();
 	}
+	
+	private void startUDPServer(){
+		if (mUdpReceiverRoutine == null){
+			mUdpReceiverRoutine = new UDPServerRunner(Message.obtain(mHandler, SOCKET_EVENT), 
+					KingCAIConfig.mUDPPort);
+		}
+		if (!mUdpReceiverRoutine.isRunning()){
+			new Thread(mUdpReceiverRoutine).start();
+		}
+	}
+
+    public void updateServerAddr(String addr){
+    	mServerAddr = addr;
+    	mTcpClient = new TCPClient(Message.obtain(mHandler, SOCKET_EVENT), mServerAddr);
+    }
 	
 	public void connectServer(String number, String password){
 		sendMessage(new LoginRequestMessage(number, password), 0);
 	}
 	
-	public void setServerIPAddr(String serverip){
-		mServerIP = serverip;
-	}
-	
 	//TCP Socket use this function
 	public void sendMessage(RequestMessage msg, int mode ){
-		// 根据服务器地址和端口号实例化一个Socket实例  
-		Socket socket = null;
-		try {
-			socket = new Socket(mServerIP, KingCAIConfig.mTextSendPort);
-			// 返回此套接字的输出流，即向服务器发送的数据对象  
-			OutputStream out = socket.getOutputStream();  
-			// 向服务器发送从控制台接收的数据  
-			out.write(msg.ToPack().getBytes());  
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-		 	e.printStackTrace();
-		} finally {
-			if (socket != null){
-				try {
-					socket.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}  	
+		if (mTcpClient != null){
+			mTcpClient.sendMessage(msg.ToPack());
+		}
 	}	
 	
 	//UDP Socket use this function
 	public void sendMessage(RequestMessage msg, String destip){
-		try {
-			String rawMsg = msg.ToPack();
-			DatagramSocket s = new DatagramSocket();
-			InetAddress	local = InetAddress.getByName(destip);			
-			DatagramPacket p = new DatagramPacket(rawMsg.getBytes(), rawMsg.getBytes().length,
-								local, KingCAIConfig.mUDPPort);
-			s.send(p);
-			s.close();
-		} catch (SocketException e){
-			e.printStackTrace();
-		} catch (UnknownHostException e){
-			e.printStackTrace();
-		} catch (IOException e){
-			e.printStackTrace();
-		}
+		UDPSenderThread sender = new UDPSenderThread(destip, KingCAIConfig.mUDPPort, msg.ToPack());
+		sender.start();
 	}
 	
 	//multicast socket Socket use this function		
 	public void sendMessage(RequestMessage msg) {
-	    try{
-	    	String rawMsg = msg.ToPack();
-	        int TTL = 4;
-	        MulticastSocket multiSocket = new MulticastSocket();  
-	        multiSocket.setTimeToLive(TTL);
-	        InetAddress  GroupAddress = InetAddress.getByName(KingCAIConfig.mMulticastServerGroupIP);
-	        DatagramPacket dp = new DatagramPacket(rawMsg.getBytes(), rawMsg.getBytes().length, 
-	        					GroupAddress, KingCAIConfig.mMulticastServerCommonPort);
-	        multiSocket.send(dp);
-	        multiSocket.close();
-		}catch (IOException e){
-			e.printStackTrace();
-		}
-	}
-
-	//客户机向服务器点对点发送图片
-	public void SendImage(RequestMessage msg, String destip) {
-	    try{
-	    	String rawMsg = msg.ToPack();
-	        int TTL = 4;
-	        MulticastSocket multiSocket = new MulticastSocket();  
-	        multiSocket.setTimeToLive(TTL);
-	        InetAddress  GroupAddress = InetAddress.getByName(destip);
-	        DatagramPacket dp = new DatagramPacket(rawMsg.getBytes(), rawMsg.getBytes().length, 
-	        					GroupAddress, KingCAIConfig.mUDPServerImagePort);
-	        multiSocket.send(dp);
-	        multiSocket.close();
-		}catch (IOException e){
-			e.printStackTrace();
-		}
-	}
-
-	//服务器向客户机广播发送图片
-	public void SendImage(RequestMessage msg) {
-	    try{
-	    	String rawMsg = msg.ToPack();
-	        int TTL = 4;
-	        MulticastSocket multiSocket = new MulticastSocket();  
-	        multiSocket.setTimeToLive(TTL);
-	        InetAddress  GroupAddress = InetAddress.getByName(KingCAIConfig.mMulticastClientImageGroupIP);
-	        DatagramPacket dp = new DatagramPacket(rawMsg.getBytes(), rawMsg.getBytes().length, 
-	        					GroupAddress, KingCAIConfig.mImageReceivePort);
-	        multiSocket.send(dp);
-	        multiSocket.close();
-		}catch (IOException e){
-			e.printStackTrace();
-		}
+	    MulticastSenderThread sender = new MulticastSenderThread(KingCAIConfig.mMulticastClientGroupIP,
+	    									KingCAIConfig.mImageReceivePort, msg.ToPack());
+	    sender.start();
 	}
 	
     public String getLocalIPAddress(){
-    	String ipAddr = null;
-    	
-    	WifiManager mWifiMgr = (WifiManager)getSystemService(Context.WIFI_SERVICE);   
-    	if (mWifiMgr != null){
-        	DhcpInfo dhcpInfo = mWifiMgr.getDhcpInfo();
-        	if (dhcpInfo != null){
-	        	ipAddr = ((dhcpInfo.ipAddress) & 0xff) + "."
-	        			+ ((dhcpInfo.ipAddress >> 8) & 0xff) + "."
-	        			+ ((dhcpInfo.ipAddress >> 16) & 0xff) + "."
-	        			+ ((dhcpInfo.ipAddress >> 24) & 0xff);	        	
-        	}
-    	}
-    	
-    	return ipAddr;
+    	return mWifiMonitor.getLocalIPAddress();
     }
 }

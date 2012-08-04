@@ -9,6 +9,7 @@ import com.king.cai.messageservice.ActiveMessageManager;
 import com.king.cai.messageservice.NewImageMessage;
 import com.king.cai.messageservice.RequestMessage;
 import com.king.cai.platform.CommonDefine;
+import com.king.cai.platform.KingCAIConfig;
 import com.king.cai.platform.internal.KingService;
 
 import android.app.Activity;
@@ -45,15 +46,9 @@ public abstract class ComunicableActivity extends Activity{
     	mHandler = new ServiceMessageHandler(Comunicator.getLooper());
 
     	mReceiver = new ServiceMessageReceiver(mHandler);
-    	mEventProcessListener = getEventProcessListener();
-    }
-    
-    public EventProcessListener getEventProcessListener(){
     	if (mEventProcessListener == null){
     		mEventProcessListener = doGetEventProcessListener();
     	}
-    	
-    	return mEventProcessListener;
     }
     
     protected abstract EventProcessListener doGetEventProcessListener();
@@ -63,8 +58,7 @@ public abstract class ComunicableActivity extends Activity{
     	super.onResume();
     	
     	IntentFilter filter = new IntentFilter();
-    	filter.addAction(CommonDefine.TEXT_MESSAG_FROM_SERVICE_ACTION);
-    	filter.addAction(CommonDefine.BINARY_MESSAG_FROM_SERVICE_ACTION);
+    	filter.addAction(KingCAIConfig.SOCKET_EVENT_ACTION);
     	registerReceiver(mReceiver, filter);
 
     	Intent intent = new Intent(CommonDefine.START_PLATFORM_ACTION);  
@@ -78,11 +72,6 @@ public abstract class ComunicableActivity extends Activity{
 
     	super.onPause();
     }
-    
-    @Override
-    public void onStop(){
-    	super.onStop();
-    } 
     
     private int GetToastYPos(){
 		DisplayMetrics dm = new DisplayMetrics(); 
@@ -112,14 +101,9 @@ public abstract class ComunicableActivity extends Activity{
     	@Override
     	public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (CommonDefine.TEXT_MESSAG_FROM_SERVICE_ACTION.equals(action)){
+            if (KingCAIConfig.SOCKET_EVENT_ACTION.equals(action)){
         		Bundle bundle = new Bundle(intent.getExtras());
-        		Message msg = mHostHandler.obtainMessage(ServiceMessageHandler.EVENT_TEXT_MESSAGE);
-        		msg.setData(bundle);
-        		msg.sendToTarget();
-            }else if (CommonDefine.BINARY_MESSAG_FROM_SERVICE_ACTION.equals(action)){
-        		Bundle bundle = new Bundle(intent.getExtras());
-        		Message msg = mHostHandler.obtainMessage(ServiceMessageHandler.EVENT_BINARY_MESSAGE);
+        		Message msg = mHostHandler.obtainMessage(ServiceMessageHandler.EVENT_SOCKET_MESSAGE);
         		msg.setData(bundle);
         		msg.sendToTarget();            	
             }
@@ -129,6 +113,8 @@ public abstract class ComunicableActivity extends Activity{
 	public class ServiceMessageHandler extends Handler{
     	public static final int EVENT_TEXT_MESSAGE = 0;
     	public static final int EVENT_BINARY_MESSAGE = 1;
+    	public static final int EVENT_SOCKET_MESSAGE = 2;
+    	
 		private ActiveMessageManager mActiveMsgMgr = new ActiveMessageManager();
 		public ServiceMessageHandler(Looper loop){
 			super(loop);
@@ -137,25 +123,22 @@ public abstract class ComunicableActivity extends Activity{
     	@Override
     	public void handleMessage(Message msg){
     		switch (msg.what){
-    		case EVENT_TEXT_MESSAGE:{
-    			Bundle bundle = msg.getData();
-            	String peerip = bundle.getString("PEER");
-            	String msgData = bundle.getString("CONTENT");    			
-    			OnReceiveMessage(peerip, msgData);
-    			break;
-    		}
-    		case EVENT_BINARY_MESSAGE:{
-    			Bundle bundle = msg.getData();
-            	String peerip = bundle.getString("PEER");
-            	String qid = bundle.getString("ID");
-            	byte[] msgData = bundle.getByteArray("CONTENT");    			
-    			OnReceiveImage(peerip, qid, msgData);
-    			break;
-    		}
+			case EVENT_SOCKET_MESSAGE:{
+				Bundle bundle = msg.getData();
+				boolean bTextMessage = bundle.getBoolean("TYPE");
+				String peerip = bundle.getString("PEER");
+				byte[] msgBuf = bundle.getByteArray("CONTENT");
+				if (bTextMessage){
+					onReceiveMessage(peerip, new String(msgBuf));
+				}else{
+//					onReceiveImage(peerip, );
+				}
+				break;
+			}
     		}
     	}
     	
-    	private void OnReceiveImage(String peer, String qid, byte[] msgData){
+    	private void onReceiveImage(String peer, String qid, byte[] msgData){
 			ByteBuffer buf = ByteBuffer.allocate(msgData.length);
 			buf.put(msgData);
 			NewImageMessage.NewImageFunctor functor = new NewImageMessage.NewImageFunctor();
@@ -163,7 +146,7 @@ public abstract class ComunicableActivity extends Activity{
 			activeMsgExecutor.Execute(mEventProcessListener);
     	}
     	
-    	private void OnReceiveMessage(String peer, String MsgData){
+    	private void onReceiveMessage(String peer, String MsgData){
     		Log.d("MessageHandler", "Raw Msg Data:" + MsgData);
     		ActiveMessage activeMsgExecutor = null;
     		Set<String> keysets = mActiveMsgMgr.mActiveMsgMap.keySet();
@@ -190,7 +173,6 @@ public abstract class ComunicableActivity extends Activity{
     	private KingService mKingService = null;
     	public void onServiceConnected(ComponentName name, IBinder service) { 
         	mKingService = ((KingService.MyBinder)service).getService();
-        	mKingService.InitSockets();
         	doServiceReady();
         }
         
@@ -198,12 +180,10 @@ public abstract class ComunicableActivity extends Activity{
         	mKingService = null;
         }
         
-        public void InitSockets(){
-        	mKingService.InitSockets();
-        }
-        
-        public void CleanSockets(){
-        	mKingService.CleanSockets();
+        public void connectSSID(String ssid){
+        	if (mKingService != null){
+        		mKingService.connectSSID(ssid);
+        	}
         }
         
         public void sendMessage(RequestMessage msg, String ip){
@@ -224,7 +204,7 @@ public abstract class ComunicableActivity extends Activity{
         	}        	
         }
         
-        public void QueryServer(){
+        public void queryServer(){
         	if (mKingService != null){
         		mKingService.queryServer();
         	}
@@ -238,7 +218,7 @@ public abstract class ComunicableActivity extends Activity{
         
         public void setServerIPAddr(String serverip){
         	if (mKingService != null){
-        		mKingService.setServerIPAddr(serverip);
+        		mKingService.updateServerAddr(serverip);
         	}
         }
     };

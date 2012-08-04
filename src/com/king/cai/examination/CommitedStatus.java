@@ -7,8 +7,8 @@ import com.king.cai.examination.ItemViewHolder;
 
 public class CommitedStatus extends PaperStatus{
 
-	public CommitedStatus(PaperActivity owner){
-		super(owner);
+	public CommitedStatus(PaperActivity owner, PaperStatus nextStatus){
+		super(owner, nextStatus);
 	}
 	
 	@Override

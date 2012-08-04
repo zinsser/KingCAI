@@ -122,7 +122,8 @@
             android:layout_height="wrap_content"
     		android:background="#DCDCDC"
             android:layout_marginLeft="15dp"
-            android:paddingTop="5dip"	    			            
+            android:paddingTop="3dip"
+           	android:paddingBottom="3dip"	            
             android:orientation="vertical" > 
 
 	        <EditText

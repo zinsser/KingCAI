@@ -54,4 +54,11 @@ public class ItemViewHolder{
     	doLayoutSubViews();
     	showTextDetail(id, fontSize);
     }
+    
+    public void doGettingItemViews(Integer id, int fontSize){
+    	doLayoutSubViews();
+    	if (mTextDetail != null){
+    		mTextDetail.setVisibility(View.GONE);
+    	}
+    }    
 }

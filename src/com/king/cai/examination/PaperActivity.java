@@ -11,7 +11,6 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
@@ -35,7 +34,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.king.cai.LoginActivity;
 import com.king.cai.R;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperViewAdapter;
@@ -43,7 +41,6 @@ import com.king.cai.messageservice.AnswerMessage;
 import com.king.cai.messageservice.LogoutRequestMessage;
 import com.king.cai.messageservice.RequestImageMessage;
 import com.king.cai.messageservice.RequestPaperMessage;
-import com.king.cai.platform.CommonDefine;
 import com.king.cai.platform.KingCAIConfig;
 
 public class PaperActivity  extends ComunicableActivity {
@@ -96,7 +93,9 @@ public class PaperActivity  extends ComunicableActivity {
 		ParseIntentExtraParam();
 		
 		mAnswerMgr = new AnswerManager(mQuestionMgr);
-		mPaperStatus = new AnswerStatus(this, mQuestionMgr);
+		PaperStatus commitStatus = new CommitedStatus(this, null);
+		PaperStatus waitingStatus = new WaitingStatus(this, commitStatus);
+		mPaperStatus = new AnswerStatus(this, waitingStatus, mQuestionMgr);
 		mPaperStatus.EnterStatus();
 		
         mListView = (ListView)findViewById(R.id.lstQuestions);
@@ -146,7 +145,6 @@ public class PaperActivity  extends ComunicableActivity {
     	mServiceChannel.sendMessage(new LogoutRequestMessage(), 0);
     	mPaperStatus.LeaveStatus();
     	mPaperStatus = null;
-    	mServiceChannel.CleanSockets();
    		super.onStop();
     }    
     
@@ -535,12 +533,21 @@ public class PaperActivity  extends ComunicableActivity {
 		mServiceChannel.sendMessage(new AnswerMessage(mAnswerMgr.toString()), 0);
 	}
 	
-	public void SwitchPaperStatus(){
+	public void switch2WaitingStatus(){
 		CommitAnswers();
 		mPaperStatus.LeaveStatus();
 		mPaperStatus = null;
-		mPaperStatus = new CommitedStatus(this);
+		mPaperStatus = new WaitingStatus(this, null);
 		mPaperStatus.EnterStatus();
+		PaperViewAdapter adapter = (PaperViewAdapter)mListView.getAdapter();
+		adapter.notifyDataSetChanged();
+	}
+	
+	public void switch2CommitStatus(){
+		mPaperStatus.LeaveStatus();
+		mPaperStatus = null;
+		mPaperStatus = new CommitedStatus(this, null);
+		mPaperStatus.EnterStatus();		
 	}
 	
 	public void ShowDoneInfo(int undoneCount){

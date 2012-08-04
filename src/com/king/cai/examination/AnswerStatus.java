@@ -20,8 +20,8 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 
 	private CountDownTimer mTickTimer = null;
 	private QuestionManager mQuestionMgr = null;
-	public AnswerStatus(PaperActivity owner, QuestionManager mgr){
-		super(owner);
+	public AnswerStatus(PaperActivity owner, PaperStatus nextStatus, QuestionManager mgr){
+		super(owner, nextStatus);
 		mQuestionMgr = mgr;
 		mQuestionMgr.AddListener(this);
    	}
@@ -102,7 +102,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
-					mStatusOwner.SwitchPaperStatus();
+					mStatusOwner.switch2WaitingStatus();
 				}
 			})
 			.setNegativeButton(android.R.string.cancel, null)

@@ -9,9 +9,10 @@ import java.nio.ByteBuffer;
 
 import com.king.cai.platform.KingCAIConfig;
 
+import android.os.Message;
 import android.util.Log;
 
-public class TCPSocketReceiver extends FirableThread{
+public class TCPSocketReceiver extends FirableRunner{
     private ServerSocket mTcpSocket = null;
     private Boolean mStopped = false;
 	private ByteBuffer mReceiveBuf = ByteBuffer.allocate(8192);
@@ -19,8 +20,8 @@ public class TCPSocketReceiver extends FirableThread{
 	private int mRemain = 0;
 	private int mPort = 0;
 
-	protected TCPSocketReceiver(KingService s, int port) {
-		super(s);
+	protected TCPSocketReceiver(Message msg, int port) {
+		super(msg);
 		mPort = port;
 		InitSocket();
 	}
@@ -58,7 +59,6 @@ public class TCPSocketReceiver extends FirableThread{
 			Socket socket = null;
 			try{
 			    socket = mTcpSocket.accept();
-			    mHostService.setTextChannelSocket(socket);
 			    
 			    InputStream in = socket.getInputStream();
 			    mReceiveBuf.clear();
@@ -89,9 +89,9 @@ public class TCPSocketReceiver extends FirableThread{
 				            }
 			            }while (length < mRemain);
 
-			            FireMessage(socket.getInetAddress().getHostAddress(), id, mImageBuf.array());				    		
+			            FireMessage(socket.getInetAddress().getHostAddress(),/* id, */mImageBuf, false);				    		
 			    	}else{
-			    		FireMessage(socket.getInetAddress().getHostAddress(), msg);
+			    		FireMessage(socket.getInetAddress().getHostAddress(), ByteBuffer.wrap(msg.getBytes()), true);
 			    	}
 				    mReceiveBuf.clear();
 			    } 
@@ -116,5 +116,17 @@ public class TCPSocketReceiver extends FirableThread{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}  
+	}
+
+	@Override
+	protected void doRun() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onExit() {
+		// TODO Auto-generated method stub
+		
 	}
 }
