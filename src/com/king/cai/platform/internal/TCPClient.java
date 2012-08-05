@@ -48,7 +48,14 @@ public class TCPClient {
 		
 		public void stopRunner(){
 			mReceiveRunner.stopRunner();
-			//TODO: let sender thread run over 
+			//TODO: let sender thread run over
+			try {
+				mInputStream.close();
+				mOutputStream.close();
+				mSocket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -62,8 +69,12 @@ public class TCPClient {
 	public void sendMessage(String outterMessage){
 		mTextClient.sendMessage(outterMessage);
 	}
-
-	public void destroyClientObject(){
+	
+	public void onDestroy(){
+		destroyClientObject();
+	}
+	
+	private void destroyClientObject(){
 		mTextClient.stopRunner();
 		mTextClient = null;
 		

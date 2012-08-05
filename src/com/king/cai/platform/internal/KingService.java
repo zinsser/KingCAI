@@ -9,16 +9,18 @@ import com.king.cai.platform.internal.UDPServerRunner;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
 public class KingService extends Service{        
-    private UDPServerRunner mUdpReceiverRoutine = null;
-    private TCPClient mTcpClient = null;
-    
     private String mServerAddr = null;
     private String mActiveSSID = null;
+
+	private UDPServerRunner mUdpReceiverRoutine = null;
+    private TCPClient mTcpClient = null;
+    private DownloadService mDownloadManager = null;
         
     private WifiMonitor mWifiMonitor = null;
     
@@ -63,9 +65,18 @@ public class KingService extends Service{
     	public void handleMessage(Message msg){
     		switch (msg.what){
     		case SOCKET_EVENT:
-    			Intent intent = new Intent(KingCAIConfig.SOCKET_EVENT_ACTION);
-    			intent.putExtras(msg.getData());
-    			sendBroadcast(intent);
+    			Bundle bundle = msg.getData();
+    			boolean bText = bundle.getBoolean("TYPE");
+    			if (bText){
+        			Intent intent = new Intent(KingCAIConfig.SOCKET_EVENT_ACTION);
+        			intent.putExtras(msg.getData());
+        			sendBroadcast(intent);    				
+    			}else{
+    				if (mDownloadManager != null){
+    					mDownloadManager.receiveData(bundle.getByteArray("CONTENT"),
+    							bundle.getInt("SIZE"));
+    				}
+    			}
     			break;
     		case WIFI_EVENT:
     			break;
@@ -108,11 +119,30 @@ public class KingService extends Service{
 
     public void updateServerAddr(String addr){
     	mServerAddr = addr;
-    	mTcpClient = new TCPClient(Message.obtain(mHandler, SOCKET_EVENT), mServerAddr);
+    	if (mTcpClient != null){
+    		mTcpClient.onDestroy();
+    		mTcpClient = null;
+    	}
+   		mTcpClient = new TCPClient(Message.obtain(mHandler, SOCKET_EVENT), mServerAddr);
+    	if (mDownloadManager == null){
+    		mDownloadManager = new DownloadService();
+    	}
     }
 	
 	public void connectServer(String number, String password){
 		sendMessage(new LoginRequestMessage(number, password), 0);
+	}
+	
+	public void addDownloadTask(DownloadTask task){
+		if (mDownloadManager != null){
+			mDownloadManager.addTask(task);
+		}
+	}
+
+	public void updateDownloadInfo(String qid, String subid, int len){
+		if (mDownloadManager != null){
+			mDownloadManager.updateDownloadInfo(qid, subid, len);
+		}
 	}
 	
 	//TCP Socket use this function

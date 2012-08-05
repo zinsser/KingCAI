@@ -12,11 +12,12 @@ public abstract class FirableRunner implements Runnable{
 		mInnerMessage = innerMessage;
 	}
 
-	protected void FireMessage(String peerip, ByteBuffer msgData, boolean bTextType){
+	protected void FireMessage(String peerip, ByteBuffer msgData, int size, boolean bTextType){
 		Bundle bundle = new Bundle();
     	bundle.putString("PEER", peerip);
 		bundle.putByteArray("CONTENT", msgData.array());
-    	bundle.putBoolean("TYPE", bTextType);
+		bundle.putInt("SIZE", size);
+		bundle.putBoolean("TYPE", bTextType);
     	mInnerMessage.setData(bundle);
     	mInnerMessage.sendToTarget();
 	}

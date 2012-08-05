@@ -25,8 +25,9 @@ public class TCPReceiveRunner extends FirableRunner{
 	@Override
 	protected void doRun() {
 		try {
-			if (mInputStream.read(mReceiveBuf.array()) > 0){
-				FireMessage(mPeerAddr, mReceiveBuf, 
+			int readSize = mInputStream.read(mReceiveBuf.array()); 
+			if (readSize > 0){
+				FireMessage(mPeerAddr, mReceiveBuf, readSize, 
 						mPort == KingCAIConfig.mTextReceivePort);
 			}
 		} catch (IOException e) {
@@ -35,6 +36,7 @@ public class TCPReceiveRunner extends FirableRunner{
 	}
 
 	@Override
-	protected void onExit() {		
+	protected void onExit() {
+		mReceiveBuf = null;
 	}
 }
