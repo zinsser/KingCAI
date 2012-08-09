@@ -1,5 +1,6 @@
 package com.king.cai.service;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import android.os.Message;
@@ -8,12 +9,20 @@ public class DownloadCache {
 	private ArrayList<DownloadTask> mTasks = new ArrayList<DownloadTask>();
 	private DownloadTask mDoingTask = null;
 	
-	private void dispatchTask(){
+	public void dispatchTask(){
 		
 	}
 	
 	public void addTask(String qid, String subid){
 		addTask(new DownloadTask(qid, subid));
+	}
+	
+	public int getRemain(){
+		return mDoingTask != null ? mDoingTask.getRemain() : 0;
+	}
+	
+	public ByteBuffer getDataBuffer(){
+		return mDoingTask != null ? mDoingTask.getDataBuffer() : null;
 	}
 	
 	public void addTask(DownloadTask newTask){

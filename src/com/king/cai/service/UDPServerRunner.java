@@ -64,4 +64,10 @@ public class UDPServerRunner extends FirableRunner{
 		mDatagramPacket = null;
 		mMsgBuffer = null;
 	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		
+	}
 }

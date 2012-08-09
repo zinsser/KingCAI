@@ -32,12 +32,14 @@ public abstract class FirableRunner implements Runnable{
 	
 	public void run(){
 		mRunning = true;
+		onStart();
 		do{
 			doRun();
 		}while (mRunning);
 		onExit();
 	}
 	
+	protected abstract void onStart();	
 	protected abstract void doRun();
 	protected abstract void onExit();
 };

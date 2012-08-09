@@ -36,4 +36,8 @@ public class DownloadTask {
 	public int getRemain(){
 		return mDataBuf != null ? mDataBuf.remaining() : mDataLen;
 	}
+	
+	public ByteBuffer getDataBuffer(){
+		return mDataBuf;
+	}
 }

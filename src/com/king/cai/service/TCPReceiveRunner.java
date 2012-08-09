@@ -36,7 +36,13 @@ public class TCPReceiveRunner extends FirableRunner{
 			int readSize = mInputStream.read(mReceiveBuf.array()); 
 			if (readSize > 0){
 				if (mDownloadCacher != null){
-					
+					if (mDownloadCacher.getRemain() != 0){
+					}else{
+						FireMessage(mPeerAddr, mDownloadCacher.getDataBuffer(), 
+										mDownloadCacher.getDataBuffer().capacity(), 
+										mPort == KingCAIConfig.mTextReceivePort);  
+						mDownloadCacher.dispatchTask();
+					}				
 				}else{
 					FireMessage(mPeerAddr, mReceiveBuf, readSize, 
 							mPort == KingCAIConfig.mTextReceivePort);
@@ -51,5 +57,11 @@ public class TCPReceiveRunner extends FirableRunner{
 	@Override
 	protected void onExit() {
 		mReceiveBuf = null;
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		
 	}
 }
