@@ -16,6 +16,10 @@ public class DownloadTask {
 	public void request(){
 	}
 	
+	public void releaseBuffer(){
+		mDataBuf = null;
+	}
+	
 	public void updateDataLength(int len){
 		mDataLen = len;
 		mDataBuf = null;

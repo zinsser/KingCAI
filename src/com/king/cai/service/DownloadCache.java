@@ -62,6 +62,15 @@ public class DownloadCache {
 			mDoingTask.request();
 		}while (mTasks.size() > 0);
 	}
+
+	public void exitDownload(){
+		mDoingTask = null;
+		for (DownloadTask task : mTasks){
+			task.releaseBuffer();
+			task = null;
+		}
+		mTasks = null;
+	}
 	
 	public void receiveData(byte[] data, Integer size){
 		if (mDoingTask != null){

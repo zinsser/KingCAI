@@ -33,10 +33,12 @@ public class TCPReceiveRunner extends FirableRunner{
 	@Override
 	protected void doRun() {
 		try {
+			mReceiveBuf.clear();
 			int readSize = mInputStream.read(mReceiveBuf.array()); 
 			if (readSize > 0){
 				if (mDownloadCacher != null){
 					if (mDownloadCacher.getRemain() != 0){
+						mDownloadCacher.receiveData(mReceiveBuf.array(), mReceiveBuf.array().length);
 					}else{
 						FireMessage(mPeerAddr, mDownloadCacher.getDataBuffer(), 
 										mDownloadCacher.getDataBuffer().capacity(), 
@@ -56,12 +58,14 @@ public class TCPReceiveRunner extends FirableRunner{
 
 	@Override
 	protected void onExit() {
+		if (mDownloadCacher != null){
+			mDownloadCacher.exitDownload();
+			mDownloadCacher = null;
+		}
 		mReceiveBuf = null;
 	}
 
 	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		
+	protected void onStart() {		
 	}
 }
