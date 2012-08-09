@@ -15,17 +15,17 @@ public class PaperViewAdapter extends BaseAdapter {
 	private PaperActivity mHostActivity = null;
     private LayoutInflater mInflater;
     private int mFontSize = 22;
-    private ArrayList<Integer> mIDs = new ArrayList<Integer>();
+    private ArrayList<String> mIDs = new ArrayList<String>();
     private QuestionManager mQuestionMgr = null;
     
     private QuestionListListener mQuestionListener = new QuestionListListener();
 
     public class QuestionListListener implements QuestionManager.QuestionListener{
     	@SuppressWarnings("unchecked")
-    	public void OnQuestionArrayChanged(ArrayList<Integer> ids) {
+    	public void OnQuestionArrayChanged(ArrayList<String> ids) {
     		if (ids != null){
     			mIDs.clear();
-    			mIDs = (ArrayList<Integer>) ids.clone();
+    			mIDs = (ArrayList<String>) ids.clone();
     	        Collections.sort(mIDs);
     	        
     	        notifyDataSetChanged();
@@ -33,7 +33,7 @@ public class PaperViewAdapter extends BaseAdapter {
     	}
 
 
-    	public void OnAddQuestion(Integer id) {
+    	public void OnAddQuestion(String id) {
     		mIDs.add(id);
             Collections.sort(mIDs);		
 	        notifyDataSetChanged();            
@@ -65,7 +65,7 @@ public class PaperViewAdapter extends BaseAdapter {
     }
     
     @SuppressWarnings("unchecked")
-	public PaperViewAdapter CloneAdapter(ArrayList<Integer> ids){
+	public PaperViewAdapter CloneAdapter(ArrayList<String> ids){
     	PaperViewAdapter retAdapter = new PaperViewAdapter();
 
         retAdapter.mHostActivity = this.mHostActivity;
@@ -74,7 +74,7 @@ public class PaperViewAdapter extends BaseAdapter {
         retAdapter.mQuestionMgr = this.mQuestionMgr;
         retAdapter.mQuestionMgr.AddListener(retAdapter.mQuestionListener);
         
-        retAdapter.mIDs = (ArrayList<Integer>) ids.clone();
+        retAdapter.mIDs = (ArrayList<String>) ids.clone();
         Collections.sort(retAdapter.mIDs);
 
         return retAdapter;

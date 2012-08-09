@@ -20,7 +20,7 @@ public class WaitingStatus extends PaperStatus{
 	}
 
 	@Override
-	public void doGettingItemView(ItemViewHolder holder, Integer id,
+	public void doGettingItemView(ItemViewHolder holder, String id,
 			int fontsize) {
 		holder.doGettingItemViews(id, fontsize);
 	}

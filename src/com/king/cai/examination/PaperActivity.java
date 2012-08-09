@@ -198,11 +198,11 @@ public class PaperActivity  extends ComunicableActivity {
 	}	
 	
 	public void SavePaper(){
-		ArrayList<Integer> ids = mQuestionMgr.GetIDs();
+		ArrayList<String> ids = mQuestionMgr.GetIDs();
 		Answer answer = null;
 		ContentValues values = new ContentValues();  		
 		PaperDBHelper helper = new PaperDBHelper(getApplicationContext());
-		for (Integer id : ids){
+		for (String id : ids){
 			values.put(s_PaperTag_ID, id);  
 			values.put(s_PaperTag_Question, mQuestionMgr.GetQuestionItem(id).mDetail);  
 			values.put(s_PaperTag_Type, mQuestionMgr.GetQuestionItem(id).mType); 
@@ -224,7 +224,7 @@ public class PaperActivity  extends ComunicableActivity {
 		Cursor c = helper.Query();
 		c.moveToFirst();
 		while (!c.isAfterLast()){
-			int id = c.getInt(s_PaperIdx_ID);
+			String id = c.getString(s_PaperIdx_ID);
 			String detail = c.getString(s_PaperIdx_Question);
 			int type = c.getInt(s_PaperIdx_Type);
 			String reference = c.getString(s_PaperIdx_Reference);
@@ -261,8 +261,9 @@ public class PaperActivity  extends ComunicableActivity {
 			if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED 
 					|| actionId == EditorInfo.IME_ACTION_DONE){
 				if (v.getText().toString().length() != 0){
-					Integer gotoItem = Integer.parseInt(v.getText().toString());
-					Integer offset = mQuestionMgr.GetUnQuestionCount(gotoItem);
+					String rawGotoText = v.getText().toString();
+					Integer gotoItem = Integer.parseInt(rawGotoText);
+					Integer offset = mQuestionMgr.GetUnQuestionCount("T"+rawGotoText);
 					
 					mListView.setAdapter(mFullAdapter);
 					ChangeFilterButtonText(R.string.AllQuestions);					
@@ -564,10 +565,10 @@ public class PaperActivity  extends ComunicableActivity {
 		ChangeFilterButtonText(R.string.AllQuestions);
 	}	
 	 	
-	public void InitUncorrectList(ArrayList<Integer> correctList, 
-									ArrayList<Integer> uncorrectList){
+	public void InitUncorrectList(ArrayList<String> correctList, 
+									ArrayList<String> uncorrectList){
 		Answer aAnswer = null;
-    	for (Integer id : mQuestionMgr.GetIDs()){
+    	for (String id : mQuestionMgr.GetIDs()){
     		aAnswer = mAnswerMgr.GetAnswer(id);
     		if (aAnswer != null && aAnswer.IsCorrect()){
     			correctList.add(id);

@@ -24,7 +24,7 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
 	}
 
 	@Override
-    public void doGettingItemViews(Integer id, int fontSize, onSubViewClickListener listener){
+    public void doGettingItemViews(String id, int fontSize, onSubViewClickListener listener){
     	super.doGettingItemViews(id, fontSize, listener);
     	doLayoutSubViews();
 
@@ -48,13 +48,13 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
 		}     	
 	}
 
-	private void setRadioButtonInfo(RadioButton btn, Integer id, PanelClickListener listener){
+	private void setRadioButtonInfo(RadioButton btn, String id, PanelClickListener listener){
 		btn.setTag(id);
 		btn.setOnClickListener(listener);
 	}
 	
 	@Override
-    public void doGettingItemViews(Integer id, int fontSize, boolean bShowRefAnswer){
+    public void doGettingItemViews(String id, int fontSize, boolean bShowRefAnswer){
      	super.doGettingItemViews(id, fontSize, bShowRefAnswer);
      	doLayoutSubViews();
      	
@@ -136,7 +136,7 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
 					|| v.getId() == R.id.radioBtnC
 					|| v.getId() == R.id.radioBtnD){
 				RadioButton radioBtn = (RadioButton)v;
-				Integer qId = (Integer)radioBtn.getTag();
+				String qId = (String)radioBtn.getTag();
 				Answer answer = mHostActivity.getAnswerManager().GetAnswer(qId);
 				boolean[] bRadioValue = answer.GetAnswer().createBooleanArray();
 				assert bRadioValue.length == 4;

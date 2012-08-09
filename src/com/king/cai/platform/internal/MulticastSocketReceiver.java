@@ -38,7 +38,8 @@ public class MulticastSocketReceiver extends FirableRunner{
 					+ ":"+ new String(mDatagramPacket.getData()));
 			String rawmsg = new String(mDatagramPacket.getData(), mDatagramPacket.getOffset(), 
 					mDatagramPacket.getLength());
-			FireMessage(remoteip, ByteBuffer.wrap(rawmsg.trim().getBytes()), true);
+			FireMessage(remoteip, ByteBuffer.wrap(rawmsg.trim().getBytes()), 
+						ByteBuffer.wrap(rawmsg.trim().getBytes()).capacity(), true);
 		}catch (IOException e){
 			e.printStackTrace();
 		}		

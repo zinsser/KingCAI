@@ -40,12 +40,12 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	    mLinearLayout_ImageView_2 = (LinearLayout)rawView.findViewById(R.id.linearLayoutImage_2);
 	    mQuestionMgr.AddListener(new QuestionListener(){
 
-			public void OnQuestionArrayChanged(ArrayList<Integer> ids) {
+			public void OnQuestionArrayChanged(ArrayList<String> ids) {
 				// TODO Auto-generated method stub
 				
 			}
 
-			public void OnAddQuestion(Integer id) {
+			public void OnAddQuestion(String id) {
 				// TODO Auto-generated method stub
 			}
 
@@ -55,7 +55,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 			}
 
 			public void OnImageReady(String sid, Bitmap bmp) {
-				for (Integer qid : mQuestionMgr.GetIDs()){
+				for (String qid : mQuestionMgr.GetIDs()){
 					if (mQuestionMgr.GetQuestionItem(qid).mID.equals(sid)){
 						ArrayList<Bitmap> bmpSaveds = mQuestionMgr.GetQuestionItem(qid).mGraphics; 
 						mImageView_1.setImageBitmap(bmpSaveds.get(0));
@@ -68,7 +68,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	}
 	
 	@Override
-    public void doGettingItemViews(Integer id, int fontSize, onSubViewClickListener listener){
+    public void doGettingItemViews(String id, int fontSize, onSubViewClickListener listener){
     	super.doGettingItemViews(id, fontSize, listener);
     	doLayoutSubViews(id);
 
@@ -87,7 +87,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	}
 
 	@Override
-    public void doGettingItemViews(Integer id, int fontSize, boolean bShowRefAnswer){
+    public void doGettingItemViews(String id, int fontSize, boolean bShowRefAnswer){
     	super.doGettingItemViews(id, fontSize, bShowRefAnswer);
     	doLayoutSubViews(id);
     	
@@ -113,7 +113,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
     	}
     }
 
-	private void doLayoutSubViews(Integer id){
+	private void doLayoutSubViews(String id){
     	if (mLinearLayoutAnswerArea != null){
     		mLinearLayoutAnswerArea.setVisibility(View.VISIBLE);
     	}
@@ -149,7 +149,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 		public void onClick(View v) {
 			if (v.getId() == R.id.imageViewMarker){
 				ImageView imgMask = (ImageView)v;
-				Integer qId = (Integer)imgMask.getTag();
+				String qId = (String)imgMask.getTag();
 				Answer answer = mHostActivity.getAnswerManager().GetAnswer(qId);
 				answer.mIsMark = !answer.mIsMark;
 				imgMask.setImageBitmap(answer.mIsMark ? mMarkIcon : mUnMarkIcon);

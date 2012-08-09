@@ -12,7 +12,7 @@ public class PaperDBHelper extends SQLiteOpenHelper {
     private static final String DB_PAPER = "Paper.db";  
     private static final String TBL_PAPER = "Paper";  
     private static final String CREATE_TBL = " create table "  
-            + " Paper(id integer primary key, question text, type integer, reference text, answer text) ";  
+            + " Paper(id text primary key, question text, type integer, reference text, answer text) ";  
       
     private SQLiteDatabase mDB;
     
@@ -38,7 +38,7 @@ public class PaperDBHelper extends SQLiteOpenHelper {
         }
     }  
     
-    public long Insert(ContentValues values, Integer id) {  
+    public long Insert(ContentValues values, String id) {  
         SQLiteDatabase db = getWritableDatabase();
         long ret = 0;
         try{

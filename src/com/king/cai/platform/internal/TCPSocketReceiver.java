@@ -89,9 +89,10 @@ public class TCPSocketReceiver extends FirableRunner{
 				            }
 			            }while (length < mRemain);
 
-			            FireMessage(socket.getInetAddress().getHostAddress(),/* id, */mImageBuf, false);				    		
+			            FireMessage(socket.getInetAddress().getHostAddress(),/* id, */mImageBuf, mImageBuf.capacity(), false);				    		
 			    	}else{
-			    		FireMessage(socket.getInetAddress().getHostAddress(), ByteBuffer.wrap(msg.getBytes()), true);
+			    		FireMessage(socket.getInetAddress().getHostAddress(), ByteBuffer.wrap(msg.getBytes()), 
+			    							ByteBuffer.wrap(msg.getBytes()).capacity(), true);
 			    	}
 				    mReceiveBuf.clear();
 			    } 

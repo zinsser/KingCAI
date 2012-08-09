@@ -10,8 +10,8 @@ import com.king.cai.R;
 import com.king.cai.examination.ItemViewHolder;
 
 public abstract class PaperStatus{
-	protected ArrayList<Integer> mListFirst = new ArrayList<Integer>();
-	protected ArrayList<Integer> mListSecond = new ArrayList<Integer>();
+	protected ArrayList<String> mListFirst = new ArrayList<String>();
+	protected ArrayList<String> mListSecond = new ArrayList<String>();
 
 	//0:All;  1:answered;   2:marked 
 	//0:All;  1:correct;   2:incorrect
@@ -44,7 +44,7 @@ public abstract class PaperStatus{
 	public abstract void onCommitClick();
 	public abstract void onFilterClick(ListView listView, PaperViewAdapter fullAdapter);
 
-	public abstract void doGettingItemView(ItemViewHolder holder, Integer id, int fontsize);	
+	public abstract void doGettingItemView(ItemViewHolder holder, String id, int fontsize);	
 	
 	public abstract void EnterStatus();
 	public abstract void LeaveStatus();

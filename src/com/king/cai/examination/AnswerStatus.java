@@ -38,10 +38,10 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 		mTickTimer.cancel();
 	}
 	
-	public void doGettingItemView(ItemViewHolder holder, Integer id, int fontsize){
+	public void doGettingItemView(ItemViewHolder holder, String id, int fontsize){
 		holder.doGettingItemViews(id, fontsize, new ItemViewHolder.onSubViewClickListener() {
 			
-			public void onViewClick(Integer questionID, Answer answer) {
+			public void onViewClick(String questionID, Answer answer) {
 				PostClicked(questionID, answer);
 			}
 		});
@@ -112,7 +112,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 		adlg.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
 	}
 
-	private void PostClicked(Integer questionID, final Answer answer){
+	private void PostClicked(String questionID, final Answer answer){
 		if (answer.mIsMark){
 			if (!mListSecond.contains(questionID)){
 				mListSecond.add(questionID);
@@ -136,20 +136,20 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 		}
 	}
 
-	public void OnQuestionArrayChanged(ArrayList<Integer> ids) {
+	public void OnQuestionArrayChanged(ArrayList<String> ids) {
 		FetchUndoneList(mListFirst);
 		mStatusOwner.ShowDoneInfo(mListFirst.size());
 	}
 
-	private void FetchUndoneList(ArrayList<Integer> undonelist){
-    	for (Integer id : mQuestionMgr.GetIDs()){
+	private void FetchUndoneList(ArrayList<String> undonelist){
+    	for (String id : mQuestionMgr.GetIDs()){
     		if (!mQuestionMgr.GetQuestionItem(id).IsPaperTitle()){
     			mListFirst.add(id);
     		}
     	}		
 	}
 
-	public void OnAddQuestion(Integer id) {
+	public void OnAddQuestion(String id) {
 		if (!mQuestionMgr.GetQuestionItem(id).IsPaperTitle()){
 			mListFirst.add(id);
 		}

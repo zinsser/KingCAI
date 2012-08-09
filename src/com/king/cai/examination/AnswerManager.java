@@ -6,18 +6,18 @@ import java.util.HashMap;
 import android.graphics.Bitmap;
 
 public class AnswerManager implements QuestionManager.QuestionListener{
-	private HashMap<Integer, Answer> mAnswers = new HashMap<Integer, Answer>();
+	private HashMap<String, Answer> mAnswers = new HashMap<String, Answer>();
 	private QuestionManager mQuestionMgr = null;
 	public AnswerManager(QuestionManager questionMgr){
 		mQuestionMgr = questionMgr;
 		mQuestionMgr.AddListener(this);
 	}
 
-	public HashMap<Integer, Answer> GetAnswers(){
+	public HashMap<String, Answer> GetAnswers(){
 		return mAnswers;
 	}
 	
-	public Answer GetAnswer(Integer id){
+	public Answer GetAnswer(String id){
 		Answer answer = null;
 		if (mAnswers.keySet().contains(id)){
 			answer = mAnswers.get(id);
@@ -26,7 +26,7 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 	}
 
 	public void AddAnswer(QuestionManager questionMgr){
-		for (Integer id : questionMgr.GetIDs()){
+		for (String id : questionMgr.GetIDs()){
 			if (questionMgr.GetQuestionItem(id).IsOption()){
 				mAnswers.put(id, new OptionsAnswerInfo(questionMgr.GetQuestionItem(id).mReference));
 			}else if (questionMgr.GetQuestionItem(id).IsBlank()){
@@ -39,7 +39,7 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 		}		
 	}
 	
-	public void AddAnswer(Integer id, QuestionInfo question, String s){
+	public void AddAnswer(String id, QuestionInfo question, String s){
 		if (question.IsOption()){
 			mAnswers.put(id, new OptionsAnswerInfo(question.mReference, s));
 		}else if (question.IsBlank()){
@@ -53,7 +53,7 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 	
 	public String toString(){
 		String retAnswer = "@";
-		for (Integer id : mAnswers.keySet()){
+		for (String id : mAnswers.keySet()){
 			if (!mQuestionMgr.GetQuestionItem(id).IsPaperTitle()){
 				if (mAnswers.get(id) != null){
 					retAnswer += id + mAnswers.get(id).toString() + "@";
@@ -65,11 +65,11 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 		return retAnswer;
 	}
 
-	public void OnQuestionArrayChanged(ArrayList<Integer> ids) {
+	public void OnQuestionArrayChanged(ArrayList<String> ids) {
 		AddAnswer(mQuestionMgr);		
 	}
 
-	public void OnAddQuestion(Integer id) {
+	public void OnAddQuestion(String id) {
 		AddAnswer(mQuestionMgr);
 	}
 
