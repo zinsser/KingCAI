@@ -9,8 +9,7 @@ import com.king.cai.messageservice.ActiveMessage;
 import com.king.cai.messageservice.ActiveMessageManager;
 import com.king.cai.messageservice.NewImageMessage;
 import com.king.cai.messageservice.RequestMessage;
-import com.king.cai.platform.CommonDefine;
-import com.king.cai.platform.internal.KingService;
+import com.king.cai.platform.KingService;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -57,7 +56,7 @@ public abstract class ComunicableActivity extends Activity{
     	filter.addAction(KingCAIConfig.SOCKET_EVENT_ACTION);
     	registerReceiver(mReceiver, filter);
 
-    	Intent intent = new Intent(CommonDefine.START_PLATFORM_ACTION);  
+    	Intent intent = new Intent(KingCAIConfig.START_SERVICE_ACTION);  
 		bindService(intent, mServiceChannel, Context.BIND_AUTO_CREATE);    	
     }
     

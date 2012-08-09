@@ -1,4 +1,4 @@
-package com.king.cai.platform.internal;
+package com.king.cai.platform;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -14,8 +14,9 @@ public class KingCAIConfig {
 	public final static int EVENT_CLEAN_PAPER = 9;
 	
 	
-	public final static String  SOCKET_EVENT_ACTION = "com.king.cai.socket.event";
-	
+	public final static String SOCKET_EVENT_ACTION = "com.king.cai.socket.event";
+	public static final String START_SERVICE_ACTION = "com.king.cai.service";
+
 	
 	public final static String mCharterSet = "GBK";
 

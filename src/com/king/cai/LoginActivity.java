@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 
 import com.king.cai.R;
-import com.king.cai.platform.internal.ServerInfo;
-import com.king.cai.platform.internal.WifiMonitor;
+import com.king.cai.platform.ServerInfo;
+import com.king.cai.platform.WifiMonitor;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperActivity;
 

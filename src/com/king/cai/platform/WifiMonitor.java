@@ -1,9 +1,9 @@
-package com.king.cai.platform.internal;
+package com.king.cai.platform;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.king.cai.platform.internal.ServerInfo;
+import com.king.cai.platform.ServerInfo;
 import com.king.cai.common.KingCAIUtils;
 
 import android.content.Context;

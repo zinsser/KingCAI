@@ -1,4 +1,4 @@
-package com.king.cai.platform.internal;
+package com.king.cai.platform;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 import android.os.Message;
 import android.util.Log;
 
-import com.king.cai.platform.internal.FirableRunner;
+import com.king.cai.platform.FirableRunner;
 
 public class MulticastSocketReceiver extends FirableRunner{
     private MulticastSocket mMulticastSocket = null;

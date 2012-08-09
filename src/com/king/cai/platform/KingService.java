@@ -1,4 +1,4 @@
-package com.king.cai.platform.internal;
+package com.king.cai.platform;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ import com.king.cai.KingCAIConfig;
 import com.king.cai.messageservice.LoginRequestMessage;
 import com.king.cai.messageservice.QueryServerMessage;
 import com.king.cai.messageservice.RequestMessage;
-import com.king.cai.platform.internal.UDPServerRunner;
+import com.king.cai.platform.UDPServerRunner;
 
 import android.app.Service;
 import android.content.Intent;

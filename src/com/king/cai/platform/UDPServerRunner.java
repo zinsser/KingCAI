@@ -1,4 +1,4 @@
-package com.king.cai.platform.internal;
+package com.king.cai.platform;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -10,7 +10,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.king.cai.KingCAIConfig;
-import com.king.cai.platform.internal.FirableRunner;
+import com.king.cai.platform.FirableRunner;
 
 
 public class UDPServerRunner extends FirableRunner{

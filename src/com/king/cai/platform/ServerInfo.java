@@ -1,4 +1,4 @@
-package com.king.cai.platform.internal;
+package com.king.cai.platform;
 
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
