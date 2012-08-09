@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.os.Message;
 
-public class DownloadService {
+public class DownloadCache {
 	private ArrayList<DownloadTask> mTasks = new ArrayList<DownloadTask>();
 	private DownloadTask mDoingTask = null;
 	
@@ -63,7 +63,7 @@ public class DownloadService {
 		}
 	}
 	
-	public void updateDownloadInfo(String qid, String subid, int len){
+	public void updateDownloadSize(String qid, String subid, int size){
 		if (findTask(qid, subid)){
 //			DownloadTask task = mTasks.
 		}

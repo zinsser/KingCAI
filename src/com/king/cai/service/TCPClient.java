@@ -25,19 +25,22 @@ public class TCPClient {
 		private OutputStream mOutputStream = null;
 		private TCPReceiveRunner mReceiveRunner = null;
 		
-		public ClientObject(Message innerMsg, String addr, int port){
+		public ClientObject(Message innerMsg, String addr, int port, boolean bCache){
 			try {
 				mSocket = new Socket(addr, port);
 				mInputStream = mSocket.getInputStream();
 				mOutputStream = mSocket.getOutputStream();
 			} catch (UnknownHostException e) {
+				KingService.addLog(e.toString());
 				e.printStackTrace();
 			} catch (IOException e) {
+				KingService.addLog(e.toString());
 				e.printStackTrace();
 			} 
 			
 			mReceiveRunner = new TCPReceiveRunner(innerMsg, mInputStream, 
-									mSocket.getInetAddress().getHostAddress(), mSocket.getPort());
+									mSocket.getInetAddress().getHostAddress(), mSocket.getPort(),
+									bCache);
 			new Thread(mReceiveRunner).start();
 		}
 		
@@ -57,6 +60,10 @@ public class TCPClient {
 				e.printStackTrace();
 			}
 		}
+		
+		public DownloadCache getCacher(){
+			return mReceiveRunner.getCacher();
+		}
 	}
 	
 	public TCPClient(Message innerMessage, String addr){
@@ -67,27 +74,45 @@ public class TCPClient {
 	}
 
 	public void sendMessage(String outterMessage){
-		mTextClient.sendMessage(outterMessage);
+		if (mTextClient != null){
+			mTextClient.sendMessage(outterMessage);
+		}
 	}
 	
 	public void onDestroy(){
 		destroyClientObject();
 	}
-	
-	private void destroyClientObject(){
-		mTextClient.stopRunner();
-		mTextClient = null;
-		
-		mBinaryClient.stopRunner();
-		mBinaryClient = null;
-	}
-	
+
 	private void contructClientObject(){
 		mTextClient = null;
 		mTextClient = new ClientObject(mInnerMessage, mServerAddr, 
-										KingCAIConfig.mTextReceivePort);
+										KingCAIConfig.mTextReceivePort, false);
 		mBinaryClient = null;
 		mBinaryClient = new ClientObject(mInnerMessage, mServerAddr, 
-										KingCAIConfig.mImageReceivePort);
+										KingCAIConfig.mImageReceivePort, true);
+	}	
+	
+	private void destroyClientObject(){
+		if (mTextClient != null){
+			mTextClient.stopRunner();
+			mTextClient = null;
+		}
+		
+		if (mBinaryClient != null){
+			mBinaryClient.stopRunner();
+			mBinaryClient = null;
+		}
+	}
+	
+	public void addImageDownloadTask(String qid, String imageIndex){
+		if (mBinaryClient != null && mBinaryClient.getCacher() != null){
+			mBinaryClient.getCacher().addTask(qid, imageIndex);
+		}
+	}
+	
+	public void updateDownloadImageSize(String qid, String imageIndex, int size){
+		if (mBinaryClient != null && mBinaryClient.getCacher() != null){
+			mBinaryClient.getCacher().updateDownloadSize(qid, imageIndex, size);
+		}
 	}
 }

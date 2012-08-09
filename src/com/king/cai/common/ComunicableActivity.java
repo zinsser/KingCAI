@@ -193,18 +193,12 @@ public abstract class ComunicableActivity extends Activity{
         		mKingService.connectSSID(ssid);
         	}
         }
-        
-        public void sendMessage(RequestMessage msg, String ip){
-        	if (mKingService != null){
-        		mKingService.sendMessage(msg, ip);
-        	}
-        }
 
         public void sendMessage(RequestMessage msg, int mode){
         	if (mKingService != null){
         		mKingService.sendMessage(msg, mode);
         	}
-        }        
+        }
         
         public void sendMessage(RequestMessage msg){
         	if (mKingService != null){
@@ -226,7 +220,7 @@ public abstract class ComunicableActivity extends Activity{
         
         public void setServerIPAddr(String serverip){
         	if (mKingService != null){
-        		mKingService.updateServerAddr(serverip);
+        		mKingService.updateServer(serverip);
         	}
         }
     };

@@ -1,12 +1,13 @@
 package com.king.cai;
 
 import com.king.cai.common.ComunicableActivity;
+import com.king.cai.service.KingService;
 
 import android.os.Bundle;
 import android.os.Message;
 import android.widget.TextView;
 
-public class LogDiaplayer extends ComunicableActivity {
+public class LogDisplayer extends ComunicableActivity {
 	private TextView mLogger = null;
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -14,7 +15,7 @@ public class LogDiaplayer extends ComunicableActivity {
         setContentView(R.layout.logger);
         mLogger = (TextView)findViewById(R.id.textViewLogger);
         if (mServiceChannel != null && mServiceChannel.mKingService != null){
-            for (String log : mServiceChannel.mKingService.getLog()){
+            for (String log : KingService.getLog()){
                 mLogger.setText(log);
             }
         }

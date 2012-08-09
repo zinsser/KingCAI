@@ -14,7 +14,6 @@ public class DownloadTask {
 	}
 	
 	public void request(){
-		
 	}
 	
 	public void updateDataLength(int len){

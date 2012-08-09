@@ -22,7 +22,6 @@ public class KingService extends Service{
 
 	private UDPServerRunner mUdpReceiverRoutine = null;
     private TCPClient mTcpClient = null;
-    private DownloadService mDownloadManager = null;  
     private WifiMonitor mWifiMonitor = null;
 
     
@@ -38,7 +37,7 @@ public class KingService extends Service{
 	@Override
 	public IBinder onBind(Intent intent) {
 		if (mWifiMonitor != null){
-		//	mWifiMonitor.registIntentFilter(getApplicationContext());
+			mWifiMonitor.registIntentFilter(getApplicationContext());
 		}
         return mBinder;
 	}
@@ -46,7 +45,7 @@ public class KingService extends Service{
     @Override  
     public boolean onUnbind(Intent intent) {
     	if (mWifiMonitor != null){
-    		//mWifiMonitor.unRegistIntentFilter(getApplicationContext());
+    		mWifiMonitor.unRegistIntentFilter(getApplicationContext());
     	}
         return super.onUnbind(intent);  
     }
@@ -73,12 +72,12 @@ public class KingService extends Service{
         			Intent intent = new Intent(KingCAIConfig.SOCKET_EVENT_ACTION);
         			intent.putExtras(msg.getData());
         			sendBroadcast(intent);    				
-    			}else{
-    				if (mDownloadManager != null){
-    					mDownloadManager.receiveData(bundle.getByteArray("CONTENT"),
-    							bundle.getInt("SIZE"));
+    			}/*else{
+ //   				if (mDownloadManager != null){
+ //   					mDownloadManager.receiveData(bundle.getByteArray("CONTENT"),
+ //   							bundle.getInt("SIZE"));
     				}
-    			}
+    			}*/
     			break;
     		case WIFI_EVENT:
     			break;
@@ -119,15 +118,14 @@ public class KingService extends Service{
 		}
 	}
 
-    public void updateServerAddr(String addr){
-    	mServerAddr = addr;
-    	if (mTcpClient != null){
-    		mTcpClient.onDestroy();
-    		mTcpClient = null;
-    	}
-   		mTcpClient = new TCPClient(Message.obtain(mHandler, SOCKET_EVENT), mServerAddr);
-    	if (mDownloadManager == null){
-    		mDownloadManager = new DownloadService();
+    public void updateServer(String addr){
+    	if (addr != null && !addr.equals(mServerAddr)){
+	    	mServerAddr = addr;
+	    	if (mTcpClient != null){
+	    		mTcpClient.onDestroy();
+	    		mTcpClient = null;
+	    	}
+	   		mTcpClient = new TCPClient(Message.obtain(mHandler, SOCKET_EVENT), mServerAddr);
     	}
     }
 	
@@ -135,15 +133,15 @@ public class KingService extends Service{
 		sendMessage(new LoginRequestMessage(number, password), 0);
 	}
 	
-	public void addDownloadTask(DownloadTask task){
-		if (mDownloadManager != null){
-			mDownloadManager.addTask(task);
+	public void addDownloadTask(String qid, String imageIndex){
+		if (mTcpClient != null){
+			mTcpClient.addImageDownloadTask(qid, imageIndex);
 		}
 	}
 
-	public void updateDownloadInfo(String qid, String subid, int len){
-		if (mDownloadManager != null){
-			mDownloadManager.updateDownloadInfo(qid, subid, len);
+	public void updateDownloadSize(String qid, String imageIndex, int size){
+		if (mTcpClient != null){
+			mTcpClient.updateDownloadImageSize(qid, imageIndex, size);
 		}
 	}
 	
@@ -153,13 +151,7 @@ public class KingService extends Service{
 			mTcpClient.sendMessage(msg.ToPack());
 		}
 	}	
-	
-	//UDP Socket use this function
-	public void sendMessage(RequestMessage msg, String destip){
-		UDPSenderThread sender = new UDPSenderThread(destip, KingCAIConfig.mUDPPort, msg.ToPack());
-		sender.start();
-	}
-	
+		
 	//multicast socket Socket use this function		
 	public void sendMessage(RequestMessage msg) {
 	    MulticastSenderThread sender = new MulticastSenderThread(KingCAIConfig.mMulticastClientGroupIP,
@@ -168,7 +160,7 @@ public class KingService extends Service{
 	}
 	
     public String getLocalIPAddress(){
-    	return mWifiMonitor.getLocalIPAddress();
+    	return mWifiMonitor != null ? mWifiMonitor.getLocalIPAddress() : "0.0.0.0";
     }
     
     public static void addLog(String log){
@@ -177,5 +169,9 @@ public class KingService extends Service{
     
     public static ArrayList<String> getLog(){
     	return LoggerManager.getInstance().getLog();
+    }
+    
+    public static void redirectLog2SDCard(){
+    	LoggerManager.getInstance().redirectLog2SDCard();
     }
 }

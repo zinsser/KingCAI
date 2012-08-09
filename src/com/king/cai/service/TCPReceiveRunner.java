@@ -13,22 +13,34 @@ public class TCPReceiveRunner extends FirableRunner{
 	private ByteBuffer mReceiveBuf = ByteBuffer.allocate(8192);
 	private int mPort = 0;
 	private String mPeerAddr = null;
+	private DownloadCache mDownloadCacher = null;
 	
 	public TCPReceiveRunner(Message innerMessage, 
-						InputStream is, String peer, int port) {
+						InputStream is, String peer, int port, boolean bCache) {
 		super(innerMessage);
 		mInputStream = is;
 		mPeerAddr = peer;
 		mPort = port;
+		if (bCache){
+			mDownloadCacher = new DownloadCache();
+		}
 	}
+
+	public DownloadCache getCacher(){
+		return mDownloadCacher;
+	} 
 	
 	@Override
 	protected void doRun() {
 		try {
 			int readSize = mInputStream.read(mReceiveBuf.array()); 
 			if (readSize > 0){
-				FireMessage(mPeerAddr, mReceiveBuf, readSize, 
-						mPort == KingCAIConfig.mTextReceivePort);
+				if (mDownloadCacher != null){
+					
+				}else{
+					FireMessage(mPeerAddr, mReceiveBuf, readSize, 
+							mPort == KingCAIConfig.mTextReceivePort);
+				}
 			}
 		} catch (IOException e) {
 			KingService.addLog(e.toString());

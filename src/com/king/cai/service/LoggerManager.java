@@ -23,4 +23,8 @@ public class LoggerManager {
 	public ArrayList<String> getLog(){
 		return mLogger;
 	}
+	
+	public void redirectLog2SDCard(){
+		
+	}
 }
