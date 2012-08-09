@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-import com.king.cai.platform.KingCAIConfig;
+import com.king.cai.KingCAIConfig;
 
 import android.os.Message;
 

@@ -1,6 +1,5 @@
 package com.king.cai.messageservice;
 
-import com.king.cai.common.ComunicableActivity.EventProcessListener;
 import com.king.cai.messageservice.ActiveMessageManager.ActiveFunctor;
 
 public class StartTestOnLineApp extends ActiveMessage{
@@ -20,7 +19,6 @@ public class StartTestOnLineApp extends ActiveMessage{
 	}
 
 	@Override
-	public void Execute(EventProcessListener l) {
-//		l.onTalkingFinished(mPeerIP);
+	public void Execute() {
 	}
 }

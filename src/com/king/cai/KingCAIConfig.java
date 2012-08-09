@@ -1,4 +1,4 @@
-package com.king.cai.platform;
+package com.king.cai;
 
 public class KingCAIConfig {
 	public final static int EVENT_CLIENT_IP_REQUEST = 0;
@@ -6,6 +6,14 @@ public class KingCAIConfig {
 	public final static int EVENT_CLIENT_LOGIN = 2;
 	public final static int EVENT_LOGIN_FINISHED = 3;
 	public final static int EVENT_RECEIVE_MESSAGE = 4;
+	
+	public final static int EVENT_QUERY_COMPLETE = 5;
+	public final static int EVENT_LOGIN_COMPLETE = 6;
+	public final static int EVENT_NEW_QUESTION = 7;
+	public final static int EVENT_NEW_IMAGE = 8;
+	public final static int EVENT_CLEAN_PAPER = 9;
+	
+	
 	public final static String  SOCKET_EVENT_ACTION = "com.king.cai.socket.event";
 	
 	

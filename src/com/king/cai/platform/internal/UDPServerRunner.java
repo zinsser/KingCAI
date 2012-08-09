@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 import android.os.Message;
 import android.util.Log;
 
-import com.king.cai.platform.KingCAIConfig;
+import com.king.cai.KingCAIConfig;
 import com.king.cai.platform.internal.FirableRunner;
 
 

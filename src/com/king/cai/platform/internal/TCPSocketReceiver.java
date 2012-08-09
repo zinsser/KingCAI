@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
-import com.king.cai.platform.KingCAIConfig;
+import com.king.cai.KingCAIConfig;
 
 import android.os.Message;
 import android.util.Log;

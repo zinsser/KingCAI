@@ -1,9 +1,9 @@
 package com.king.cai.platform.internal;
 
+import com.king.cai.KingCAIConfig;
 import com.king.cai.messageservice.LoginRequestMessage;
 import com.king.cai.messageservice.QueryServerMessage;
 import com.king.cai.messageservice.RequestMessage;
-import com.king.cai.platform.KingCAIConfig;
 import com.king.cai.platform.internal.UDPServerRunner;
 
 import android.app.Service;

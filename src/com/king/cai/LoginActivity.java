@@ -1,7 +1,5 @@
 package com.king.cai;
 
-
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 
@@ -10,7 +8,6 @@ import com.king.cai.platform.internal.ServerInfo;
 import com.king.cai.platform.internal.WifiMonitor;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperActivity;
-import com.king.cai.platform.KingCAIConfig;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -27,7 +24,6 @@ import android.os.Handler;
 
 import android.os.Message;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -411,55 +407,35 @@ public class LoginActivity  extends ComunicableActivity  {
 		finish();
     }
        
-	@Override    
-    protected EventProcessListener doGetEventProcessListener(){
-    	return new LoginEventProcessListener();
-    }
-    
-	public class LoginEventProcessListener implements ComunicableActivity.EventProcessListener {
-
-		public void  onTalkingFinished(final String serverip){
+    @Override
+	protected void doHandleInnerMessage(Message innerMessage){
+		Bundle bundle = innerMessage.getData();    	
+    	switch (innerMessage.what){
+		case KingCAIConfig.EVENT_QUERY_COMPLETE:
 			mInnerHandler.removeMessages(EVENT_QUERY_TIME_OUT);
-			mServerIP = serverip;
+			mServerIP = bundle.getString("Peer");
 			mSSID = (String)mSpinnerSSID.getAdapter().getItem(mSpinnerSSID.getSelectedItemPosition());
 			mInnerHandler.obtainMessage(EVENT_QUERY_SUCCESS).sendToTarget();
 			mServiceChannel.setServerIPAddr(mServerIP);
 			mServiceChannel.connectServer(mTxtStudentID.getText().toString(), 
 										  mTxtPassword.getText().toString());
-			mInnerHandler.obtainMessage(EVENT_LOGIN_TIME_OUT).sendToTarget();
-		}
-
-
-		public void onLoginSuccess(String studentinfo) {
-			mInnerHandler.obtainMessage(EVENT_QUERY_FAIL).sendToTarget();
-			StartPaperActivity(studentinfo, mCheckBoxOffline.isChecked());
-		}
-
-
-		public void onLoginFail() {
-			mTextViewStatus.setText(R.string.FailLoginStatus);
-			showToast(R.string.InputCorrectIDTip);			
-			cleanForm();
-		}
-
-
-		public void onPaperTitleReceived(String title) {
-			Log.d("PaperActivity", title);			
-		}
-
-
-		public void onNewQuestion(String id, String answer, int type, String content, boolean bHasImage) {
-			Log.d("PaperActivity", content);
-		}
-
-
-		public void onCleanPaper() {
-			finish();
-		}
-
-
-		public void onNewImage(String id, ByteBuffer buf) {
-			Log.d("PaperActivity", "new image");			
-		}
-	}    
+			mInnerHandler.obtainMessage(EVENT_LOGIN_TIME_OUT).sendToTarget();			
+			break;
+		case KingCAIConfig.EVENT_LOGIN_COMPLETE:
+			Boolean bResult = bundle.getBoolean("Result");
+			if (bResult){
+				String studentInfo = bundle.getString("Info");
+				mInnerHandler.obtainMessage(EVENT_QUERY_FAIL).sendToTarget();
+				StartPaperActivity(studentInfo, mCheckBoxOffline.isChecked());				
+			}else{
+				mTextViewStatus.setText(R.string.FailLoginStatus);
+				showToast(R.string.InputCorrectIDTip);			
+				cleanForm();				
+			}
+			break;
+		case KingCAIConfig.EVENT_CLEAN_PAPER:
+			finish();			
+			break;
+		}   	
+    }
 }

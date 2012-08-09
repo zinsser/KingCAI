@@ -1,8 +1,10 @@
 package com.king.cai.messageservice;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Message;
 
-import com.king.cai.common.ComunicableActivity.EventProcessListener;
+import com.king.cai.KingCAIConfig;
 import com.king.cai.messageservice.ActiveMessageManager.ActiveFunctor;
 
 public class NewQuestionMessage  extends ActiveMessage{
@@ -24,29 +26,29 @@ public class NewQuestionMessage  extends ActiveMessage{
 	}
 
 	@Override
-	public void Execute(EventProcessListener l) {
-		new QuestionParseTask(l).execute(super.FromPack(mMsgPack));
+	public void Execute(/*EventProcessListener l*/) {
+		new QuestionParseTask(/*l*/).execute(super.FromPack(mMsgPack));
 	}
 	
 	public class ProgressObject{
 		String mID;
 		int mType;
-		String mAnswer;
+		String mReference;
 		String mContent;
 		boolean mHasImage;
-		ProgressObject(String id, int type, String answer, String content, boolean hasImage){
+		ProgressObject(String id, int type, String reference, String content, boolean hasImage){
 			mID = id;
 			mType = type;
-			mAnswer = answer;
+			mReference = reference;
 			mContent = content;
 			mHasImage = hasImage;
 		}
 	}
 	
 	public class QuestionParseTask extends  AsyncTask<String, ProgressObject, String> {
-		EventProcessListener mProcessListener;
-		public QuestionParseTask(EventProcessListener l){
-			mProcessListener = l;
+//		EventProcessListener mProcessListener;
+		public QuestionParseTask(/*EventProcessListener l*/){
+//			mProcessListener = l;
 		}
 		@Override
 		protected String doInBackground(String... packs) {
@@ -90,7 +92,16 @@ public class NewQuestionMessage  extends ActiveMessage{
 			// 更新进度
 			//setProgress
 			for (ProgressObject obj : values){
-				mProcessListener.onNewQuestion(obj.mID, obj.mAnswer, obj.mType, obj.mContent, obj.mHasImage);					
+				Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_NEW_QUESTION);
+				Bundle bundle = new Bundle();
+				bundle.putString("ID", obj.mID);
+				bundle.putString("Reference", obj.mReference);
+				bundle.putInt("Type", obj.mType);
+				bundle.putString("Content", obj.mContent);
+				bundle.putBoolean("HasImage", obj.mHasImage);
+				innerMessage.setData(bundle);
+				innerMessage.sendToTarget();
+//				mProcessListener.onNewQuestion(obj.mID, obj.mAnswer, obj.mType, obj.mContent, obj.mHasImage);					
 			}
 		}
 	};

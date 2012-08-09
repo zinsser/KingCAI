@@ -2,7 +2,6 @@ package com.king.cai;
 
 import com.king.cai.R;
 import com.king.cai.examination.PaperActivity;
-import com.king.cai.platform.KingCAIConfig;
 
 import android.app.Activity;
 import android.content.Intent;

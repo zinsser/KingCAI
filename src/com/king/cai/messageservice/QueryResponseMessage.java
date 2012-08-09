@@ -1,6 +1,9 @@
 package com.king.cai.messageservice;
 
-import com.king.cai.common.ComunicableActivity.EventProcessListener;
+import android.os.Bundle;
+import android.os.Message;
+
+import com.king.cai.KingCAIConfig;
 import com.king.cai.messageservice.ActiveMessageManager.ActiveFunctor;
 
 public class QueryResponseMessage extends ActiveMessage{
@@ -22,7 +25,12 @@ public class QueryResponseMessage extends ActiveMessage{
 	}
 
 	@Override
-	public void Execute(EventProcessListener l) {
-		l.onTalkingFinished(mPeerIP);
+	public void Execute() {
+		Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_QUERY_COMPLETE);
+		Bundle bundle = new Bundle();
+		bundle.putString("Peer", mPeerIP);
+		innerMessage.setData(bundle);
+		innerMessage.sendToTarget();
+//		l.onTalkingFinished(mPeerIP);
 	}
 }

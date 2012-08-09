@@ -1,6 +1,9 @@
 package com.king.cai.messageservice;
 
-import com.king.cai.common.ComunicableActivity.EventProcessListener;
+import android.os.Bundle;
+import android.os.Message;
+
+import com.king.cai.KingCAIConfig;
 import com.king.cai.messageservice.ActiveMessageManager.ActiveFunctor;
 
 public class LoginResponseMessage extends ActiveMessage{
@@ -20,13 +23,21 @@ public class LoginResponseMessage extends ActiveMessage{
 	}
 
 	@Override
-	public void Execute(EventProcessListener l) {
+	public void Execute() {
 		String pack = super.FromPack(mMsgPack);
+		Bundle bundle = new Bundle();
+		Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_LOGIN_COMPLETE);
 		if (pack.contains("[pass]")){
-			String studentinfo = pack.substring("[pass]".length(), pack.length());
-			l.onLoginSuccess(studentinfo);
+			String studentInfo = pack.substring("[pass]".length(), pack.length());
+			bundle.putBoolean("RESULT", true);
+			bundle.putString("INFO", studentInfo);
+//			l.onLoginSuccess(studentinfo);
 		}else{
-			l.onLoginFail();
+			bundle.putBoolean("RESULT", false);
+//			l.onLoginFail();
 		}
+		innerMessage.setData(bundle);
+		innerMessage.sendToTarget();
+		
 	}
 }

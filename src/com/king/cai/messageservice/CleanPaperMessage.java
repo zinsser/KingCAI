@@ -1,6 +1,6 @@
 package com.king.cai.messageservice;
 
-import com.king.cai.common.ComunicableActivity.EventProcessListener;
+import com.king.cai.KingCAIConfig;
 import com.king.cai.messageservice.ActiveMessageManager.ActiveFunctor;
 
 public class CleanPaperMessage  extends ActiveMessage{
@@ -19,7 +19,8 @@ public class CleanPaperMessage  extends ActiveMessage{
 	}
 
 	@Override
-	public void Execute(EventProcessListener l) {
-		l.onCleanPaper();
+	public void Execute() {
+		mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_CLEAN_PAPER).sendToTarget();
+//		l.onCleanPaper();
 	}
 }

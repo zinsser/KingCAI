@@ -2,9 +2,11 @@ package com.king.cai.messageservice;
 
 import java.nio.ByteBuffer;
 
-import com.king.cai.common.ComunicableActivity.EventProcessListener;
+import android.os.Bundle;
+import android.os.Message;
+
+import com.king.cai.KingCAIConfig;
 import com.king.cai.messageservice.ActiveMessageManager.ActiveFunctor;
-import com.king.cai.platform.KingCAIConfig;
 
 public class NewImageMessage  extends ActiveMessage{
 	public final static String s_MsgTag = KingCAIConfig.NewImageMessageTag;
@@ -38,7 +40,13 @@ public class NewImageMessage  extends ActiveMessage{
 	}
 
 	@Override
-	public void Execute(EventProcessListener l) {
-		l.onNewImage(mQID, mImageBuffer);
+	public void Execute() {
+		Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_NEW_IMAGE);
+		Bundle bundle = new Bundle();
+		bundle.putString("QUESTION", mQID);
+		bundle.putByteArray("DATA", mImageBuffer.array());
+		innerMessage.setData(bundle);
+		innerMessage.sendToTarget();
+//		l.onNewImage(mQID, mImageBuffer);
 	}
 }

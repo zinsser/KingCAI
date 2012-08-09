@@ -4,12 +4,12 @@ import java.nio.ByteBuffer;
 import java.util.Set;
 
 
+import com.king.cai.KingCAIConfig;
 import com.king.cai.messageservice.ActiveMessage;
 import com.king.cai.messageservice.ActiveMessageManager;
 import com.king.cai.messageservice.NewImageMessage;
 import com.king.cai.messageservice.RequestMessage;
 import com.king.cai.platform.CommonDefine;
-import com.king.cai.platform.KingCAIConfig;
 import com.king.cai.platform.internal.KingService;
 
 import android.app.Activity;
@@ -46,13 +46,9 @@ public abstract class ComunicableActivity extends Activity{
     	mHandler = new ServiceMessageHandler(Comunicator.getLooper());
 
     	mReceiver = new ServiceMessageReceiver(mHandler);
-    	if (mEventProcessListener == null){
-    		mEventProcessListener = doGetEventProcessListener();
-    	}
+
     }
-    
-    protected abstract EventProcessListener doGetEventProcessListener();
-    
+
     @Override
     public void onResume(){
     	super.onResume();
@@ -109,6 +105,16 @@ public abstract class ComunicableActivity extends Activity{
             }
     	} 
     }
+	private Handler mInnerMessageHandler = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if (msg != null){
+				doHandleInnerMessage(msg);
+			}
+		}
+	};
+	
+	protected abstract void doHandleInnerMessage(Message innerMessage);
 	
 	public class ServiceMessageHandler extends Handler{
     	public static final int EVENT_TEXT_MESSAGE = 0;
@@ -143,7 +149,8 @@ public abstract class ComunicableActivity extends Activity{
 			buf.put(msgData);
 			NewImageMessage.NewImageFunctor functor = new NewImageMessage.NewImageFunctor();
 			NewImageMessage activeMsgExecutor = (NewImageMessage) functor.OnReceiveMessage(peer,  qid, buf.array());
-			activeMsgExecutor.Execute(mEventProcessListener);
+			activeMsgExecutor.setCompleteHandler(mInnerMessageHandler);
+			activeMsgExecutor.Execute();
     	}
     	
     	private void onReceiveMessage(String peer, String MsgData){
@@ -159,7 +166,8 @@ public abstract class ComunicableActivity extends Activity{
     		}
     		
     		if (activeMsgExecutor != null){
-    			activeMsgExecutor.Execute(mEventProcessListener);
+    			activeMsgExecutor.setCompleteHandler(mInnerMessageHandler);
+    			activeMsgExecutor.Execute();
     		}	
     	}    	
     }
@@ -222,15 +230,4 @@ public abstract class ComunicableActivity extends Activity{
         	}
         }
     };
-    
-    protected EventProcessListener mEventProcessListener = null;    
-    public interface EventProcessListener{
-		public abstract void  onTalkingFinished(final String serverip);
-		public abstract void  onLoginSuccess(final String studentinfo);
-		public abstract void  onLoginFail();	
-		public abstract void  onPaperTitleReceived(String title);	
-		public abstract void  onNewQuestion(String id, String answer, int type, String content, boolean bHasImage);
-		public abstract void  onCleanPaper();
-		public abstract void  onNewImage(String id, ByteBuffer buf);
-	}
 }

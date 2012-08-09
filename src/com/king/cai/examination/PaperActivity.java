@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.king.cai.KingCAIConfig;
 import com.king.cai.R;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperViewAdapter;
@@ -41,7 +42,6 @@ import com.king.cai.messageservice.AnswerMessage;
 import com.king.cai.messageservice.LogoutRequestMessage;
 import com.king.cai.messageservice.RequestImageMessage;
 import com.king.cai.messageservice.RequestPaperMessage;
-import com.king.cai.platform.KingCAIConfig;
 
 public class PaperActivity  extends ComunicableActivity {
 	private final static int GROUP_NORMAL = 0;
@@ -372,80 +372,33 @@ public class PaperActivity  extends ComunicableActivity {
     }
     
 	@Override
-	protected EventProcessListener doGetEventProcessListener() {
-		return new PaperEventProcessListener();
-	}
-	
-	private class PaperEventProcessListener implements EventProcessListener {
-		public void  onTalkingFinished(final String serverip){
+	protected void doHandleInnerMessage(Message innerMessage){
+		Bundle bundle = innerMessage.getData();
+		switch (innerMessage.what){
+		case KingCAIConfig.EVENT_NEW_QUESTION:{
+			String id = bundle.getString("ID");
+			Integer type = bundle.getInt("Type");
+			String answer = bundle.getString("Reference");
+			String content = bundle.getString("Content");
+			boolean bHasImage = bundle.getBoolean("HasImage");
+			mQuestionMgr.AddQuestion(new QuestionInfo(id, type, answer, content, bHasImage));
+			if (bHasImage)mServiceChannel.sendMessage(new RequestImageMessage(id), 0);	
+			break;
 		}
+		case KingCAIConfig.EVENT_NEW_IMAGE:{
+			String id = bundle.getString("ID");
+			byte[] data = bundle.getByteArray("Data");
 
-
-		public void onLoginSuccess(String studentinfo) {
+			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+			mQuestionMgr.AddQuestionImage(id, bmp);
+			break;
 		}
-
-
-		public void onLoginFail() {
-		}
-
-
-		public void onPaperTitleReceived(String title) {
-			mQuestionMgr.AddQuestion(new QuestionInfo("0", QuestionInfo.QUESTION_TYPE_TITLE, null, title, false));
-		}
-
-
-		public void onNewQuestion(String id, String answer, int type, String content, boolean bHasImage) {
-			Message msg = mNewQuestionHandler.obtainMessage(NEW_QUESTION);
-    		Bundle bundle = new Bundle();
-    		bundle.putString("ID", id);
-    		bundle.putString("Answer", answer);
-    		bundle.putInt("Type", type);
-    		bundle.putString("Content", content);
-    		bundle.putBoolean("HasImage", bHasImage);
-    		msg.setData(bundle);
-    		msg.sendToTarget();
-		}
-
-		public void onCleanPaper() {
+		case KingCAIConfig.EVENT_CLEAN_PAPER:	
 			finish();
+			break;
 		}
+ 	}
 
-
-		public void onNewImage(String id, ByteBuffer buf) {
-			Message msg = mNewQuestionHandler.obtainMessage(NEW_IMAGE);
-    		Bundle bundle = new Bundle();
-    		bundle.putString("ID", id);
-    		bundle.putByteArray("Data", buf.array());
-    		msg.setData(bundle);
-    		msg.sendToTarget();
-		}
-	}
-
-    private static int NEW_QUESTION = 20;
-	private static int NEW_IMAGE = 21;
-    private Handler mNewQuestionHandler = new Handler(){
-		
-    	@Override
-    	public void handleMessage(Message msg){
-    		if (msg.what == NEW_QUESTION){
-    			Bundle bundle = msg.getData();
-    			String id = bundle.getString("ID");
-    			Integer type = bundle.getInt("Type");
-    			String answer = bundle.getString("Answer");
-    			String content = bundle.getString("Content");
-    			boolean bHasImage = bundle.getBoolean("HasImage");
-    			mQuestionMgr.AddQuestion(new QuestionInfo(id, type, answer, content, bHasImage));
-    			if (bHasImage)mServiceChannel.sendMessage(new RequestImageMessage(id), 0);
-    		}else if (msg.what == NEW_IMAGE){
-    			Bundle bundle = msg.getData();
-    			String id = bundle.getString("ID");
-    			byte[] data = bundle.getByteArray("Data");
-
-    			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-    			mQuestionMgr.AddQuestionImage(id, bmp);
-    		}
-    	}
-	};
     private void ParseIntentExtraParam(){
         if (getIntent().hasExtra(KingCAIConfig.StudentInfo)){
             Bundle extra = getIntent().getExtras();
