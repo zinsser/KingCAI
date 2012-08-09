@@ -18,8 +18,10 @@ public class UDPSenderThread extends Thread{
 			mDatagramPacket = new DatagramPacket(outterMessage.getBytes(), outterMessage.getBytes().length,
 					local, port);
 		} catch (UnknownHostException e) {
+			KingService.addLog(e.toString());			
 			e.printStackTrace();
 		} catch (SocketException e) {
+			KingService.addLog(e.toString());			
 			e.printStackTrace();
 		}		
 	}
@@ -30,6 +32,7 @@ public class UDPSenderThread extends Thread{
 			mDatagramSocket.send(mDatagramPacket);
 			mDatagramSocket.close();
 		} catch (IOException e){
+			KingService.addLog(e.toString());			
 			e.printStackTrace();
 		}
 		

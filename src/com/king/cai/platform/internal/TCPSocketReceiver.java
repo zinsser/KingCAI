@@ -33,6 +33,7 @@ public class TCPSocketReceiver extends FirableRunner{
 				mTcpSocket.setReceiveBufferSize(8192);
 				mTcpSocket.setReuseAddress(true);
 			}catch (IOException e){
+				KingService.addLog(e.toString());				
 				e.printStackTrace();
 			}		
 		}
@@ -115,6 +116,7 @@ public class TCPSocketReceiver extends FirableRunner{
 				mTcpSocket = null;
 			}
 		} catch (IOException e) {
+			KingService.addLog(e.toString());			
 			e.printStackTrace();
 		}  
 	}

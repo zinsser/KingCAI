@@ -17,6 +17,7 @@ public class TCPSenderThread extends Thread{
 			mOutputStream.write(mOutterMessage.getBytes());
 			mOutputStream.flush();
 		} catch (IOException e) {
+			KingService.addLog(e.toString());			
 			e.printStackTrace();
 		}
 	}

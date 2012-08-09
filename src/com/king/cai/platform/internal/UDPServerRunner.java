@@ -29,6 +29,7 @@ public class UDPServerRunner extends FirableRunner{
 			mDatagramPacket = null;
 			mDatagramPacket = new DatagramPacket(mMsgBuffer.array(), mMsgBuffer.array().length);
 		}catch (SocketException e){
+			KingService.addLog(e.toString());			
 			e.printStackTrace();
 		}
 	}
@@ -48,6 +49,7 @@ public class UDPServerRunner extends FirableRunner{
 			FireMessage(peerAddr, ByteBuffer.wrap(rawmsg.trim().getBytes()), 
 						ByteBuffer.wrap(rawmsg.trim().getBytes()).capacity(), true);
 		}catch(IOException e) {
+			KingService.addLog(e.toString());			
 			e.printStackTrace();
 		}
 		mRunning = false;

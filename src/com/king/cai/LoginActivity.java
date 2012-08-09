@@ -16,7 +16,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
@@ -46,8 +45,6 @@ public class LoginActivity  extends ComunicableActivity  {
 	private final static int MENU_MODIFY_PASSWORD = 1;
 	private final static int MENU_SETTING = 2;
 	private final static int MENU_WIFI_SETTING = 3;	
-	
-	private final static int DIALOG_MODIFY_PASSWORD = 1;
 	
 	private final static int EVENT_QUERY_TIME_OUT = 1;
 	private final static int EVENT_QUERY_SUCCESS = 2;	
@@ -367,13 +364,13 @@ public class LoginActivity  extends ComunicableActivity  {
     	case MENU_SETTING:
     		Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
     		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | 
-    				Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+    						Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
     		startActivity(intent);
     		break;
     	case MENU_WIFI_SETTING:
     		Intent intentWifi = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
     		intentWifi.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | 
-    				Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+    							Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
     		startActivity(intentWifi);
     		break;
     	}
@@ -381,20 +378,6 @@ public class LoginActivity  extends ComunicableActivity  {
     	return super.onOptionsItemSelected(item);
     }    
 
-    @Override
-    protected Dialog onCreateDialog(int id){
-    	if (id == DIALOG_MODIFY_PASSWORD){
-    		LayoutInflater inflater = LayoutInflater.from(getApplication());
-    		View modifyView = inflater.inflate(R.layout.modifypassword, null);	
-    		AlertDialog.Builder builder = new AlertDialog.Builder(this)
-    			.setPositiveButton(android.R.string.ok, null)
-    			.setNegativeButton(android.R.string.cancel, null)
-    			.setView(modifyView);
-    		return builder.create();
-    	}
-    	return super.onCreateDialog(id);
-    }
-    
     public void StartPaperActivity(String studentInfo, boolean bOffline){
 //    	SaveStudentInfo(mID, studentInfo, mTxtPassword.getText().toString(), mImgViewHeader.getDrawable().toString());
     	

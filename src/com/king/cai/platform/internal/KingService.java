@@ -1,5 +1,7 @@
 package com.king.cai.platform.internal;
 
+import java.util.ArrayList;
+
 import com.king.cai.KingCAIConfig;
 import com.king.cai.messageservice.LoginRequestMessage;
 import com.king.cai.messageservice.QueryServerMessage;
@@ -20,9 +22,9 @@ public class KingService extends Service{
 
 	private UDPServerRunner mUdpReceiverRoutine = null;
     private TCPClient mTcpClient = null;
-    private DownloadService mDownloadManager = null;
-        
+    private DownloadService mDownloadManager = null;  
     private WifiMonitor mWifiMonitor = null;
+
     
     //这里定义吧一个Binder类，用在onBind()有方法里，这样Activity那边可以获取到 
     private MyBinder mBinder = new MyBinder();      
@@ -167,5 +169,13 @@ public class KingService extends Service{
 	
     public String getLocalIPAddress(){
     	return mWifiMonitor.getLocalIPAddress();
+    }
+    
+    public static void addLog(String log){
+    	LoggerManager.getInstance().addLog(log);
+    }
+    
+    public static ArrayList<String> getLog(){
+    	return LoggerManager.getInstance().getLog();
     }
 }

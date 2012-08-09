@@ -31,6 +31,7 @@ public class TCPReceiveRunner extends FirableRunner{
 						mPort == KingCAIConfig.mTextReceivePort);
 			}
 		} catch (IOException e) {
+			KingService.addLog(e.toString());
 			e.printStackTrace();
 		}
 	}

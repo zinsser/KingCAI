@@ -87,6 +87,17 @@ public abstract class ComunicableActivity extends Activity{
     	toast.show();
     }    
     
+	protected abstract void doHandleInnerMessage(Message innerMessage);
+	private Handler mInnerMessageHandler = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if (msg != null){
+				doHandleInnerMessage(msg);
+			}
+		}
+	};
+	    
+    
 	public class ServiceMessageReceiver extends BroadcastReceiver{
     	private Handler mHostHandler = null;
     	
@@ -105,16 +116,6 @@ public abstract class ComunicableActivity extends Activity{
             }
     	} 
     }
-	private Handler mInnerMessageHandler = new Handler(){
-		@Override
-		public void handleMessage(Message msg){
-			if (msg != null){
-				doHandleInnerMessage(msg);
-			}
-		}
-	};
-	
-	protected abstract void doHandleInnerMessage(Message innerMessage);
 	
 	public class ServiceMessageHandler extends Handler{
     	public static final int EVENT_TEXT_MESSAGE = 0;
@@ -174,7 +175,7 @@ public abstract class ComunicableActivity extends Activity{
 	
 	protected void doServiceReady(){
 		
-	}
+	}	
 	
     protected myServiceChannel mServiceChannel = new myServiceChannel();
     protected class myServiceChannel implements ServiceConnection{     
