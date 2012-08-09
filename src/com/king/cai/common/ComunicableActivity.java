@@ -5,11 +5,11 @@ import java.util.Set;
 
 
 import com.king.cai.KingCAIConfig;
-import com.king.cai.messageservice.ActiveMessage;
-import com.king.cai.messageservice.ActiveMessageManager;
-import com.king.cai.messageservice.NewImageMessage;
-import com.king.cai.messageservice.RequestMessage;
-import com.king.cai.platform.KingService;
+import com.king.cai.message.ActiveMessage;
+import com.king.cai.message.ActiveMessageManager;
+import com.king.cai.message.NewImageMessage;
+import com.king.cai.message.RequestMessage;
+import com.king.cai.service.KingService;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

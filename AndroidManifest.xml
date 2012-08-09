@@ -54,7 +54,7 @@
                   
          </activity> 
         <service android:enabled="true" 
-  				android:name=".platform.internal.KingService" >
+  				android:name=".service.internal.KingService" >
             <!--android:permission="android.permission.SET_PREFERRED_APPLICATIONS"> -->
             <intent-filter >
                 <action android:name="com.jczhou.platform.socketservice"/>

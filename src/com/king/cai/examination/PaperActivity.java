@@ -36,10 +36,10 @@ import com.king.cai.KingCAIConfig;
 import com.king.cai.R;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperViewAdapter;
-import com.king.cai.messageservice.AnswerMessage;
-import com.king.cai.messageservice.LogoutRequestMessage;
-import com.king.cai.messageservice.RequestImageMessage;
-import com.king.cai.messageservice.RequestPaperMessage;
+import com.king.cai.message.AnswerMessage;
+import com.king.cai.message.LogoutRequestMessage;
+import com.king.cai.message.RequestImageMessage;
+import com.king.cai.message.RequestPaperMessage;
 
 public class PaperActivity  extends ComunicableActivity {
 	private final static int GROUP_NORMAL = 0;
