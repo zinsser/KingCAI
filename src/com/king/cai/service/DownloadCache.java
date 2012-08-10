@@ -1,22 +1,32 @@
 package com.king.cai.service;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import android.os.Message;
 
 public class DownloadCache {
-	private ArrayList<DownloadTask> mTasks = new ArrayList<DownloadTask>();
+	private Queue<DownloadTask> mTasks = new LinkedList<DownloadTask>();
 	private DownloadTask mDoingTask = null;
 	
 	public void dispatchTask(){
+		if (mDoingTask == null){
+			if (mTasks.size() > 0){
+				mDoingTask = mTasks.poll();
+			}
+		}
 		
+		if (mDoingTask != null && mDoingTask.isUnstart()){
+			mDoingTask.request();
+		}else if (mDoingTask != null && mDoingTask.isFinished()){
+			mDoingTask = null;
+			if (mTasks.size() > 0){
+				mDoingTask = mTasks.poll();
+			}
+		}
 	}
-	
-	public void addTask(String qid, String subid){
-		addTask(new DownloadTask(qid, subid));
-	}
-	
+
 	public int getRemain(){
 		return mDoingTask != null ? mDoingTask.getRemain() : 0;
 	}
@@ -25,42 +35,15 @@ public class DownloadCache {
 		return mDoingTask != null ? mDoingTask.getDataBuffer() : null;
 	}
 	
+	public void addTask(String qid, Message innerMessage){
+		addTask(new DownloadTask(qid, innerMessage));
+	}	
+	
 	public void addTask(DownloadTask newTask){
-		if (newTask != null){
-			if (mDoingTask == null){
-				mDoingTask = newTask;
-			} else if (!mDoingTask.equals(newTask)){
-				if (!findTask(newTask)){
-					mTasks.add(newTask);
-				}
-			}
+		if (newTask != null && !mTasks.contains(newTask)){
+			mTasks.offer(newTask);
+			dispatchTask();
 		}
-	}
-	
-	private boolean findTask(DownloadTask targetTask){
-		boolean bExistSameTask = false;
-		for (DownloadTask task : mTasks){
-			if (task.equals(targetTask)){
-				bExistSameTask = true;
-				break;
-			}
-		}
-		return bExistSameTask;
-	}
-	
-	private boolean findTask(String qid, String subid){
-		return findTask(new DownloadTask(qid, subid));
-	}
-	
-	public void startDownload(){
-		do{
-			if (mDoingTask == null && mTasks.size() > 1){
-				mDoingTask = mTasks.get(0);
-				mTasks.remove(0);
-			}
-			
-			mDoingTask.request();
-		}while (mTasks.size() > 0);
 	}
 
 	public void exitDownload(){
@@ -72,19 +55,15 @@ public class DownloadCache {
 		mTasks = null;
 	}
 	
-	public void receiveData(byte[] data, Integer size){
+	public void receiveData(ByteBuffer buf, Integer size){
 		if (mDoingTask != null){
-			mDoingTask.addData(data, size);
-			if (mDoingTask.getRemain() == 0){
-				
-			}
+			mDoingTask.addData(buf, size);
 		}
 	}
 	
-	public void updateDownloadSize(String qid, String subid, int size){
-		if (findTask(qid, subid)){
-//			DownloadTask task = mTasks.
+	public void updateDownloadSize(String qid, String imageIndex, int size){
+		if (mDoingTask != null && mDoingTask.getQuestionID().equals(qid)){
+			mDoingTask.updateImageInfo(imageIndex, size);
 		}
 	}
-	
 }

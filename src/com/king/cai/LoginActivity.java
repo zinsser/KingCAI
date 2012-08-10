@@ -79,7 +79,8 @@ public class LoginActivity  extends ComunicableActivity  {
         BtnClickListener btnListener = new BtnClickListener();
         mBtnLogin = (Button)findViewById(R.id.btnLogin);
         mBtnLogin.setOnClickListener(btnListener);  
-         
+        mBtnLogin.setEnabled(false);
+        
         mCheckBoxOffline = (CheckBox)findViewById(R.id.checkBoxOffline);
         mImgViewHeader = (ImageView)findViewById(R.id.imageViewHeaderPhoto);
         mImgViewHeader.setOnClickListener(btnListener);
@@ -389,7 +390,12 @@ public class LoginActivity  extends ComunicableActivity  {
 		startActivity(openSheetActivity);
 		finish();
     }
-       
+
+	@Override
+	protected void doServiceReady() {
+		mBtnLogin.setEnabled(true);
+	}    
+    
     @Override
 	protected void doHandleInnerMessage(Message innerMessage){
 		Bundle bundle = innerMessage.getData();    	
@@ -416,9 +422,6 @@ public class LoginActivity  extends ComunicableActivity  {
 				cleanForm();				
 			}
 			break;
-		case KingCAIConfig.EVENT_CLEAN_PAPER:
-			finish();			
-			break;
-		}   	
+    	}
     }
 }

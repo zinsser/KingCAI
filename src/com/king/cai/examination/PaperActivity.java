@@ -151,6 +151,7 @@ public class PaperActivity  extends ComunicableActivity {
     	super.onResume();
 
     }
+    
     @Override
 	protected void doServiceReady(){
         mServiceChannel.sendMessage(new RequestPaperMessage(), 0);		
@@ -380,7 +381,7 @@ public class PaperActivity  extends ComunicableActivity {
 			String content = bundle.getString("Content");
 			boolean bHasImage = bundle.getBoolean("HasImage");
 			mQuestionMgr.AddQuestion(new QuestionInfo(id, type, answer, content, bHasImage));
-			if (bHasImage)mServiceChannel.sendMessage(new RequestImageMessage(id), 0);	
+			if (bHasImage)mServiceChannel.addDownloadTask(id);	
 			break;
 		}
 		case KingCAIConfig.EVENT_NEW_IMAGE:{

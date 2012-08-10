@@ -24,4 +24,8 @@ public class LogDisplayer extends ComunicableActivity {
 	@Override
 	protected void doHandleInnerMessage(Message innerMessage) {
 	}
+
+	@Override
+	protected void doServiceReady() {		
+	}
 }

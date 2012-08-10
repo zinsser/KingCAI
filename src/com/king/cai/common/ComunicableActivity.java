@@ -45,7 +45,6 @@ public abstract class ComunicableActivity extends Activity{
     	mHandler = new ServiceMessageHandler(Comunicator.getLooper());
 
     	mReceiver = new ServiceMessageReceiver(mHandler);
-
     }
 
     @Override
@@ -90,12 +89,16 @@ public abstract class ComunicableActivity extends Activity{
 	private Handler mInnerMessageHandler = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
-			if (msg != null){
+			switch (msg.what){
+			case KingCAIConfig.EVENT_CLEAN_PAPER:
+				finish();
+				break;
+			default:
 				doHandleInnerMessage(msg);
+				break;
 			}
 		}
 	};
-	    
     
 	public class ServiceMessageReceiver extends BroadcastReceiver{
     	private Handler mHostHandler = null;
@@ -172,10 +175,7 @@ public abstract class ComunicableActivity extends Activity{
     	}    	
     }
 	
-	protected void doServiceReady(){
-		
-	}	
-	
+	protected abstract void doServiceReady();	
     protected myServiceChannel mServiceChannel = new myServiceChannel();
     protected class myServiceChannel implements ServiceConnection{     
     	public KingService mKingService = null;
@@ -221,6 +221,12 @@ public abstract class ComunicableActivity extends Activity{
         public void setServerIPAddr(String serverip){
         	if (mKingService != null){
         		mKingService.updateServer(serverip);
+        	}
+        }
+        
+        public void addDownloadTask(String qid){
+        	if (mKingService != null){
+        		mKingService.addDownloadTask(qid);
         	}
         }
     };

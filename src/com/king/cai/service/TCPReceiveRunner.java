@@ -38,7 +38,7 @@ public class TCPReceiveRunner extends FirableRunner{
 			if (readSize > 0){
 				if (mDownloadCacher != null){
 					if (mDownloadCacher.getRemain() != 0){
-						mDownloadCacher.receiveData(mReceiveBuf.array(), mReceiveBuf.array().length);
+						mDownloadCacher.receiveData(mReceiveBuf, readSize);
 					}else{
 						FireMessage(mPeerAddr, mDownloadCacher.getDataBuffer(), 
 										mDownloadCacher.getDataBuffer().capacity(), 

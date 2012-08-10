@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.king.cai.KingCAIConfig;
 import com.king.cai.message.LoginRequestMessage;
 import com.king.cai.message.QueryServerMessage;
+import com.king.cai.message.RequestImageMessage;
 import com.king.cai.message.RequestMessage;
 import com.king.cai.service.UDPServerRunner;
 
@@ -60,13 +61,14 @@ public class KingService extends Service{
     
     public static final int SOCKET_EVENT = 0;
     public static final int WIFI_EVENT = 1;
+    public static final int REQUEST_EVENT = 2;
     
     private Handler mHandler = new Handler(){
     	@Override
     	public void handleMessage(Message msg){
+			Bundle bundle = msg.getData();
     		switch (msg.what){
     		case SOCKET_EVENT:
-    			Bundle bundle = msg.getData();
     			boolean bText = bundle.getBoolean("TYPE");
     			if (bText){
         			Intent intent = new Intent(KingCAIConfig.SOCKET_EVENT_ACTION);
@@ -80,6 +82,10 @@ public class KingService extends Service{
     			}*/
     			break;
     		case WIFI_EVENT:
+    			break;
+    		case REQUEST_EVENT:
+    			String qid = bundle.getString("ID");
+    			KingService.this.sendMessage(new RequestImageMessage(qid), 0);
     			break;
     		}
     	}
@@ -133,9 +139,13 @@ public class KingService extends Service{
 		sendMessage(new LoginRequestMessage(number, password), 0);
 	}
 	
-	public void addDownloadTask(String qid, String imageIndex){
+	public void addDownloadTask(String qid){
 		if (mTcpClient != null){
-			mTcpClient.addImageDownloadTask(qid, imageIndex);
+			Message innerMessage = mHandler.obtainMessage(REQUEST_EVENT);
+			Bundle bundle = new Bundle();
+			bundle.putString("ID", qid);
+			innerMessage.setData(bundle);
+			mTcpClient.addImageDownloadTask(qid, innerMessage);
 		}
 	}
 
