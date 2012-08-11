@@ -33,8 +33,8 @@
     <string name="ModifyPassword">修改密码</string>
     <string name="LoginOffline">离线模式</string> 
     <string name="RefAnswer">参考答案</string>  
-    <string name="CurrentQuestion">请输入第 %d 道题答案</string>
-    <string name="CurrentBlankQuestion">请输入第%1$d(%2$d)道题答案</string>
+    <string name="CurrentQuestion">请输入第 %s 道题答案</string>
+    <string name="CurrentBlankQuestion">请输入第%1$s(%2$s)道题答案</string>
     <string name="ServerNotFound">无法找到服务器</string>        
     <string name="SelectClassTip">请选择班级！</string>   
     <string name="InputCorrectIDTip">请输入正确的学号及密码！</string>   
@@ -58,10 +58,12 @@
 	<string name="QueryServerStatus">正在查找教师服务器</string>	
 	<string name="FailQueryServerStatus">未找到教师服务器</string>	
 	<string name="FoundServerStatus">教师服务器已找到，正在请求登录</string>	
-	<string name="LoginServerStatus">正在请求登录教师服务器</string>	
+	<string name="LoginServerStatus">正在请求登录教师服务器</string>
+	<string name="LoginTimeOut">登录超时，请确认教师服务器是否开启</string>	
 	<string name="SuccessLoginStatus">登录成功，即将进入考试界面</string>	
-	<string name="FailLoginStatus">登录失败，请检查用户名密码</string>	
+	<string name="FailLoginStatus">登录失败，请检查用户名密码及热点</string>	
 	<string name="Setting">设置</string>	
 	<string name="WifiSetting">设置Wifi网络</string>	
 	<string name="SecretTitle">修改 %s 的密码</string>	
+	<string name="ErrNotInputID">请输入学号</string>	
 </resources>

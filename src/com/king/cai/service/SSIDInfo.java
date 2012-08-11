@@ -3,7 +3,7 @@ package com.king.cai.service;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
 
-public class ServerInfo{
+public class SSIDInfo{
 //	public static final int SECURITY_NONE = 0;
 //	public static final int SECURITY_WEP = 1;
 //	public static final int SECURITY_PSK = 2;
@@ -11,7 +11,7 @@ public class ServerInfo{
 	
 	private ScanResult mResultInfo = null;
 
-	public ServerInfo(ScanResult result){
+	public SSIDInfo(ScanResult result){
 		mResultInfo = result;
 	}
 

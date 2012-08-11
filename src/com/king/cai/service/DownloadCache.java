@@ -35,8 +35,8 @@ public class DownloadCache {
 		return mDoingTask != null ? mDoingTask.getDataBuffer() : null;
 	}
 	
-	public void addTask(String qid, Message innerMessage){
-		addTask(new DownloadTask(qid, innerMessage));
+	public void addTask(String qid, String imageIndex, Message innerMessage){
+		addTask(new DownloadTask(qid, imageIndex, innerMessage));
 	}	
 	
 	public void addTask(DownloadTask newTask){
@@ -65,5 +65,13 @@ public class DownloadCache {
 		if (mDoingTask != null && mDoingTask.getQuestionID().equals(qid)){
 			mDoingTask.updateImageInfo(imageIndex, size);
 		}
+	}
+	
+	public String getQuestionID(){
+		return mDoingTask.getQuestionID();
+	}
+	
+	public String getImageIndex(){
+		return mDoingTask.getImageIndex();
 	}
 }

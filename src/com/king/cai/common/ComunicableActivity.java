@@ -1,13 +1,11 @@
 package com.king.cai.common;
 
-import java.nio.ByteBuffer;
 import java.util.Set;
 
 
 import com.king.cai.KingCAIConfig;
 import com.king.cai.message.ActiveMessage;
 import com.king.cai.message.ActiveMessageManager;
-import com.king.cai.message.NewImageMessage;
 import com.king.cai.message.RequestMessage;
 import com.king.cai.service.KingService;
 
@@ -18,6 +16,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -43,7 +43,6 @@ public abstract class ComunicableActivity extends Activity{
     	HandlerThread Comunicator = new HandlerThread(TAG, Process.THREAD_PRIORITY_BACKGROUND);
     	Comunicator.start();	
     	mHandler = new ServiceMessageHandler(Comunicator.getLooper());
-
     	mReceiver = new ServiceMessageReceiver(mHandler);
     }
 
@@ -67,7 +66,7 @@ public abstract class ComunicableActivity extends Activity{
     	super.onPause();
     }
     
-    private int GetToastYPos(){
+    private int getToastYPos(){
 		DisplayMetrics dm = new DisplayMetrics(); 
 		dm = getApplicationContext().getResources().getDisplayMetrics(); 
 		return dm.heightPixels / 4;
@@ -75,13 +74,13 @@ public abstract class ComunicableActivity extends Activity{
     
     public void showToast(String msg){
     	Toast toast = Toast.makeText(this, msg, 2000);
-    	toast.setGravity(Gravity.CENTER, 0, 0-GetToastYPos());
+    	toast.setGravity(Gravity.CENTER, 0, 0 - getToastYPos());
     	toast.show();
     }
 
     public void showToast(int resId){
     	Toast toast = Toast.makeText(this, resId, 2000);
-    	toast.setGravity(Gravity.CENTER, 0, 0-GetToastYPos());
+    	toast.setGravity(Gravity.CENTER, 0, 0 - getToastYPos());
     	toast.show();
     }    
     
@@ -120,9 +119,7 @@ public abstract class ComunicableActivity extends Activity{
     }
 	
 	public class ServiceMessageHandler extends Handler{
-    	public static final int EVENT_TEXT_MESSAGE = 0;
-    	public static final int EVENT_BINARY_MESSAGE = 1;
-    	public static final int EVENT_SOCKET_MESSAGE = 2;
+    	public static final int EVENT_SOCKET_MESSAGE = 0;
     	
 		private ActiveMessageManager mActiveMsgMgr = new ActiveMessageManager();
 		public ServiceMessageHandler(Looper loop){
@@ -132,32 +129,24 @@ public abstract class ComunicableActivity extends Activity{
     	@Override
     	public void handleMessage(Message msg){
     		switch (msg.what){
-			case EVENT_SOCKET_MESSAGE:{
+			case EVENT_SOCKET_MESSAGE:
 				Bundle bundle = msg.getData();
-				boolean bTextMessage = bundle.getBoolean("TYPE");
-				String peerip = bundle.getString("PEER");
-				byte[] msgBuf = bundle.getByteArray("CONTENT");
+				boolean bTextMessage = bundle.getBoolean("Type");				
 				if (bTextMessage){
+					String peerip = bundle.getString("Peer");
+					byte[] msgBuf = bundle.getByteArray("Content");					
 					onReceiveMessage(peerip, new String(msgBuf));
 				}else{
-//					onReceiveImage(peerip, );
+					Message newImageMessage = mInnerMessageHandler.obtainMessage(KingCAIConfig.EVENT_NEW_IMAGE);
+					newImageMessage.setData(bundle);
+					newImageMessage.sendToTarget();
 				}
 				break;
-			}
     		}
     	}
     	
-    	private void onReceiveImage(String peer, String qid, byte[] msgData){
-			ByteBuffer buf = ByteBuffer.allocate(msgData.length);
-			buf.put(msgData);
-			NewImageMessage.NewImageFunctor functor = new NewImageMessage.NewImageFunctor();
-			NewImageMessage activeMsgExecutor = (NewImageMessage) functor.OnReceiveMessage(peer,  qid, buf.array());
-			activeMsgExecutor.setCompleteHandler(mInnerMessageHandler);
-			activeMsgExecutor.Execute();
-    	}
-    	
     	private void onReceiveMessage(String peer, String MsgData){
-    		Log.d("MessageHandler", "Raw Msg Data:" + MsgData);
+    		KingService.addLog("MessageHandler Raw Msg Data:" + MsgData);
     		ActiveMessage activeMsgExecutor = null;
     		Set<String> keysets = mActiveMsgMgr.mActiveMsgMap.keySet();
     		String[] keys = (String[])keysets.toArray(new String[keysets.size()]);
@@ -218,15 +207,21 @@ public abstract class ComunicableActivity extends Activity{
         	}
         }
         
-        public void setServerIPAddr(String serverip){
+        public void updateServerInfo(String serverip, String ssid){
         	if (mKingService != null){
-        		mKingService.updateServer(serverip);
+        		mKingService.updateServer(serverip, ssid);
         	}
         }
         
-        public void addDownloadTask(String qid){
+        public void addDownloadTask(String qid, String imageIndex){
         	if (mKingService != null){
-        		mKingService.addDownloadTask(qid);
+        		mKingService.addDownloadTask(qid, imageIndex);
+        	}
+        }
+        
+        public void updateDownloadInfo(String qid, String imageIndex, int size){
+        	if (mKingService != null){
+        		mKingService.updateDownloadSize(qid, imageIndex, size);
         	}
         }
     };

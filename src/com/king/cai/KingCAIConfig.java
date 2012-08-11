@@ -12,7 +12,7 @@ public class KingCAIConfig {
 	public final static int EVENT_NEW_QUESTION = 7;
 	public final static int EVENT_NEW_IMAGE = 8;
 	public final static int EVENT_CLEAN_PAPER = 9;
-	
+	public final static int EVENT_IMAGE_READY = 10;
 	
 	public final static String SOCKET_EVENT_ACTION = "com.king.cai.socket.event";
 	public static final String START_SERVICE_ACTION = "com.king.cai.service";
@@ -24,8 +24,6 @@ public class KingCAIConfig {
 	public final static String ServerIP = "ServerIP";
 	public final static String SSID = "SSID";
 	public final static String Offline = "Offline";
-	
-	public final static String NewImageMessageTag = "[ImageBC]";
 	
 	public final static int mTextSendPort = 2011;	
 	public final static int mUDPPort = 2012;

@@ -1,9 +1,9 @@
 package com.king.cai.message;
 
-public class LogoutRequestMessage extends RequestMessage{
+public class RequestMessage_Logout extends RequestMessage{
 	private final static String s_MsgTag = "[LogoutRequest]";
 	
-	public LogoutRequestMessage(){
+	public RequestMessage_Logout(){
 		super(s_MsgTag);
 	}
 	

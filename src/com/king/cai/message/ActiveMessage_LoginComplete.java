@@ -6,38 +6,36 @@ import android.os.Message;
 import com.king.cai.KingCAIConfig;
 import com.king.cai.message.ActiveMessageManager.ActiveFunctor;
 
-public class LoginResponseMessage extends ActiveMessage{
+public class ActiveMessage_LoginComplete extends ActiveMessage{
 	public final static String s_MsgTag = "[LoginResponse]";
-	private String mMsgPack = null;
-	public LoginResponseMessage(String RawMsg){
+	private String mSocketMessage = null;
+	public ActiveMessage_LoginComplete(String socketMessage){
 		super(s_MsgTag);
-		mMsgPack = RawMsg;
+		mSocketMessage = socketMessage;
 	}
 	
 	public static class LoginResponseFunctor extends ActiveFunctor{
 
 		@Override
-		public ActiveMessage OnReceiveMessage(String peer, String param){
-			return new LoginResponseMessage(param);
+		public ActiveMessage OnReceiveMessage(String peer, String socketMessage){
+			return new ActiveMessage_LoginComplete(socketMessage);
 		}
 	}
 
 	@Override
 	public void Execute() {
-		String pack = super.FromPack(mMsgPack);
+		String pack = super.FromPack(mSocketMessage);
 		Bundle bundle = new Bundle();
+		//[pass]xxxx
 		Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_LOGIN_COMPLETE);
 		if (pack.contains("[pass]")){
 			String studentInfo = pack.substring("[pass]".length(), pack.length());
 			bundle.putBoolean("RESULT", true);
 			bundle.putString("INFO", studentInfo);
-//			l.onLoginSuccess(studentinfo);
 		}else{
 			bundle.putBoolean("RESULT", false);
-//			l.onLoginFail();
 		}
 		innerMessage.setData(bundle);
-		innerMessage.sendToTarget();
-		
+		innerMessage.sendToTarget();		
 	}
 }

@@ -7,27 +7,27 @@ import android.os.Message;
 import com.king.cai.KingCAIConfig;
 import com.king.cai.message.ActiveMessageManager.ActiveFunctor;
 
-public class NewQuestionMessage  extends ActiveMessage{
+public class ActiveMessage_NewQuestion  extends ActiveMessage{
 	public final static String s_MsgTag = "[QuestionBC]";
-	private String mMsgPack = null;
+	private String mSocketMessage = null;
 	private String mPeerIP;
-	public NewQuestionMessage(String peer, String RawMsg){
+	public ActiveMessage_NewQuestion(String peer, String socketMessage){
 		super(s_MsgTag);
-		mMsgPack = RawMsg;
+		mSocketMessage = socketMessage;
 		mPeerIP = peer;
 	}
 	
 	public static class NewQuestionFunctor extends ActiveFunctor{
 
 		@Override
-		public ActiveMessage OnReceiveMessage(String peer, String param){
-			return new NewQuestionMessage(peer, param);
+		public ActiveMessage OnReceiveMessage(String peer, String socketMessage){
+			return new ActiveMessage_NewQuestion(peer, socketMessage);
 		}
 	}
 
 	@Override
-	public void Execute(/*EventProcessListener l*/) {
-		new QuestionParseTask(/*l*/).execute(super.FromPack(mMsgPack));
+	public void Execute() {
+		new QuestionParseTask().execute(super.FromPack(mSocketMessage));
 	}
 	
 	public class ProgressObject{
@@ -35,21 +35,17 @@ public class NewQuestionMessage  extends ActiveMessage{
 		int mType;
 		String mReference;
 		String mContent;
-		boolean mHasImage;
-		ProgressObject(String id, int type, String reference, String content, boolean hasImage){
+		int mImageCount;
+		ProgressObject(String id, int type, String reference, String content, int imageCount){
 			mID = id;
 			mType = type;
 			mReference = reference;
 			mContent = content;
-			mHasImage = hasImage;
+			mImageCount = imageCount;
 		}
 	}
 	
 	public class QuestionParseTask extends  AsyncTask<String, ProgressObject, String> {
-//		EventProcessListener mProcessListener;
-		public QuestionParseTask(/*EventProcessListener l*/){
-//			mProcessListener = l;
-		}
 		@Override
 		protected String doInBackground(String... packs) {
 			for (String subpack : packs){
@@ -67,9 +63,9 @@ public class NewQuestionMessage  extends ActiveMessage{
 						String qId = question.substring("[id]".length(), answerPos);
 						String answer = question.substring(answerPos+"[answer]".length(), TypePos);
 						int type = Integer.parseInt(question.substring(TypePos+"[type]".length(), TypePos+"[type]".length()+1));
-						String hasImage = question.substring(imagePos + "[image]".length(), contentPos);
+						String imageCount = question.substring(imagePos + "[image]".length(), contentPos);
 						String content = question.substring(contentPos + "[content]".length(), question.length());
-						publishProgress(new ProgressObject(qId, type, answer, content, "1".equals(hasImage)));
+						publishProgress(new ProgressObject(qId, type, answer, content, Integer.parseInt(imageCount)));
 					}
 				}
 			}
@@ -77,31 +73,24 @@ public class NewQuestionMessage  extends ActiveMessage{
 		}
 		@Override  
 		protected void onPostExecute(String result) {  
-			// 在doInBackground完成后，会收到处理好的结果result  
-//			progressdialog.dismiss();   
 		}  
 		
 		@Override  
 		protected void onPreExecute() {  
-			// 执行了execute  
-//			progressdialog.show();  
 		}  
 		
 		@Override  
 		protected void onProgressUpdate(ProgressObject... values) {  
-			// 更新进度
-			//setProgress
 			for (ProgressObject obj : values){
 				Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_NEW_QUESTION);
 				Bundle bundle = new Bundle();
 				bundle.putString("ID", obj.mID);
-				bundle.putString("Reference", obj.mReference);
 				bundle.putInt("Type", obj.mType);
+				bundle.putString("Reference", obj.mReference);
 				bundle.putString("Content", obj.mContent);
-				bundle.putBoolean("HasImage", obj.mHasImage);
+				bundle.putInt("ImageCount", obj.mImageCount);
 				innerMessage.setData(bundle);
-				innerMessage.sendToTarget();
-//				mProcessListener.onNewQuestion(obj.mID, obj.mAnswer, obj.mType, obj.mContent, obj.mHasImage);					
+				innerMessage.sendToTarget();					
 			}
 		}
 	};

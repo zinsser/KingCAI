@@ -162,7 +162,6 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 		mStatusOwner.ShowDoneInfo(mListFirst.size());
 	}
 
-	public void OnImageReady(String sid, Bitmap bmp) {
-		
+	public void OnImageReady(String qid, String imageIndex, Bitmap bmp) {
 	}	
 }

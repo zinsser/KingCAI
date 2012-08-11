@@ -15,7 +15,7 @@ public class QuestionManager {
 		public abstract void OnQuestionArrayChanged(ArrayList<String> ids);
 		public abstract void OnAddQuestion(String id);		
 		public abstract void OnClearQuestion();
-		public abstract void OnImageReady(String qid, Bitmap bmp);
+		public abstract void OnImageReady(String qid, String imageIndex, Bitmap bmp);
 	}
 	
 	public QuestionManager(){
@@ -25,13 +25,13 @@ public class QuestionManager {
 		mQuestions.clear();
         for (int i = 0; i < Questions.sQuestions.length; ++i){
         	if (i == 0 || i == 6){
-        		mQuestions.put(Integer.toString(i), new QuestionInfo(String.valueOf(i), 0, null, Questions.sQuestions[i], false));        		
+        		AddQuestion(String.valueOf(i), 0, null, Questions.sQuestions[i], 0);
         	}else if (i == 2){
-        		mQuestions.put(Integer.toString(i), new QuestionInfo(String.valueOf(i), 3, "#123#abc#", Questions.sQuestions[i], false));        		
+        		AddQuestion(String.valueOf(i), 3, "#123#abc#", Questions.sQuestions[i], 0);        		
         	}else if (i == 3){
-        		mQuestions.put(Integer.toString(i), new QuestionInfo(String.valueOf(i), 3, "#123#", Questions.sQuestions[i], true));        		
+        		AddQuestion(String.valueOf(i), 3, "#123#", Questions.sQuestions[i], 1);        		
         	}else{
-        		mQuestions.put(Integer.toString(i), new QuestionInfo(String.valueOf(i), 1, "#A#", Questions.sQuestions[i], false));        		
+        		AddQuestion(String.valueOf(i), 1, "#A#", Questions.sQuestions[i], 0);        		
         	}
         }
         
@@ -44,45 +44,26 @@ public class QuestionManager {
 		}
 	}
 	
-	public void AddQuestion(String id, int type, String reference, String detail, boolean bHasImage){
-		mQuestions.put(id, new QuestionInfo(String.valueOf(id), type, reference, detail, bHasImage));
-
-		for (QuestionListener l : mListeners){
-			l.OnAddQuestion(id);
-		}
+	public void AddQuestion(String id, int type, String reference, String detail, int imageCount){
+		AddQuestion(new QuestionInfo(id, type, reference, detail, imageCount));
 	}
 	
 	public void AddQuestion(QuestionInfo question){
-		String id = Integer.toString(mQuestions.size());
+		String id = question.getQuestionID();
 		mQuestions.put(id, question);
 		for (QuestionListener l : mListeners){
 			l.OnAddQuestion(id);
 		}	
 	}
 
-	public void AddQuestionImage(Integer id, Bitmap bmp){
+	public void AddQuestionImage(String id, String imageIndex, Bitmap bmp){
 		if (bmp != null && mQuestions.get(id) != null){
-			mQuestions.get(id).AddGraphic(bmp);
+			mQuestions.get(id).AddGraphic(imageIndex, bmp);
 			for (QuestionListener l : mListeners){
-				l.OnImageReady("0", bmp);
+				l.OnImageReady(id, imageIndex, bmp);
 			}
 		}
-	}
-
-	public void AddQuestionImage(String sid, Bitmap bmp){
-		for (String qid : mQuestions.keySet()){
-			if (mQuestions.get(qid).mID.equals(sid)){
-				if (bmp != null && mQuestions.get(qid) != null){
-					mQuestions.get(qid).AddGraphic(bmp);
-					for (QuestionListener l : mListeners){
-						l.OnImageReady(sid, bmp);
-					}
-				}
-				break;
-			}
-		}
-	}
-	
+	}	
 	
 	public  ArrayList<String> GetIDs(){
 		ArrayList<String> ids = new ArrayList<String>();

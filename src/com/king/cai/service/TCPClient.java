@@ -104,9 +104,9 @@ public class TCPClient {
 		}
 	}
 	
-	public void addImageDownloadTask(String qid, Message innerMessage){
+	public void addImageDownloadTask(String qid, String imageIndex, Message innerMessage){
 		if (mBinaryClient != null && mBinaryClient.getCacher() != null){
-			mBinaryClient.getCacher().addTask(qid, innerMessage);
+			mBinaryClient.getCacher().addTask(qid, imageIndex, innerMessage);
 		}
 	}
 	

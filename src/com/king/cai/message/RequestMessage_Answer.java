@@ -1,10 +1,10 @@
 package com.king.cai.message;
 
-public class AnswerMessage extends RequestMessage{
+public class RequestMessage_Answer extends RequestMessage{
 	private final static String s_MsgTag = "[AnswerCommit]";
 	private String mAnswerString;
 	
-	public AnswerMessage(String answerString){
+	public RequestMessage_Answer(String answerString){
 		super(s_MsgTag);
 		mAnswerString = answerString;
 	}

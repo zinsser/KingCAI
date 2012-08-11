@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 import com.king.cai.R;
-import com.king.cai.service.ServerInfo;
+import com.king.cai.service.SSIDInfo;
 import com.king.cai.service.WifiMonitor;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperActivity;
@@ -47,9 +47,7 @@ public class LoginActivity  extends ComunicableActivity  {
 	private final static int MENU_WIFI_SETTING = 3;	
 	
 	private final static int EVENT_QUERY_TIME_OUT = 1;
-	private final static int EVENT_QUERY_SUCCESS = 2;	
-	private final static int EVENT_QUERY_FAIL = 3;
-	private final static int EVENT_LOGIN_TIME_OUT = 4;
+	private final static int EVENT_LOGIN_TIME_OUT = 2;
 	private final static int DELAY_QUERY_TIME = 5000;
 	private final static int DELAY_LOGIN_TIME = 5000;
 	
@@ -79,7 +77,7 @@ public class LoginActivity  extends ComunicableActivity  {
         BtnClickListener btnListener = new BtnClickListener();
         mBtnLogin = (Button)findViewById(R.id.btnLogin);
         mBtnLogin.setOnClickListener(btnListener);  
-        mBtnLogin.setEnabled(false);
+        mBtnLogin.setEnabled(true);
         
         mCheckBoxOffline = (CheckBox)findViewById(R.id.checkBoxOffline);
         mImgViewHeader = (ImageView)findViewById(R.id.imageViewHeaderPhoto);
@@ -228,7 +226,7 @@ public class LoginActivity  extends ComunicableActivity  {
     public class WifiStateEventListener implements WifiMonitor.WifiStateListener{
 
 
-		public void onScanResultChanged(ArrayList<ServerInfo> serverInfos) {
+		public void onScanResultChanged(ArrayList<SSIDInfo> serverInfos) {
 	        mSpinnerSSID.setEnabled(true);
 		}
 
@@ -244,11 +242,8 @@ public class LoginActivity  extends ComunicableActivity  {
     		case EVENT_QUERY_TIME_OUT:
     			mTextViewStatus.setText(R.string.FailQueryServerStatus);
     			break;
-    		case EVENT_QUERY_SUCCESS:
-    			mTextViewStatus.setText(R.string.FoundServerStatus);
-    			break;
-    		case EVENT_QUERY_FAIL:
-    			mTextViewStatus.setText(R.string.SuccessLoginStatus);
+    		case EVENT_LOGIN_TIME_OUT:
+    			mTextViewStatus.setText(R.string.LoginTimeOut);
     			break;
     		}
     	}
@@ -265,8 +260,8 @@ public class LoginActivity  extends ComunicableActivity  {
 					if (mSpinnerSSID.getSelectedItemPosition() != 0){
 		    			mTextViewStatus.setText(R.string.QueryServerStatus);						
 						mServiceChannel.queryServer();						
-						Message msg = mInnerHandler.obtainMessage(EVENT_QUERY_TIME_OUT);
-						mInnerHandler.sendMessageDelayed(msg, DELAY_QUERY_TIME);
+						mInnerHandler.sendMessageDelayed(mInnerHandler.obtainMessage(EVENT_QUERY_TIME_OUT), 
+													DELAY_QUERY_TIME);
 					}else{
 						mSpinnerSSID.performClick();
 		    			mTextViewStatus.setText(R.string.SelectClassTip);
@@ -275,7 +270,8 @@ public class LoginActivity  extends ComunicableActivity  {
 					mID = mTxtStudentID.getText().toString();
 					
 					if (mID == null || mID.length() <= 0){
-						showToast("Please input student number!!");
+						showToast(R.string.ErrNotInputID);
+						mTxtStudentID.requestFocus();
 					}else{
 						StartPaperActivity("初三一班  张三丰", mCheckBoxOffline.isChecked());
 					}
@@ -404,18 +400,20 @@ public class LoginActivity  extends ComunicableActivity  {
 			mInnerHandler.removeMessages(EVENT_QUERY_TIME_OUT);
 			mServerIP = bundle.getString("Peer");
 			mSSID = (String)mSpinnerSSID.getAdapter().getItem(mSpinnerSSID.getSelectedItemPosition());
-			mInnerHandler.obtainMessage(EVENT_QUERY_SUCCESS).sendToTarget();
-			mServiceChannel.setServerIPAddr(mServerIP);
+			mTextViewStatus.setText(R.string.FoundServerStatus);
+			mServiceChannel.updateServerInfo(mServerIP, mSSID);
 			mServiceChannel.connectServer(mTxtStudentID.getText().toString(), 
 										  mTxtPassword.getText().toString());
-			mInnerHandler.obtainMessage(EVENT_LOGIN_TIME_OUT).sendToTarget();			
+			mInnerHandler.sendMessageDelayed(mInnerHandler.obtainMessage(EVENT_LOGIN_TIME_OUT), 
+										DELAY_LOGIN_TIME);
 			break;
 		case KingCAIConfig.EVENT_LOGIN_COMPLETE:
+			mInnerHandler.removeMessages(EVENT_LOGIN_TIME_OUT);
 			Boolean bResult = bundle.getBoolean("Result");
 			if (bResult){
 				String studentInfo = bundle.getString("Info");
-				mInnerHandler.obtainMessage(EVENT_QUERY_FAIL).sendToTarget();
-				StartPaperActivity(studentInfo, mCheckBoxOffline.isChecked());				
+				mTextViewStatus.setText(R.string.SuccessLoginStatus);
+				StartPaperActivity(studentInfo, mCheckBoxOffline.isChecked());
 			}else{
 				mTextViewStatus.setText(R.string.FailLoginStatus);
 				showToast(R.string.InputCorrectIDTip);			

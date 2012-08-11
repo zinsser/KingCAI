@@ -13,14 +13,15 @@ public class DownloadTask {
 	
 	private String mQuestionID;
 	private String mImageIndex;
+	private Message mInnerMessage = null;
 	private ByteBuffer mDataBuf = null;
 	private TaskStatus mStatus;
-	private Message mInnerMessage = null;
 	
-	public DownloadTask(String qid, Message innerMessage){
+	public DownloadTask(String qid, String imageIndex, Message innerMessage){
 		mQuestionID = qid;
-		mStatus = TaskStatus.TS_Unstart;
+		mImageIndex = imageIndex;
 		mInnerMessage = innerMessage;
+		mStatus = TaskStatus.TS_Unstart;		
 	}
 	
 	public void request(){
@@ -48,6 +49,18 @@ public class DownloadTask {
 		return mQuestionID;
 	}
 	
+	public String getImageIndex(){
+		return mImageIndex;
+	}
+	
+	public int getRemain(){
+		return mDataBuf != null ? mDataBuf.remaining() : 0;
+	}
+	
+	public ByteBuffer getDataBuffer(){
+		return mDataBuf;
+	}
+	
 	public void updateImageInfo(String imageIndex, int size){
 		mImageIndex = imageIndex;
 		mDataBuf = null;
@@ -72,13 +85,5 @@ public class DownloadTask {
 			bEqual = bEqual && (mImageIndex == null && other.mImageIndex == null);
 		}
 		return bEqual;
-	}
-	
-	public int getRemain(){
-		return mDataBuf != null ? mDataBuf.remaining() : 0;
-	}
-	
-	public ByteBuffer getDataBuffer(){
-		return mDataBuf;
 	}
 }

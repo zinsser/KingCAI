@@ -36,10 +36,9 @@ import com.king.cai.KingCAIConfig;
 import com.king.cai.R;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperViewAdapter;
-import com.king.cai.message.AnswerMessage;
-import com.king.cai.message.LogoutRequestMessage;
-import com.king.cai.message.RequestImageMessage;
-import com.king.cai.message.RequestPaperMessage;
+import com.king.cai.message.RequestMessage_Answer;
+import com.king.cai.message.RequestMessage_Logout;
+import com.king.cai.message.RequestMessage_Paper;
 
 public class PaperActivity  extends ComunicableActivity {
 	private final static int GROUP_NORMAL = 0;
@@ -140,7 +139,7 @@ public class PaperActivity  extends ComunicableActivity {
     @Override
     public void onStop(){
     	SaveConfig(true);
-    	mServiceChannel.sendMessage(new LogoutRequestMessage(), 0);
+    	mServiceChannel.sendMessage(new RequestMessage_Logout(), 0);
     	mPaperStatus.LeaveStatus();
     	mPaperStatus = null;
    		super.onStop();
@@ -154,7 +153,7 @@ public class PaperActivity  extends ComunicableActivity {
     
     @Override
 	protected void doServiceReady(){
-        mServiceChannel.sendMessage(new RequestPaperMessage(), 0);		
+        mServiceChannel.sendMessage(new RequestMessage_Paper(), 0);		
 	}
     
     
@@ -228,7 +227,7 @@ public class PaperActivity  extends ComunicableActivity {
 			int type = c.getInt(s_PaperIdx_Type);
 			String reference = c.getString(s_PaperIdx_Reference);
 			String answer = c.getString(s_PaperIdx_Answer);
-			mQuestionMgr.AddQuestion(id, type, reference, detail, false);
+			mQuestionMgr.AddQuestion(id, type, reference, detail, 0);
 			mAnswerMgr.AddAnswer(id, mQuestionMgr.GetQuestionItem(id), answer);
 			c.moveToNext();
 		}
@@ -379,22 +378,30 @@ public class PaperActivity  extends ComunicableActivity {
 			Integer type = bundle.getInt("Type");
 			String answer = bundle.getString("Reference");
 			String content = bundle.getString("Content");
-			boolean bHasImage = bundle.getBoolean("HasImage");
-			mQuestionMgr.AddQuestion(new QuestionInfo(id, type, answer, content, bHasImage));
-			if (bHasImage)mServiceChannel.addDownloadTask(id);	
+			Integer imageCount = bundle.getInt("ImageCount");
+			mQuestionMgr.AddQuestion(id, type, answer, content, imageCount);
+			for (int i = 1; i < imageCount + 1; ++i){
+				mServiceChannel.addDownloadTask(id, String.valueOf(i));	
+			}
+			break;
+		}
+		case KingCAIConfig.EVENT_IMAGE_READY:{
+			String id = bundle.getString("ID");
+			String imageIndex = bundle.getString("Index");
+			Integer size = bundle.getInt("Size");
+			
+			mServiceChannel.updateDownloadInfo(id, imageIndex, size);
 			break;
 		}
 		case KingCAIConfig.EVENT_NEW_IMAGE:{
 			String id = bundle.getString("ID");
-			byte[] data = bundle.getByteArray("Data");
-
-			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-			mQuestionMgr.AddQuestionImage(id, bmp);
+			String imageIndex = bundle.getString("Index");
+			byte[] data = bundle.getByteArray("Content");
+			Integer size = bundle.getInt("Size");
+			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, size);
+			mQuestionMgr.AddQuestionImage(id, imageIndex, bmp);
 			break;
 		}
-		case KingCAIConfig.EVENT_CLEAN_PAPER:	
-			finish();
-			break;
 		}
  	}
 
@@ -483,7 +490,7 @@ public class PaperActivity  extends ComunicableActivity {
 
 	public void CommitAnswers(){
 		HiddenKeyBoard(findViewById(R.id.txtGoto));
-		mServiceChannel.sendMessage(new AnswerMessage(mAnswerMgr.toString()), 0);
+		mServiceChannel.sendMessage(new RequestMessage_Answer(mAnswerMgr.toString()), 0);
 	}
 	
 	public void switch2WaitingStatus(){

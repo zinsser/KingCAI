@@ -3,7 +3,7 @@ package com.king.cai.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.king.cai.service.ServerInfo;
+import com.king.cai.service.SSIDInfo;
 import com.king.cai.common.KingCAIUtils;
 
 import android.content.Context;
@@ -28,7 +28,7 @@ public class WifiMonitor {
 	private final static int WIFI_STATUS_SCANED = 12;	
 	
 	private WifiStateListener mWifiStateListener = null;
-	private HashMap<String, ServerInfo> mScanResults = new HashMap<String, ServerInfo>(); 
+	private HashMap<String, SSIDInfo> mScanResults = new HashMap<String, SSIDInfo>(); 
 	private WifiManager mWifiService = null;
 	private int mState = WifiManager.WIFI_STATE_UNKNOWN;
 	private int mActiveNetworkID = -1;
@@ -38,7 +38,7 @@ public class WifiMonitor {
     
     
 	public interface WifiStateListener{
-		public void  onScanResultChanged(final ArrayList<ServerInfo> serverInfos);
+		public void  onScanResultChanged(final ArrayList<SSIDInfo> serverInfos);
 		public void  onServerInfoChanged(final String wifiInfo);
 	}
 	
@@ -89,7 +89,7 @@ public class WifiMonitor {
     }
 
     public boolean connectToWifi(String ssid){
-    	ServerInfo info = mScanResults.get(ssid);
+    	SSIDInfo info = mScanResults.get(ssid);
     	boolean bRet = info != null && WifiConfiguration.KeyMgmt.NONE == info.getSecurity();
     	if (bRet && mState == WIFI_STATUS_SCANED){
         	WifiConfiguration wifiConfig = new WifiConfiguration();
@@ -124,7 +124,7 @@ public class WifiMonitor {
 		if(results != null) {
 			mScanResults.clear();
 			for(ScanResult result : results) {
-				mScanResults.put(result.SSID, new ServerInfo(result));
+				mScanResults.put(result.SSID, new SSIDInfo(result));
 			}
 			
 			mWifiStateListener.onScanResultChanged(null);

@@ -1,7 +1,5 @@
 package com.king.cai.examination;
 
-import java.util.ArrayList;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
@@ -10,7 +8,6 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 
 import com.king.cai.R;
-import com.king.cai.examination.QuestionManager.QuestionListener;
 
 public class QuestionItemViewHolder extends ItemViewHolder{
 	protected ImageView mMark = null;
@@ -38,40 +35,13 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	    mImageView_2 = (ImageView)rawView.findViewById(R.id.imageView_2);
 	    mLinearLayout_ImageView_1 = (LinearLayout)rawView.findViewById(R.id.linearLayoutImage_1);
 	    mLinearLayout_ImageView_2 = (LinearLayout)rawView.findViewById(R.id.linearLayoutImage_2);
-	    mQuestionMgr.AddListener(new QuestionListener(){
-
-			public void OnQuestionArrayChanged(ArrayList<String> ids) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public void OnAddQuestion(String id) {
-				// TODO Auto-generated method stub
-			}
-
-			public void OnClearQuestion() {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public void OnImageReady(String sid, Bitmap bmp) {
-				for (String qid : mQuestionMgr.GetIDs()){
-					if (mQuestionMgr.GetQuestionItem(qid).mID.equals(sid)){
-						ArrayList<Bitmap> bmpSaveds = mQuestionMgr.GetQuestionItem(qid).mGraphics; 
-						mImageView_1.setImageBitmap(bmpSaveds.get(0));
-						break;
-					}
-				}
-//				mImageView_1.setImageBitmap(bmp);
-			}
-	    });
 	}
 	
 	@Override
     public void doGettingItemViews(String id, int fontSize, onSubViewClickListener listener){
     	super.doGettingItemViews(id, fontSize, listener);
     	doLayoutSubViews(id);
-
+    	
     	mMarkIcon = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.mark_icon);
     	mUnMarkIcon  = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.unmark_icon);
     	
@@ -83,7 +53,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 			mMark.setImageBitmap(mMarkIcon);	
 		}
 
-	    mMark.setOnClickListener(new PanelClickListener(listener));	
+	    mMark.setOnClickListener(new PanelClickListener(listener));
 	}
 
 	@Override
@@ -131,10 +101,11 @@ public class QuestionItemViewHolder extends ItemViewHolder{
     	}
     	
 	    QuestionInfo question = mQuestionMgr.GetQuestionItem(id);
-	    if (question.HasImage()){
+	    if (question.hasImage()){
 	    	mLinearLayoutImage.setVisibility(View.VISIBLE);
 	    	mImageView_1.setVisibility(View.VISIBLE);
-	    	
+	    	mImageView_1.setImageBitmap(question.getImage(question.getImageIndex(0)));
+
 	    	mLinearLayout_ImageView_2.setVisibility(View.GONE);
 	    }
 	}

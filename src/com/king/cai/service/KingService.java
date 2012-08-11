@@ -3,10 +3,10 @@ package com.king.cai.service;
 import java.util.ArrayList;
 
 import com.king.cai.KingCAIConfig;
-import com.king.cai.message.LoginRequestMessage;
-import com.king.cai.message.QueryServerMessage;
-import com.king.cai.message.RequestImageMessage;
 import com.king.cai.message.RequestMessage;
+import com.king.cai.message.RequestMessage_Image;
+import com.king.cai.message.RequestMessage_Login;
+import com.king.cai.message.RequestMessage_QueryServer;
 import com.king.cai.service.UDPServerRunner;
 
 import android.app.Service;
@@ -26,9 +26,8 @@ public class KingService extends Service{
     private WifiMonitor mWifiMonitor = null;
 
     
-    //这里定义吧一个Binder类，用在onBind()有方法里，这样Activity那边可以获取到 
+    //这里定义一个Binder类，用在onBind()有方法里，这样Activity那边可以获取到 
     private MyBinder mBinder = new MyBinder();      
-	
 	public class MyBinder extends Binder{
 		public KingService getService(){
             return KingService.this;
@@ -57,7 +56,7 @@ public class KingService extends Service{
 		mWifiMonitor = null;
 		mWifiMonitor = new WifiMonitor(getApplicationContext(), 
 										Message.obtain(mHandler, WIFI_EVENT));
-    }      
+    }
     
     public static final int SOCKET_EVENT = 0;
     public static final int WIFI_EVENT = 1;
@@ -69,23 +68,17 @@ public class KingService extends Service{
 			Bundle bundle = msg.getData();
     		switch (msg.what){
     		case SOCKET_EVENT:
-    			boolean bText = bundle.getBoolean("TYPE");
-    			if (bText){
-        			Intent intent = new Intent(KingCAIConfig.SOCKET_EVENT_ACTION);
-        			intent.putExtras(msg.getData());
-        			sendBroadcast(intent);    				
-    			}/*else{
- //   				if (mDownloadManager != null){
- //   					mDownloadManager.receiveData(bundle.getByteArray("CONTENT"),
- //   							bundle.getInt("SIZE"));
-    				}
-    			}*/
+    			Intent intent = new Intent(KingCAIConfig.SOCKET_EVENT_ACTION);
+    			intent.putExtras(msg.getData());
+    			sendBroadcast(intent);	
     			break;
     		case WIFI_EVENT:
     			break;
     		case REQUEST_EVENT:
     			String qid = bundle.getString("ID");
-    			KingService.this.sendMessage(new RequestImageMessage(qid), 0);
+    			String imageIndex = bundle.getString("Index");
+    			
+    			KingService.this.sendMessage(new RequestMessage_Image(qid, imageIndex), 0);
     			break;
     		}
     	}
@@ -110,7 +103,7 @@ public class KingService extends Service{
 		//2，教师服务器收到该消息后，将ip地址作为响应通过UDP消息返回
 		//3，学生终端通过UDP接收到该响应后，更新本地的服务器IP地址
 		//4，并启动TCPClient，通过TCP和教师服务器保持通信
-		sendMessage(new QueryServerMessage(getLocalIPAddress()));
+		sendMessage(new RequestMessage_QueryServer(getLocalIPAddress()));
 		startUDPServer();
 	}
 	
@@ -124,7 +117,7 @@ public class KingService extends Service{
 		}
 	}
 
-    public void updateServer(String addr){
+    public void updateServer(String addr, String ssid){
     	if (addr != null && !addr.equals(mServerAddr)){
 	    	mServerAddr = addr;
 	    	if (mTcpClient != null){
@@ -136,16 +129,17 @@ public class KingService extends Service{
     }
 	
 	public void connectServer(String number, String password){
-		sendMessage(new LoginRequestMessage(number, password), 0);
+		sendMessage(new RequestMessage_Login(number, password), 0);
 	}
 	
-	public void addDownloadTask(String qid){
+	public void addDownloadTask(String qid, String imageIndex){
 		if (mTcpClient != null){
 			Message innerMessage = mHandler.obtainMessage(REQUEST_EVENT);
 			Bundle bundle = new Bundle();
 			bundle.putString("ID", qid);
+			bundle.putString("Index", imageIndex);
 			innerMessage.setData(bundle);
-			mTcpClient.addImageDownloadTask(qid, innerMessage);
+			mTcpClient.addImageDownloadTask(qid, imageIndex, innerMessage);
 		}
 	}
 

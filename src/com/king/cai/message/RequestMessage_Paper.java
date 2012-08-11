@@ -1,9 +1,9 @@
 package com.king.cai.message;
 
-public class RequestPaperMessage extends RequestMessage{
+public class RequestMessage_Paper extends RequestMessage{
 	private final static String s_MsgTag = "[PaperRequest]";
 	
-	public RequestPaperMessage(){
+	public RequestMessage_Paper(){
 		super(s_MsgTag);
 	}
 	

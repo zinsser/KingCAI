@@ -2,10 +2,10 @@ package com.king.cai.message;
 
 import com.king.cai.message.ActiveMessageManager.ActiveFunctor;
 
-public class StartTestOnLineApp extends ActiveMessage{
+public class ActiveMessage_StartTOLApp extends ActiveMessage{
 	public final static String s_MsgTag = "[StartTOLApp]";
 	private String mPeerIP;
-	public StartTestOnLineApp(String peer){
+	public ActiveMessage_StartTOLApp(String peer){
 		super(s_MsgTag);
 		mPeerIP = peer;
 	}
@@ -14,7 +14,7 @@ public class StartTestOnLineApp extends ActiveMessage{
 
 		@Override
 		public ActiveMessage OnReceiveMessage(String peer, String param) {
-			return new StartTestOnLineApp(peer);
+			return new ActiveMessage_StartTOLApp(peer);
 		}
 	}
 

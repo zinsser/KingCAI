@@ -1,6 +1,7 @@
 package com.king.cai.examination;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.graphics.Bitmap;
 
@@ -17,19 +18,38 @@ public class QuestionInfo {
 	public int mType;
 	public String mDetail;
 	public String mReference;
-	public boolean mHasImage;
-	public ArrayList<Bitmap> mGraphics = new ArrayList<Bitmap>();
+	public int mImageCount;
+	public HashMap<String, Bitmap> mGraphics = new HashMap<String, Bitmap>();
+	public ArrayList<String> mImageIndexes = new ArrayList<String>();
 	
-	public QuestionInfo(String id, int type, String reference, String detail, boolean bHasImage){
+	public QuestionInfo(String id, int type, String reference, String detail, int imageCount){
 		mID = id;
 		mDetail = detail;
 		mReference = reference;
-		mHasImage = bHasImage;
+		mImageCount = imageCount;
 		mType = AnalysisDetailTypeByReference(type, reference);
 	}
 	
-	public void AddGraphic(Bitmap graphic){
-		mGraphics.add(graphic);
+	public void AddGraphic(String imageIndex, Bitmap graphic){
+		mImageIndexes.add(imageIndex);
+		mGraphics.put(imageIndex, graphic);
+	}
+	
+	public String getQuestionID(){
+		return mID;
+	}
+	
+	public Bitmap getImage(String imageIndex){
+		if (mGraphics.size() < 1) return null;
+		return mGraphics.get(imageIndex);
+	}
+	
+	public boolean hasImage(){
+		return mImageCount > 0;
+	}
+	
+	public String getImageIndex(int pos){
+		return mImageIndexes.get(pos);
 	}
 	
 	private int AnalysisDetailTypeByReference(int type, String reference){
@@ -48,15 +68,6 @@ public class QuestionInfo {
 		}
 
 		return retType;
-	}
-	
-	public Bitmap GetImage(){
-		if (mGraphics.size() < 1) return null;
-		return mGraphics.get(0);
-	}
-	
-	public boolean HasImage(){
-		return mHasImage;
 	}
 	
 	public int GetType(){

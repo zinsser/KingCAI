@@ -5,11 +5,12 @@ import java.util.HashMap;
 public class ActiveMessageManager {
 	public HashMap<String, ActiveFunctor> mActiveMsgMap = new HashMap<String, ActiveFunctor>();
 	public ActiveMessageManager(){
-		mActiveMsgMap.put(QueryResponseMessage.s_MsgTag, new QueryResponseMessage.QueryResponseFunctor());		
-		mActiveMsgMap.put(LoginResponseMessage.s_MsgTag, new LoginResponseMessage.LoginResponseFunctor());
-		mActiveMsgMap.put(NewQuestionMessage.s_MsgTag, new NewQuestionMessage.NewQuestionFunctor());
-		mActiveMsgMap.put(CleanPaperMessage.s_MsgTag, new CleanPaperMessage.CleanPaperFunctor());
-		mActiveMsgMap.put(NewImageMessage.s_MsgTag, new NewImageMessage.NewImageFunctor());		
+		mActiveMsgMap.put(ActiveMessage_QueryComplete.s_MsgTag, new ActiveMessage_QueryComplete.QueryResponseFunctor());		
+		mActiveMsgMap.put(ActiveMessage_LoginComplete.s_MsgTag, new ActiveMessage_LoginComplete.LoginResponseFunctor());
+		mActiveMsgMap.put(ActiveMessage_NewQuestion.s_MsgTag, new ActiveMessage_NewQuestion.NewQuestionFunctor());
+		mActiveMsgMap.put(ActiveMessage_CleanPaper.s_MsgTag, new ActiveMessage_CleanPaper.CleanPaperFunctor());
+		mActiveMsgMap.put(ActiveMessage_ImageResponse.s_MsgTag, new ActiveMessage_ImageResponse.NewImageFunctor());
+		mActiveMsgMap.put(ActiveMessage_StartTOLApp.s_MsgTag, new ActiveMessage_StartTOLApp.TOLStartorFunctor());
 	}
 	
 	public static abstract class ActiveFunctor {

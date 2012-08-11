@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 
 import com.king.cai.KingCAIConfig;
 
+import android.os.Bundle;
 import android.os.Message;
 
 public class TCPReceiveRunner extends FirableRunner{
@@ -36,18 +37,21 @@ public class TCPReceiveRunner extends FirableRunner{
 			mReceiveBuf.clear();
 			int readSize = mInputStream.read(mReceiveBuf.array()); 
 			if (readSize > 0){
-				if (mDownloadCacher != null){
+				if (mDownloadCacher != null 
+						&& mPort == KingCAIConfig.mTextReceivePort){
 					if (mDownloadCacher.getRemain() != 0){
 						mDownloadCacher.receiveData(mReceiveBuf, readSize);
 					}else{
-						FireMessage(mPeerAddr, mDownloadCacher.getDataBuffer(), 
-										mDownloadCacher.getDataBuffer().capacity(), 
-										mPort == KingCAIConfig.mTextReceivePort);  
+						Bundle bundle = contructBinaryBundle(mDownloadCacher.getQuestionID(), 
+															 mDownloadCacher.getImageIndex(), 
+															 mDownloadCacher.getDataBuffer(),
+															 mDownloadCacher.getDataBuffer().capacity());
+						fireMessage(bundle);  
 						mDownloadCacher.dispatchTask();
 					}				
 				}else{
-					FireMessage(mPeerAddr, mReceiveBuf, readSize, 
-							mPort == KingCAIConfig.mTextReceivePort);
+					Bundle bundle = contructTextBundle(mPeerAddr, mReceiveBuf, readSize);
+					fireMessage(bundle);
 				}
 			}
 		} catch (IOException e) {

@@ -33,8 +33,8 @@
     <string name="ModifyPassword">Modify Password</string>
     <string name="LoginOffline">Login Off-Line</string>  
     <string name="RefAnswer">Reference</string>      
-    <string name="CurrentQuestion">the %d Question</string> 
-    <string name="CurrentBlankQuestion">the %1$d(%2$d) Question</string>
+    <string name="CurrentQuestion">the %s Question</string> 
+    <string name="CurrentBlankQuestion">the %1$s(%2$s) Question</string>
     <string name="ServerNotFound">Server could not be found!</string>    
     <string name="SelectClassTip">Please SELECT a class!</string> 
     <string name="InputCorrectIDTip">Please input a correct ID or password!</string>
@@ -59,9 +59,11 @@
 	<string name="FailQueryServerStatus">未找到教师服务器</string>	
 	<string name="FoundServerStatus">教师服务器已找到，正在请求登录</string>	
 	<string name="LoginServerStatus">正在请求登录教师服务器</string>	
+	<string name="LoginTimeOut">登录超时，请确认教师服务器是否开启</string>	
 	<string name="SuccessLoginStatus">登录成功，即将进入考试界面</string>	
 	<string name="FailLoginStatus">登录失败，请检查用户名密码</string>	
 	<string name="Setting">Setting</string>
 	<string name="WifiSetting">Wifi Setting</string>	
 	<string name="SecretTitle">%s is modified</string>
+	<string name="ErrNotInputID">Please input student number!</string>
 </resources>

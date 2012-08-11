@@ -3,10 +3,10 @@ package com.king.cai.message;
 import com.king.cai.KingCAIConfig;
 import com.king.cai.message.ActiveMessageManager.ActiveFunctor;
 
-public class CleanPaperMessage  extends ActiveMessage{
+public class ActiveMessage_CleanPaper  extends ActiveMessage{
 	public final static String s_MsgTag = "[CleanPaper]";
 	
-	public CleanPaperMessage(){
+	public ActiveMessage_CleanPaper(){
 		super(s_MsgTag);
 	}
 	
@@ -14,7 +14,7 @@ public class CleanPaperMessage  extends ActiveMessage{
 
 		@Override
 		public ActiveMessage OnReceiveMessage(String peer, String param){
-			return new CleanPaperMessage();
+			return new ActiveMessage_CleanPaper();
 		}
 	}
 

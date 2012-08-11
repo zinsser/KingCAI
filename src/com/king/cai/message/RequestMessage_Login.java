@@ -1,11 +1,11 @@
 package com.king.cai.message;
 
-public class LoginRequestMessage extends RequestMessage{
+public class RequestMessage_Login extends RequestMessage{
 	private final static String s_MsgTag = "[LoginRequest]";
 	private String mNumber;
 	private String mPassword;
 	
-	public LoginRequestMessage(String number, String password){
+	public RequestMessage_Login(String number, String password){
 		super(s_MsgTag);
 		mNumber = number;
 		mPassword = password;
