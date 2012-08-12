@@ -177,6 +177,12 @@ public abstract class ComunicableActivity extends Activity{
         	mKingService = null;
         }
         
+        public void startScanSSID(Bundle bundle){
+        	if (mKingService != null){
+        		mKingService.startScanSSID(bundle);
+        	}
+        }
+        
         public void connectSSID(String ssid){
         	if (mKingService != null){
         		mKingService.connectSSID(ssid);

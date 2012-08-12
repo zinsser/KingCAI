@@ -18,6 +18,7 @@ import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
 import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
+import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ public class WifiMonitor {
 	private final static int WIFI_STATUS_SCANED = 12;	
 	
 	private WifiStateListener mWifiStateListener = null;
+	private List<ScanResult> mScanSSIDResults = null;
 	private HashMap<String, SSIDInfo> mScanResults = new HashMap<String, SSIDInfo>(); 
 	private WifiManager mWifiService = null;
 	private int mState = WifiManager.WIFI_STATE_UNKNOWN;
@@ -35,9 +37,8 @@ public class WifiMonitor {
     public BroadcastReceiver mReceiver = new WifiStateReceiver();
     private ConnectivityManager mConnManager;
     private Message mInnerMessage = null;
-    
-    
-	public interface WifiStateListener{
+
+    public interface WifiStateListener{
 		public void  onScanResultChanged(final ArrayList<SSIDInfo> serverInfos);
 		public void  onServerInfoChanged(final String wifiInfo);
 	}
@@ -68,7 +69,7 @@ public class WifiMonitor {
     	ctx.unregisterReceiver(mReceiver);		
 	}
 	
-    public void startScanServer(){
+    public void startScanSSID(Bundle bundle){
 		if (!mWifiService.isWifiEnabled() 
 				&& mWifiService.getWifiState() != WifiManager.WIFI_STATE_ENABLING){
 			mWifiService.setWifiEnabled(true);
@@ -139,7 +140,9 @@ public class WifiMonitor {
     private class  ScanResultCommand extends Command{
     	public void Execute(Intent intent){
 			if (mState != WIFI_STATUS_RESULT_RETRIVED){
-				retriveScanResult();
+				mScanSSIDResults.clear();
+				mScanSSIDResults = mWifiService.getScanResults();
+//				retriveScanResult();
 				mState = WIFI_STATUS_RESULT_RETRIVED;
 			}
     	}   	
@@ -151,7 +154,7 @@ public class WifiMonitor {
 										WifiManager.WIFI_STATE_UNKNOWN);
 			if (wifiState == WifiManager.WIFI_STATE_ENABLED 
 					&& mState != WIFI_STATUS_SCANNING){
-				startScanServer();
+				startScanSSID(new Bundle());
 			}
     	}
     };

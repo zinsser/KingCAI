@@ -57,9 +57,9 @@ public class LoginActivity  extends ComunicableActivity  {
 	private final static String s_Tag_Number = "last_number";
 	private final static String s_Tag_Grade = "last_grade";
 	
-	private EditText mTxtStudentID = null;
-	private EditText mTxtPassword = null;
-	private Button mBtnLogin = null;
+	private EditText mTextviewStudentID = null;
+	private EditText mTextviewPassword = null;
+	private Button mButtonLogin = null;
     private CheckBox mCheckBoxOffline = null;	
     private ImageView mImgViewHeader = null;
 	private String mServerIP;
@@ -75,16 +75,16 @@ public class LoginActivity  extends ComunicableActivity  {
         setContentView(R.layout.login);
         
         BtnClickListener btnListener = new BtnClickListener();
-        mBtnLogin = (Button)findViewById(R.id.btnLogin);
-        mBtnLogin.setOnClickListener(btnListener);  
-        mBtnLogin.setEnabled(true);
+        mButtonLogin = (Button)findViewById(R.id.btnLogin);
+        mButtonLogin.setOnClickListener(btnListener);  
+        mButtonLogin.setEnabled(true);
         
         mCheckBoxOffline = (CheckBox)findViewById(R.id.checkBoxOffline);
         mImgViewHeader = (ImageView)findViewById(R.id.imageViewHeaderPhoto);
         mImgViewHeader.setOnClickListener(btnListener);
         
-        mTxtStudentID = (EditText)findViewById(R.id.txtStudentID);
-        mTxtPassword = (EditText)findViewById(R.id.txtPassword);
+        mTextviewStudentID = (EditText)findViewById(R.id.txtStudentID);
+        mTextviewPassword = (EditText)findViewById(R.id.txtPassword);
         
         initSpinnerBar();
         findViewById(R.id.imageViewSpinnerDown).setOnClickListener(new View.OnClickListener(){
@@ -153,7 +153,7 @@ public class LoginActivity  extends ComunicableActivity  {
 				}
 			}
 		}
-		mTxtStudentID.setText(mID);
+		mTextviewStudentID.setText(mID);
 	}
 	
     private void SaveLastLogin(){
@@ -161,7 +161,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		SharedPreferences sp = getSharedPreferences(s_ConfigFileName, 0);
 		SharedPreferences.Editor editor = sp.edit();
 
-		editor.putString(s_Tag_Number, mTxtStudentID.getText().toString());
+		editor.putString(s_Tag_Number, mTextviewStudentID.getText().toString());
 		editor.putString(s_Tag_Grade, mSSID);
 		editor.commit();    	
     }
@@ -223,18 +223,6 @@ public class LoginActivity  extends ComunicableActivity  {
 		}
     }
     
-    public class WifiStateEventListener implements WifiMonitor.WifiStateListener{
-
-
-		public void onScanResultChanged(ArrayList<SSIDInfo> serverInfos) {
-	        mSpinnerSSID.setEnabled(true);
-		}
-
-
-		public void onServerInfoChanged(String wifiInfo) {
-		}
-    }
-
     public Handler mInnerHandler = new Handler(){
     	@Override
     	public void handleMessage(Message msg){
@@ -252,10 +240,10 @@ public class LoginActivity  extends ComunicableActivity  {
     public class BtnClickListener implements OnClickListener{
 
 	    public void onClick(View btn){
-	    	if (btn == mBtnLogin){
+	    	if (btn == mButtonLogin){
 				InputMethodManager im =(InputMethodManager)btn.getContext().getSystemService(Context.INPUT_METHOD_SERVICE); 
-				im.hideSoftInputFromWindow(mTxtStudentID.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS); 
-				im.hideSoftInputFromWindow(mTxtPassword.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+				im.hideSoftInputFromWindow(mTextviewStudentID.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS); 
+				im.hideSoftInputFromWindow(mTextviewPassword.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				if (!mCheckBoxOffline.isChecked()){
 					if (mSpinnerSSID.getSelectedItemPosition() != 0){
 		    			mTextViewStatus.setText(R.string.QueryServerStatus);						
@@ -267,11 +255,11 @@ public class LoginActivity  extends ComunicableActivity  {
 		    			mTextViewStatus.setText(R.string.SelectClassTip);
 					}
 				}else{
-					mID = mTxtStudentID.getText().toString();
+					mID = mTextviewStudentID.getText().toString();
 					
 					if (mID == null || mID.length() <= 0){
 						showToast(R.string.ErrNotInputID);
-						mTxtStudentID.requestFocus();
+						mTextviewStudentID.requestFocus();
 					}else{
 						StartPaperActivity("初三一班  张三丰", mCheckBoxOffline.isChecked());
 					}
@@ -302,8 +290,8 @@ public class LoginActivity  extends ComunicableActivity  {
 	}
     
     private void cleanForm(){
-    	mTxtStudentID.setText("");
-    	mTxtPassword.setText("");
+    	mTextviewStudentID.setText("");
+    	mTextviewPassword.setText("");
     	mTextViewStatus.setText(R.string.AppInitStatus);
     }
 
@@ -320,13 +308,13 @@ public class LoginActivity  extends ComunicableActivity  {
     public boolean onOptionsItemSelected(MenuItem item){
     	switch (item.getItemId()){
     	case MENU_MODIFY_PASSWORD:
-    		if (mTxtStudentID != null && mTxtStudentID.getText().length() != 0){
+    		if (mTextviewStudentID != null && mTextviewStudentID.getText().length() != 0){
 	    		LayoutInflater inflater = LayoutInflater.from(getApplication());
 	    		final View modifyView = inflater.inflate(R.layout.modifypassword, null);
 	    		final Dialog dlg = new Dialog(this, R.style.NoTitleDialog);
 	    		dlg.setContentView(modifyView);
 	        	String title = String.format(getResources().getString(R.string.SecretTitle), 
-	        			mTxtStudentID.getText().toString());   		
+	        			mTextviewStudentID.getText().toString());   		
 	    		((TextView)modifyView.findViewById(R.id.textViewTitle)).setText(title);
 	    		Button buttonOK = (Button)modifyView.findViewById(R.id.buttonOK);
 	    		buttonOK.setOnClickListener(new View.OnClickListener() {
@@ -389,7 +377,9 @@ public class LoginActivity  extends ComunicableActivity  {
 
 	@Override
 	protected void doServiceReady() {
-		mBtnLogin.setEnabled(true);
+		mButtonLogin.setEnabled(true);
+		Bundle bundle = new Bundle();
+		mServiceChannel.startScanSSID(bundle);
 	}    
     
     @Override
@@ -402,8 +392,8 @@ public class LoginActivity  extends ComunicableActivity  {
 			mSSID = (String)mSpinnerSSID.getAdapter().getItem(mSpinnerSSID.getSelectedItemPosition());
 			mTextViewStatus.setText(R.string.FoundServerStatus);
 			mServiceChannel.updateServerInfo(mServerIP, mSSID);
-			mServiceChannel.connectServer(mTxtStudentID.getText().toString(), 
-										  mTxtPassword.getText().toString());
+			mServiceChannel.connectServer(mTextviewStudentID.getText().toString(), 
+										  mTextviewPassword.getText().toString());
 			mInnerHandler.sendMessageDelayed(mInnerHandler.obtainMessage(EVENT_LOGIN_TIME_OUT), 
 										DELAY_LOGIN_TIME);
 			break;

@@ -28,9 +28,11 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
 	private class TagParam{
 		private String mId;
 		private String mSubId;
-		public TagParam(String qid, String sid){
+		private onSubViewClickListener mListener;
+		public TagParam(String qid, String sid, onSubViewClickListener l){
 			mId = qid;
 			mSubId = sid;
+			mListener = l;
 		}
 	}
 	
@@ -45,7 +47,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
 		if (mQuestionMgr.GetQuestionItem(id).GetType() == QuestionInfo.QUESTION_TYPE_MULTIBLANK){
     		String tipQuestion = String.format(mHostActivity.getResources().getString(R.string.CurrentBlankQuestion), id, 1);
     		mEditTextor.setHint(tipQuestion);
-    		mEditTextor.setTag(new TagParam(id, Integer.toString(1)));
+    		mEditTextor.setTag(new TagParam(id, Integer.toString(1), listener));
     		mEditTextor.setImeOptions(EditorInfo.IME_ACTION_NEXT);
     		Parcel parcelValues  = mHostActivity.getAnswerManager().GetAnswer(id).GetRefAnswer();
     		Integer cnt = (Integer)parcelValues.readInt();
@@ -54,7 +56,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     			tipQuestion = String.format(mHostActivity.getResources().getString(R.string.CurrentBlankQuestion), id, i + 1);
     			EditText editText = new EditText(mHostActivity);
     	    	editText.setHint(tipQuestion);
-    	    	editText.setTag(new TagParam(id, Integer.toString(i + 1)));
+    	    	editText.setTag(new TagParam(id, Integer.toString(i + 1), listener));
     	    	editText.setOnEditorActionListener(inputListener);
     	    	editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
     	    	editText.setSingleLine(false);
@@ -66,7 +68,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     	}else{
     		String tipQuestion = String.format(mHostActivity.getResources().getString(R.string.CurrentQuestion), id);    	
     		mEditTextor.setHint(tipQuestion);
-    		mEditTextor.setTag(new TagParam(id, Integer.toString(0)));
+    		mEditTextor.setTag(new TagParam(id, Integer.toString(0), listener));
     		mEditTextor.setImeOptions(EditorInfo.IME_ACTION_DONE);
     	}
 	}
@@ -83,7 +85,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
         	mEditTextor.setEnabled(false);
         	mEditTextor.setText(mMultiBlankAnswer.get(Integer.toString(1)));
         	mEditTextor.setBackgroundResource(R.drawable.reference_bk);        	
-    		mEditTextor.setTag(new TagParam(id, Integer.toString(1)));
+    		mEditTextor.setTag(new TagParam(id, Integer.toString(1), null));
     		if (bShowRefAnswer){
 	    		if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
 		    			&& mMultiBlankAnswer.get(1) != null && mMultiBlankRefAnswer.get(1) != null
@@ -109,7 +111,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     			String subid = Integer.toString(i + 1);
     			EditText editText = new EditText(mHostActivity);
     			editText.setEnabled(false);
-    	    	editText.setTag(new TagParam(id, subid));
+    	    	editText.setTag(new TagParam(id, subid, null));
     	    	editText.setSingleLine(false);
     	    	editText.setMaxLines(3);
     	    	editText.setText(mMultiBlankAnswer.get(subid));
@@ -133,7 +135,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
     		String subid = Integer.toString(0);
         	mEditTextor.setEnabled(false);
         	mEditTextor.setText(mMultiBlankAnswer.get(subid));
-        	mEditTextor.setTag(new TagParam(id, Integer.toString(0)));
+        	mEditTextor.setTag(new TagParam(id, Integer.toString(0), null));
         	mEditTextor.setBackgroundResource(R.drawable.reference_bk);
         	if (bShowRefAnswer){
 	    		if (mMultiBlankAnswer != null && mMultiBlankRefAnswer != null
@@ -167,12 +169,13 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
 			TagParam param = (TagParam)v.getTag();
 			String qId = param.mId;
 			String subId = param.mSubId;
+			onSubViewClickListener listener = param.mListener;
 			
 			if ((actionId == EditorInfo.IME_ACTION_UNSPECIFIED 
 					|| actionId == EditorInfo.IME_ACTION_DONE)
 					&& event.equals(KeyEvent.ACTION_DOWN)){
 				mMultiBlankAnswer.put(subId, new String(v.getText().toString()));				
-				doSaveAnswers(qId);
+				doSaveAnswers(qId, listener);
 				return true;
 			}else if (actionId == EditorInfo.IME_ACTION_NEXT
 					&& event.equals(KeyEvent.ACTION_DOWN)){
@@ -189,13 +192,15 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
 				TagParam param = (TagParam)((EditText)v).getTag();
 				String qId = param.mId;
 				String subId = param.mSubId;
+				onSubViewClickListener listener = param.mListener;
+				
 				mMultiBlankAnswer.put(subId, new String(((EditText)v).getText().toString()));				
-				doSaveAnswers(qId);				
+				doSaveAnswers(qId, listener);				
 			}
 		}	
     }
 
-	private void doSaveAnswers(String id){
+	private void doSaveAnswers(String id, onSubViewClickListener l){
 		Parcel answer = Parcel.obtain();
 		answer.writeInt(mMultiBlankAnswer.size());
 		for (Iterator<String> iter = mMultiBlankAnswer.keySet().iterator(); 
@@ -206,6 +211,7 @@ public class BlankItemViewHolder extends QuestionItemViewHolder {
 		}
 		answer.setDataPosition(0);
 		mHostActivity.getAnswerManager().GetAnswer(id).AddAnswer(answer);
+		l.onViewClick(id, mHostActivity.getAnswerManager().GetAnswer(id));
 	}	    
     
     private void doLoadAnswers(String qId){

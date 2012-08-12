@@ -84,9 +84,9 @@ public class KingService extends Service{
     	}
     };
 
-    public void scanSSID(){
+    public void startScanSSID(Bundle bundle){
     	if (mWifiMonitor != null){
-    		mWifiMonitor.startScanServer();
+    		mWifiMonitor.startScanSSID(bundle);
     	}
     }
     

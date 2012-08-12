@@ -49,7 +49,7 @@ public class QuestionInfo {
 	}
 	
 	public String getImageIndex(int pos){
-		return mImageIndexes.get(pos);
+		return mImageIndexes.size() > pos ? mImageIndexes.get(pos) : null;
 	}
 	
 	private int AnalysisDetailTypeByReference(int type, String reference){
