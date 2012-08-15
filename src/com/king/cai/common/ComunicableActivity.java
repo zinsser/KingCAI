@@ -146,7 +146,7 @@ public abstract class ComunicableActivity extends Activity{
     	}
     	
     	private void onReceiveMessage(String peer, String MsgData){
-    		KingService.addLog("MessageHandler Raw Msg Data:" + MsgData);
+    		KingService.getLogService().addLog("MessageHandler Raw Msg Data:" + MsgData);
     		ActiveMessage activeMsgExecutor = null;
     		Set<String> keysets = mActiveMsgMgr.mActiveMsgMap.keySet();
     		String[] keys = (String[])keysets.toArray(new String[keysets.size()]);
@@ -228,6 +228,12 @@ public abstract class ComunicableActivity extends Activity{
         public void updateDownloadInfo(String qid, String imageIndex, int size){
         	if (mKingService != null){
         		mKingService.updateDownloadSize(qid, imageIndex, size);
+        	}
+        }
+        
+        public void updatePaperSize(Integer size){
+        	if (mKingService != null){
+        		mKingService.updatePaperSize(size);
         	}
         }
     };

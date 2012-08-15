@@ -11,6 +11,7 @@ public class ActiveMessageManager {
 		mActiveMsgMap.put(ActiveMessage_CleanPaper.s_MsgTag, new ActiveMessage_CleanPaper.CleanPaperFunctor());
 		mActiveMsgMap.put(ActiveMessage_ImageResponse.s_MsgTag, new ActiveMessage_ImageResponse.NewImageFunctor());
 		mActiveMsgMap.put(ActiveMessage_StartTOLApp.s_MsgTag, new ActiveMessage_StartTOLApp.TOLStartorFunctor());
+		mActiveMsgMap.put(ActiveMessage_PaperResponse.s_MsgTag, new ActiveMessage_PaperResponse.PaperResponseFunctor());		
 	}
 	
 	public static abstract class ActiveFunctor {

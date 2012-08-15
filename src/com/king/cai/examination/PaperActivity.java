@@ -402,6 +402,10 @@ public class PaperActivity  extends ComunicableActivity {
 			mQuestionMgr.AddQuestionImage(id, imageIndex, bmp);
 			break;
 		}
+		case KingCAIConfig.EVENT_PAPER_READY:{
+			Integer size = bundle.getInt("Size");
+			mServiceChannel.updatePaperSize(size);
+		}
 		}
  	}
 

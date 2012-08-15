@@ -9,10 +9,11 @@ public class KingCAIConfig {
 	
 	public final static int EVENT_QUERY_COMPLETE = 5;
 	public final static int EVENT_LOGIN_COMPLETE = 6;
-	public final static int EVENT_NEW_QUESTION = 7;
-	public final static int EVENT_NEW_IMAGE = 8;
-	public final static int EVENT_CLEAN_PAPER = 9;
-	public final static int EVENT_IMAGE_READY = 10;
+	public final static int EVENT_PAPER_READY = 7;
+	public final static int EVENT_NEW_QUESTION = 8;
+	public final static int EVENT_NEW_IMAGE = 9;
+	public final static int EVENT_CLEAN_PAPER = 10;
+	public final static int EVENT_IMAGE_READY = 11;
 	
 	public final static String SOCKET_EVENT_ACTION = "com.king.cai.socket.event";
 	public static final String START_SERVICE_ACTION = "com.king.cai.service";

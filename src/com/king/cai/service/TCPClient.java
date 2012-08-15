@@ -19,6 +19,8 @@ public class TCPClient {
 	private ClientObject mTextClient = null;
 	private ClientObject mBinaryClient = null;
 	
+
+	
 	public class ClientObject{
 		private Socket mSocket = null;
 		private InputStream mInputStream = null;
@@ -31,10 +33,10 @@ public class TCPClient {
 				mInputStream = mSocket.getInputStream();
 				mOutputStream = mSocket.getOutputStream();
 			} catch (UnknownHostException e) {
-				KingService.addLog(e.toString());
+				KingService.getLogService().addLog(e.toString());
 				e.printStackTrace();
 			} catch (IOException e) {
-				KingService.addLog(e.toString());
+				KingService.getLogService().addLog(e.toString());
 				e.printStackTrace();
 			} 
 			
@@ -60,9 +62,8 @@ public class TCPClient {
 				e.printStackTrace();
 			}
 		}
-		
-		public DownloadCache getCacher(){
-			return mReceiveRunner.getCacher();
+		public TCPReceiveRunner getRunner(){
+			return mReceiveRunner;
 		}
 	}
 	
@@ -105,14 +106,22 @@ public class TCPClient {
 	}
 	
 	public void addImageDownloadTask(String qid, String imageIndex, Message innerMessage){
-		if (mBinaryClient != null && mBinaryClient.getCacher() != null){
-			mBinaryClient.getCacher().addTask(qid, imageIndex, innerMessage);
+		if (mBinaryClient != null && mBinaryClient.getRunner() != null 
+				&& mBinaryClient.getRunner().getCacher() != null){
+			mBinaryClient.getRunner().getCacher().addTask(qid, imageIndex, innerMessage);
 		}
 	}
 	
 	public void updateDownloadImageSize(String qid, String imageIndex, int size){
-		if (mBinaryClient != null && mBinaryClient.getCacher() != null){
-			mBinaryClient.getCacher().updateDownloadSize(qid, imageIndex, size);
+		if (mBinaryClient != null && mBinaryClient.getRunner() != null 
+				&& mBinaryClient.getRunner().getCacher() != null){
+			mBinaryClient.getRunner().getCacher().updateDownloadSize(qid, imageIndex, size);
+		}
+	}
+	
+	public void updatePaperSize(Integer size){
+		if (mTextClient != null && mTextClient.getRunner() != null){
+			mTextClient.getRunner().updateExpectSize( size);
 		}
 	}
 }

@@ -15,7 +15,7 @@ public class LogDisplayer extends ComunicableActivity {
         setContentView(R.layout.logger);
         mLogger = (TextView)findViewById(R.id.textViewLogger);
         if (mServiceChannel != null && mServiceChannel.mKingService != null){
-            for (String log : KingService.getLog()){
+            for (String log : KingService.getLogService().getLog()){
                 mLogger.setText(log);
             }
         }

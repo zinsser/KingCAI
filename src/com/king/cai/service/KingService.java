@@ -149,6 +149,11 @@ public class KingService extends Service{
 		}
 	}
 	
+    public void updatePaperSize(Integer size){
+    	if (mTcpClient != null){
+    		mTcpClient.updatePaperSize(size);
+    	}
+    }
 	//TCP Socket use this function
 	public void sendMessage(RequestMessage msg, int mode ){
 		if (mTcpClient != null){
@@ -167,15 +172,7 @@ public class KingService extends Service{
     	return mWifiMonitor != null ? mWifiMonitor.getLocalIPAddress() : "0.0.0.0";
     }
     
-    public static void addLog(String log){
-    	LoggerManager.getInstance().addLog(log);
-    }
-    
-    public static ArrayList<String> getLog(){
-    	return LoggerManager.getInstance().getLog();
-    }
-    
-    public static void redirectLog2SDCard(){
-    	LoggerManager.getInstance().redirectLog2SDCard();
+    public static LoggerManager getLogService(){
+    	return LoggerManager.getInstance();
     }
 }
