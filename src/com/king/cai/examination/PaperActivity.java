@@ -37,8 +37,10 @@ import com.king.cai.R;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperViewAdapter;
 import com.king.cai.message.RequestMessage_Answer;
+import com.king.cai.message.RequestMessage_Image;
 import com.king.cai.message.RequestMessage_Logout;
 import com.king.cai.message.RequestMessage_Paper;
+import com.king.cai.service.KingService;
 
 public class PaperActivity  extends ComunicableActivity {
 	private final static int GROUP_NORMAL = 0;
@@ -368,11 +370,15 @@ public class PaperActivity  extends ComunicableActivity {
 
     	return about;
     }
-    
+
 	@Override
 	protected void doHandleInnerMessage(Message innerMessage){
 		Bundle bundle = innerMessage.getData();
 		switch (innerMessage.what){
+		case KingCAIConfig.EVENT_PAPER_READY:{
+			Integer size = bundle.getInt("Size");
+			mServiceChannel.updatePaperSize(size);
+		}		
 		case KingCAIConfig.EVENT_NEW_QUESTION:{
 			String id = bundle.getString("ID");
 			Integer type = bundle.getInt("Type");
@@ -381,34 +387,35 @@ public class PaperActivity  extends ComunicableActivity {
 			Integer imageCount = bundle.getInt("ImageCount");
 			mQuestionMgr.AddQuestion(id, type, answer, content, imageCount);
 			for (int i = 1; i < imageCount + 1; ++i){
-				mServiceChannel.addDownloadTask(id, String.valueOf(i));	
+				DownloadManager.getInstance().addTask(id, String.valueOf(i), mInnerMessageHandler);	
 			}
 			break;
 		}
-		case KingCAIConfig.EVENT_IMAGE_READY:{
-			String id = bundle.getString("ID");
+		case KingCAIConfig.EVENT_REQUEST_IMAGE:{
+			String qid = bundle.getString("ID");
 			String imageIndex = bundle.getString("Index");
-			Integer size = bundle.getInt("Size");
 			
-			mServiceChannel.updateDownloadInfo(id, imageIndex, size);
+			mServiceChannel.sendMessage(new RequestMessage_Image(qid, imageIndex), 0);
+		}		
+		case KingCAIConfig.EVENT_IMAGE_READY:{
+			Integer size = bundle.getInt("Size");
+			mServiceChannel.updateDownloadInfo(size);
 			break;
-		}
+		}	
 		case KingCAIConfig.EVENT_NEW_IMAGE:{
-			String id = bundle.getString("ID");
-			String imageIndex = bundle.getString("Index");
+			String id = DownloadManager.getInstance().getCurrentTask().getQuestionID();
+			String imageIndex = DownloadManager.getInstance().getCurrentTask().getImageIndex();
 			byte[] data = bundle.getByteArray("Content");
-			Integer size = bundle.getInt("Size");
-			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, size);
+			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
 			mQuestionMgr.AddQuestionImage(id, imageIndex, bmp);
+
+			DownloadManager.getInstance().finishCurrentTask();
 			break;
-		}
-		case KingCAIConfig.EVENT_PAPER_READY:{
-			Integer size = bundle.getInt("Size");
-			mServiceChannel.updatePaperSize(size);
 		}
 		}
  	}
-
+	
+	
     private void ParseIntentExtraParam(){
         if (getIntent().hasExtra(KingCAIConfig.StudentInfo)){
             Bundle extra = getIntent().getExtras();

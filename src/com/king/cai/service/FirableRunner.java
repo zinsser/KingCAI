@@ -22,13 +22,10 @@ public abstract class FirableRunner implements Runnable{
 		return bundle;
 	}
 	
-	protected Bundle contructBinaryBundle(String qid, String imageIndex, ByteBuffer data, int size){
+	protected Bundle contructBinaryBundle(ByteBuffer data){
 		Bundle bundle = new Bundle();
 		bundle.putBoolean("Type", false);
-		bundle.putString("ID", qid);
-		bundle.putString("Index", imageIndex);
 		bundle.putByteArray("Content", data.array());
-		bundle.putInt("Size", size);
 		
 		return bundle;
 	}

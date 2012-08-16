@@ -1,7 +1,9 @@
-package com.king.cai.service;
+package com.king.cai.examination;
 
-import java.nio.ByteBuffer;
+import com.king.cai.KingCAIConfig;
 
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 
 public class DownloadTask {
@@ -13,20 +15,28 @@ public class DownloadTask {
 	
 	private String mQuestionID;
 	private String mImageIndex;
-	private Message mInnerMessage = null;
-	private ByteBuffer mDataBuf = null;
 	private TaskStatus mStatus;
+	private Handler mInnerHandler;
 	
-	public DownloadTask(String qid, String imageIndex, Message innerMessage){
+	public DownloadTask(String qid, String imageIndex, Handler innerHandler){
 		mQuestionID = qid;
 		mImageIndex = imageIndex;
-		mInnerMessage = innerMessage;
 		mStatus = TaskStatus.TS_Unstart;		
 	}
 	
 	public void request(){
 		mStatus = TaskStatus.TS_Process;
-		mInnerMessage.sendToTarget();
+		
+		Message innerMessage = mInnerHandler.obtainMessage(KingCAIConfig.EVENT_REQUEST_IMAGE);
+		Bundle bundle = new Bundle();
+		bundle.putString("ID", mQuestionID);
+		bundle.putString("Index", mImageIndex);
+		innerMessage.setData(bundle);
+		innerMessage.sendToTarget();
+	}
+	
+	public void finish(){
+		mStatus = TaskStatus.TS_Finished;
 	}
 	
 	public boolean isUnstart(){
@@ -41,10 +51,6 @@ public class DownloadTask {
 		return mStatus == TaskStatus.TS_Finished;
 	}
 	
-	public void releaseBuffer(){
-		mDataBuf = null;
-	}
-	
 	public String getQuestionID(){
 		return mQuestionID;
 	}
@@ -52,31 +58,7 @@ public class DownloadTask {
 	public String getImageIndex(){
 		return mImageIndex;
 	}
-	
-	public int getRemain(){
-		return mDataBuf != null ? mDataBuf.remaining() : 0;
-	}
-	
-	public ByteBuffer getDataBuffer(){
-		return mDataBuf;
-	}
-	
-	public void updateImageInfo(String imageIndex, int size){
-		mImageIndex = imageIndex;
-		mDataBuf = null;
-		mDataBuf = ByteBuffer.allocate(size);
-	}
-	
-	public void addData(ByteBuffer buf, Integer size){
-		if (mDataBuf != null && mDataBuf.hasRemaining()){
-			mDataBuf.put(buf.array(), 0, size);
-		}
-		
-		if (!mDataBuf.hasRemaining()){
-			mStatus = TaskStatus.TS_Finished;
-		}
-	}
-	
+
 	public boolean equals(DownloadTask other){
 		boolean  bEqual = mQuestionID != null && mQuestionID.equals(other.mQuestionID);
 		if (mImageIndex != null && other.mImageIndex != null){

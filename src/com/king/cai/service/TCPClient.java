@@ -105,17 +105,9 @@ public class TCPClient {
 		}
 	}
 	
-	public void addImageDownloadTask(String qid, String imageIndex, Message innerMessage){
-		if (mBinaryClient != null && mBinaryClient.getRunner() != null 
-				&& mBinaryClient.getRunner().getCacher() != null){
-			mBinaryClient.getRunner().getCacher().addTask(qid, imageIndex, innerMessage);
-		}
-	}
-	
-	public void updateDownloadImageSize(String qid, String imageIndex, int size){
-		if (mBinaryClient != null && mBinaryClient.getRunner() != null 
-				&& mBinaryClient.getRunner().getCacher() != null){
-			mBinaryClient.getRunner().getCacher().updateDownloadSize(qid, imageIndex, size);
+	public void updateDownloadImageSize(int size){
+		if (mBinaryClient != null && mBinaryClient.getRunner() != null){
+			mBinaryClient.getRunner().updateExpectSize(size);
 		}
 	}
 	

@@ -60,7 +60,7 @@ public class KingService extends Service{
     
     public static final int SOCKET_EVENT = 0;
     public static final int WIFI_EVENT = 1;
-    public static final int REQUEST_EVENT = 2;
+
     
     private Handler mHandler = new Handler(){
     	@Override
@@ -70,15 +70,9 @@ public class KingService extends Service{
     		case SOCKET_EVENT:
     			Intent intent = new Intent(KingCAIConfig.SOCKET_EVENT_ACTION);
     			intent.putExtras(msg.getData());
-    			sendBroadcast(intent);	
+    			getApplication().sendBroadcast(intent);	
     			break;
     		case WIFI_EVENT:
-    			break;
-    		case REQUEST_EVENT:
-    			String qid = bundle.getString("ID");
-    			String imageIndex = bundle.getString("Index");
-    			
-    			KingService.this.sendMessage(new RequestMessage_Image(qid, imageIndex), 0);
     			break;
     		}
     	}
@@ -131,21 +125,10 @@ public class KingService extends Service{
 	public void connectServer(String number, String password){
 		sendMessage(new RequestMessage_Login(number, password), 0);
 	}
-	
-	public void addDownloadTask(String qid, String imageIndex){
-		if (mTcpClient != null){
-			Message innerMessage = mHandler.obtainMessage(REQUEST_EVENT);
-			Bundle bundle = new Bundle();
-			bundle.putString("ID", qid);
-			bundle.putString("Index", imageIndex);
-			innerMessage.setData(bundle);
-			mTcpClient.addImageDownloadTask(qid, imageIndex, innerMessage);
-		}
-	}
 
-	public void updateDownloadSize(String qid, String imageIndex, int size){
+	public void updateDownloadSize(int size){
 		if (mTcpClient != null){
-			mTcpClient.updateDownloadImageSize(qid, imageIndex, size);
+			mTcpClient.updateDownloadImageSize(size);
 		}
 	}
 	
