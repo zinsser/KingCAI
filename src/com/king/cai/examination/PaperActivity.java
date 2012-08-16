@@ -80,9 +80,7 @@ public class PaperActivity  extends ComunicableActivity {
 		ParseIntentExtraParam();
 		
 		mAnswerMgr = new AnswerManager(mQuestionMgr);
-		PaperStatus commitStatus = new CommitedStatus(this, null);
-		PaperStatus waitingStatus = new WaitingStatus(this, commitStatus);
-		mPaperStatus = new AnswerStatus(this, waitingStatus, mQuestionMgr);
+		mPaperStatus = new AnswerStatus(this,  mQuestionMgr);
 		mPaperStatus.EnterStatus();
 		
         mListView = (ListView)findViewById(R.id.lstQuestions);
@@ -462,7 +460,7 @@ public class PaperActivity  extends ComunicableActivity {
 		CommitAnswers();
 		mPaperStatus.LeaveStatus();
 		mPaperStatus = null;
-		mPaperStatus = new WaitingStatus(this, null);
+		mPaperStatus = new WaitingStatus(this);
 		mPaperStatus.EnterStatus();
 		PaperViewAdapter adapter = (PaperViewAdapter)mListView.getAdapter();
 		adapter.notifyDataSetChanged();
@@ -471,7 +469,7 @@ public class PaperActivity  extends ComunicableActivity {
 	public void switch2CommitStatus(){
 		mPaperStatus.LeaveStatus();
 		mPaperStatus = null;
-		mPaperStatus = new CommitedStatus(this, null);
+		mPaperStatus = new CommitedStatus(this);
 		mPaperStatus.EnterStatus();		
 	}
 	

@@ -18,10 +18,9 @@ public abstract class PaperStatus{
 	protected int mFilterLevel = 0;  	 	
 
 	protected PaperActivity mStatusOwner = null;
-	protected PaperStatus mNextStatus = null;
-	protected PaperStatus(PaperActivity owner, PaperStatus nextStatus){
+
+	protected PaperStatus(PaperActivity owner){
 		mStatusOwner = owner;
-		mNextStatus = nextStatus;
 	}
 
 	protected String MakeMixString(int iField, int resid){
@@ -33,14 +32,7 @@ public abstract class PaperStatus{
 		mStatusOwner.ChangeFilterButtonText(R.string.AllQuestions);
 		mFilterLevel = 0;
 	}
-	
-	protected void switchStatus(){
-		if (mNextStatus != null){
-			LeaveStatus();
-			mNextStatus.EnterStatus();
-		}
-	}
-	
+
 	public abstract void onCommitClick();
 	public abstract void onFilterClick(ListView listView, PaperViewAdapter fullAdapter);
 

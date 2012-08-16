@@ -20,8 +20,8 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 
 	private CountDownTimer mTickTimer = null;
 	private QuestionManager mQuestionMgr = null;
-	public AnswerStatus(PaperActivity owner, PaperStatus nextStatus, QuestionManager mgr){
-		super(owner, nextStatus);
+	public AnswerStatus(PaperActivity owner, QuestionManager mgr){
+		super(owner);
 		mQuestionMgr = mgr;
 		mQuestionMgr.addListener(this);
    	}

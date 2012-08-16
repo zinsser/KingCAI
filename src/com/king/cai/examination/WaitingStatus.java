@@ -5,8 +5,8 @@ import android.widget.ListView;
 
 public class WaitingStatus extends PaperStatus{
 
-	protected WaitingStatus(PaperActivity owner, PaperStatus nextStatus) {
-		super(owner, nextStatus);
+	protected WaitingStatus(PaperActivity owner) {
+		super(owner);
 	}
 
 	@Override
