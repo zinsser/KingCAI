@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
 
 public class QuestionInfo {
 	public static final int QUESTION_TYPE_TITLE = 0;
@@ -27,10 +28,10 @@ public class QuestionInfo {
 		mDetail = detail;
 		mReference = reference;
 		mImageCount = imageCount;
-		mType = AnalysisDetailTypeByReference(type, reference);
+		mType = analysisDetailTypeByReference(type, reference);
 	}
 	
-	public void AddGraphic(String imageIndex, Bitmap graphic){
+	public void addGraphic(String imageIndex, Bitmap graphic){
 		mImageIndexes.add(imageIndex);
 		mGraphics.put(imageIndex, graphic);
 	}
@@ -52,7 +53,7 @@ public class QuestionInfo {
 		return mImageIndexes.size() > pos ? mImageIndexes.get(pos) : null;
 	}
 	
-	private int AnalysisDetailTypeByReference(int type, String reference){
+	private int analysisDetailTypeByReference(int type, String reference){
 		//根据参考答案来分析更精确的问题类型：选择题（单、多）、填空题（单、多）、逻辑判断题
 		int retType = type;
 		if (reference != null && reference.length() > 1 
@@ -70,23 +71,23 @@ public class QuestionInfo {
 		return retType;
 	}
 	
-	public int GetType(){
+	public int getType(){
 		return mType;
 	}
 	
-	public boolean IsBlank(){
+	public boolean isBlank(){
 		return (mType == QUESTION_TYPE_BLANK) || (mType == QUESTION_TYPE_MULTIBLANK); 
 	}
 	
-	public boolean IsLogic(){
+	public boolean isLogic(){
 		return mType == QUESTION_TYPE_LOGIC;
 	}
 	
-	public boolean IsOption(){
+	public boolean isOption(){
 		return (mType == QUESTION_TYPE_OPTION) || (mType == QUESTION_TYPE_MULTIOPTION);		
 	}
 	
-	public boolean IsPaperTitle(){
+	public boolean isPaperTitle(){
 		return mType == QUESTION_TYPE_TITLE;
 	}
 }

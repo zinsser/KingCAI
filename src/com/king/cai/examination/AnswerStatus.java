@@ -23,7 +23,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	public AnswerStatus(PaperActivity owner, PaperStatus nextStatus, QuestionManager mgr){
 		super(owner, nextStatus);
 		mQuestionMgr = mgr;
-		mQuestionMgr.AddListener(this);
+		mQuestionMgr.addListener(this);
    	}
 	
 	@Override
@@ -37,12 +37,33 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	public void LeaveStatus(){
 		mTickTimer.cancel();
 	}
+
+	public void onQuestionArrayChanged(ArrayList<Integer> ids) {
+		FetchUndoneList(mListFirst);
+		mStatusOwner.ShowDoneInfo(mListFirst.size());
+	}
 	
-	public void doGettingItemView(ItemViewHolder holder, String id, int fontsize){
-		holder.doGettingItemViews(id, fontsize, new ItemViewHolder.onSubViewClickListener() {
-			
-			public void onViewClick(String questionID, Answer answer) {
-				PostClicked(questionID, answer);
+	public void onAddQuestion(Integer id) {
+		if (!mQuestionMgr.getQuestionItem(id).isPaperTitle()){
+			mListFirst.add(id);
+		}
+		mStatusOwner.ShowDoneInfo(mListFirst.size());
+	}
+
+
+	public void onClearQuestion() {
+		mListFirst.clear();
+		mStatusOwner.ShowDoneInfo(mListFirst.size());
+	}
+
+	public void onImageReady(String qid, String imageIndex, Bitmap bmp) {
+	}
+	
+	public void doGettingItemView(ItemViewHolder holder, Integer index, int fontsize){
+		holder.doGettingItemViews(index, fontsize, new ItemViewHolder.onSubViewClickListener() {
+
+			public void onViewClick(Integer index, Answer answer) {
+				PostClicked(index, answer);	
 			}
 		});
 	}
@@ -112,56 +133,35 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 		adlg.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
 	}
 
-	private void PostClicked(String questionID, final Answer answer){
+	private void PostClicked(Integer index, Answer answer){
 		if (answer.mIsMark){
-			if (!mListSecond.contains(questionID)){
-				mListSecond.add(questionID);
+			if (!mListSecond.contains(index)){
+				mListSecond.add(index);
 			}
 		}else{
-			if (mListSecond.contains(questionID)){
-				mListSecond.remove(questionID);
+			if (mListSecond.contains(index)){
+				mListSecond.remove(index);
 			}
 		}
 
-		if (answer.IsAnswered()){
-			if (mListFirst.contains(questionID)){
-				mListFirst.remove(questionID);
+		if (answer.isAnswered()){
+			if (mListFirst.contains(index)){
+				mListFirst.remove(index);
 				mStatusOwner.ShowDoneInfo(mListFirst.size());				
 			}
 		}else{
-			if (!mListFirst.contains(questionID)){
-				mListFirst.add(questionID);
+			if (!mListFirst.contains(index)){
+				mListFirst.add(index);
 				mStatusOwner.ShowDoneInfo(mListFirst.size());
 			}
 		}
 	}
 
-	public void OnQuestionArrayChanged(ArrayList<String> ids) {
-		FetchUndoneList(mListFirst);
-		mStatusOwner.ShowDoneInfo(mListFirst.size());
-	}
-
-	private void FetchUndoneList(ArrayList<String> undonelist){
-    	for (String id : mQuestionMgr.GetIDs()){
-    		if (!mQuestionMgr.GetQuestionItem(id).IsPaperTitle()){
-    			mListFirst.add(id);
+	private void FetchUndoneList(ArrayList<Integer> undonelist){
+    	for (Integer index : mQuestionMgr.getIndexes()){
+    		if (!mQuestionMgr.getQuestionItem(index).isPaperTitle()){
+    			mListFirst.add(index);
     		}
     	}		
 	}
-
-	public void OnAddQuestion(String id) {
-		if (!mQuestionMgr.GetQuestionItem(id).IsPaperTitle()){
-			mListFirst.add(id);
-		}
-		mStatusOwner.ShowDoneInfo(mListFirst.size());
-	}
-
-
-	public void OnClearQuestion() {
-		mListFirst.clear();
-		mStatusOwner.ShowDoneInfo(mListFirst.size());
-	}
-
-	public void OnImageReady(String qid, String imageIndex, Bitmap bmp) {
-	}	
 }

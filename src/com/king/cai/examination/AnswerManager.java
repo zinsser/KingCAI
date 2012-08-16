@@ -10,14 +10,14 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 	private QuestionManager mQuestionMgr = null;
 	public AnswerManager(QuestionManager questionMgr){
 		mQuestionMgr = questionMgr;
-		mQuestionMgr.AddListener(this);
+		mQuestionMgr.addListener(this);
 	}
 
-	public HashMap<String, Answer> GetAnswers(){
+	public HashMap<String, Answer> getAnswers(){
 		return mAnswers;
 	}
 	
-	public Answer GetAnswer(String id){
+	public Answer getAnswer(String id){
 		Answer answer = null;
 		if (mAnswers.keySet().contains(id)){
 			answer = mAnswers.get(id);
@@ -25,36 +25,43 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 		return answer;
 	}
 
-	public void AddAnswer(QuestionManager questionMgr){
-		for (String id : questionMgr.GetIDs()){
-			if (questionMgr.GetQuestionItem(id).IsOption()){
-				mAnswers.put(id, new OptionsAnswerInfo(questionMgr.GetQuestionItem(id).mReference));
-			}else if (questionMgr.GetQuestionItem(id).IsBlank()){
-				mAnswers.put(id, new BlankAnswerInfo(questionMgr.GetQuestionItem(id).mReference));				
-			}else if (questionMgr.GetQuestionItem(id).IsLogic()){
-				
-			}else{
-				mAnswers.put(id, null);
-			}
-		}		
+	private Answer constructAnswer(String id, String answerContent){
+		Answer answer = null;
+		if (mQuestionMgr.getQuestionItem(id).isOption()){
+			answer = new OptionsAnswerInfo(mQuestionMgr.getQuestionItem(id).mReference, answerContent);
+		}else if (mQuestionMgr.getQuestionItem(id).isBlank()){
+			answer = new BlankAnswerInfo(mQuestionMgr.getQuestionItem(id).mReference, answerContent);				
+		}else if (mQuestionMgr.getQuestionItem(id).isLogic()){
+			
+		}
+		
+		return answer;
+	}
+
+	private Answer constructAnswer(String id){
+		return constructAnswer(id, null);
 	}
 	
-	public void AddAnswer(String id, QuestionInfo question, String s){
-		if (question.IsOption()){
-			mAnswers.put(id, new OptionsAnswerInfo(question.mReference, s));
-		}else if (question.IsBlank()){
-			mAnswers.put(id, new BlankAnswerInfo(question.mReference, s));				
-		}else if (question.IsLogic()){
-			
-		}else{
-			mAnswers.put(id, null);
+	
+	public void addAnswer(){
+		mAnswers.clear();
+		for (String id : mQuestionMgr.getIDs()){
+			mAnswers.put(id, constructAnswer(id));
 		}
+	}
+	
+	public void addAnswer(QuestionInfo question){
+		mAnswers.put(question.getQuestionID(), constructAnswer(question.getQuestionID()));
+	}
+	
+	public void addAnswer(String id, String s){
+		mAnswers.put(id, constructAnswer(id, s));
 	}
 	
 	public String toString(){
 		String retAnswer = "@";
 		for (String id : mAnswers.keySet()){
-			if (!mQuestionMgr.GetQuestionItem(id).IsPaperTitle()){
+			if (!mQuestionMgr.getQuestionItem(id).isPaperTitle()){
 				if (mAnswers.get(id) != null){
 					retAnswer += id + mAnswers.get(id).toString() + "@";
 				}else{
@@ -65,18 +72,18 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 		return retAnswer;
 	}
 
-	public void OnQuestionArrayChanged(ArrayList<String> ids) {
-		AddAnswer(mQuestionMgr);		
+	public void onQuestionArrayChanged(ArrayList<Integer> ids) {
+		addAnswer();
 	}
 
-	public void OnAddQuestion(String id) {
-		AddAnswer(mQuestionMgr);
+	public void onAddQuestion(Integer id) {
+		addAnswer(mQuestionMgr.getQuestionItem(id));
 	}
 
-	public void OnClearQuestion() {
+	public void onClearQuestion() {
 		mAnswers.clear();
 	}
 
-	public void OnImageReady(String qid, String imageIndex, Bitmap bmp) {		
+	public void onImageReady(String qid, String imageIndex, Bitmap bmp) {
 	}
 }

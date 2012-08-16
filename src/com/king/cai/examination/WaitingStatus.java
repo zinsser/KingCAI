@@ -16,11 +16,10 @@ public class WaitingStatus extends PaperStatus{
 
 	@Override
 	public void onFilterClick(ListView listView, PaperViewAdapter fullAdapter) {
-
 	}
 
 	@Override
-	public void doGettingItemView(ItemViewHolder holder, String id,
+	public void doGettingItemView(ItemViewHolder holder, Integer id,
 			int fontsize) {
 		holder.doGettingItemViews(id, fontsize);
 	}

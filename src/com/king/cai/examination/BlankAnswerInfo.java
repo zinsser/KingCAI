@@ -12,16 +12,16 @@ public class BlankAnswerInfo extends Answer{
 	private int mTotalBlank = 0;
 	
 	public BlankAnswerInfo(String refAnswer) {
-		super(mType);
+		this(refAnswer, null);
+	}
+
+	public BlankAnswerInfo(String refAnswer, String answer) {
+		super(mType);	
+		if (answer != null){
+			String2Map(answer, mAnswerString);
+		}
 		
 		String2Map(refAnswer, mRefAnswer);
-		mTotalBlank = mRefAnswer.size();
-	}
-	
-	public BlankAnswerInfo(String refAnswer, String answer) {
-		super(mType);
-		String2Map(refAnswer, mRefAnswer);
-		String2Map(answer, mAnswerString);
 		mTotalBlank = mRefAnswer.size();
 	}
 	
@@ -52,7 +52,7 @@ public class BlankAnswerInfo extends Answer{
 	}
 
 	@Override
-	public void AddAnswer(Parcel answers) {
+	public void addAnswer(Parcel answers) {
 		Integer cnt = answers.readInt();
 		for (int i = 0; i < cnt; ++i){
 			Integer subid = answers.readInt();
@@ -62,7 +62,7 @@ public class BlankAnswerInfo extends Answer{
 	}
 
 	@Override
-	public Parcel GetAnswer() {
+	public Parcel getAnswer() {
 		Parcel answer = Parcel.obtain();
 		answer.writeInt(mAnswerString.size());
 		for (Iterator<Integer> iter = mAnswerString.keySet().iterator(); 
@@ -76,7 +76,7 @@ public class BlankAnswerInfo extends Answer{
 	}
 	
 	@Override
-	public Parcel GetRefAnswer() {
+	public Parcel getRefAnswer() {
 		Parcel answer = Parcel.obtain();
 		answer.writeInt(mTotalBlank);
 		for (Iterator<Integer> iter = mRefAnswer.keySet().iterator(); 
@@ -91,12 +91,12 @@ public class BlankAnswerInfo extends Answer{
 	}
 	
 	@Override
-	public boolean IsAnswered() {
+	public boolean isAnswered() {
 		return mAnswerString.size() != 0;
 	}
 
 	@Override
-	public boolean IsCorrect() {
+	public boolean isCorrect() {
 		return mRefAnswer!= null && mAnswerString != null 
 				&& mAnswerString.equals(mRefAnswer);
 	}

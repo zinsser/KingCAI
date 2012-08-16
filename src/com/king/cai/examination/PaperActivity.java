@@ -7,7 +7,6 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -40,7 +39,6 @@ import com.king.cai.message.RequestMessage_Answer;
 import com.king.cai.message.RequestMessage_Image;
 import com.king.cai.message.RequestMessage_Logout;
 import com.king.cai.message.RequestMessage_Paper;
-import com.king.cai.service.KingService;
 
 public class PaperActivity  extends ComunicableActivity {
 	private final static int GROUP_NORMAL = 0;
@@ -57,17 +55,7 @@ public class PaperActivity  extends ComunicableActivity {
 	private final static String s_CfgTag_FontSize = "fontsize";
 	private final static String s_CfgTag_ExitStatus = "exitstatus"; //true:normal false:exception
 	
-	private final static String s_PaperTag_ID = "id";
-	private final static String s_PaperTag_Question = "question";
-	private final static String s_PaperTag_Type = "type";	
-	private final static String s_PaperTag_Reference = "reference";
-	private final static String s_PaperTag_Answer = "answer";
-	
-	private final static int s_PaperIdx_ID = 0;
-	private final static int s_PaperIdx_Question = 1;
-	private final static int s_PaperIdx_Type = 2;
-	private final static int s_PaperIdx_Reference = 3;
-	private final static int s_PaperIdx_Answer = 4;
+
 	
 	public TextView mTextViewTitle = null;
 	private ListView mListView = null;
@@ -154,7 +142,7 @@ public class PaperActivity  extends ComunicableActivity {
     }
     
     @Override
-	protected void doServiceReady(){
+	protected void onServiceReady(){
         mServiceChannel.sendMessage(new RequestMessage_Paper(), 0);		
 	}
     
@@ -178,8 +166,7 @@ public class PaperActivity  extends ComunicableActivity {
 			ClearDatabase();
 			ReadPaper();
 		}else if (mOffline){//offline
-			mQuestionMgr.ImportLocalQuestions();
-			mAnswerMgr.AddAnswer(mQuestionMgr);
+			mQuestionMgr.importQuestionsFromLocalFile();
 		}else {
 			ClearDatabase();
 		}
@@ -198,44 +185,11 @@ public class PaperActivity  extends ComunicableActivity {
 	}	
 	
 	public void SavePaper(){
-		ArrayList<String> ids = mQuestionMgr.GetIDs();
-		Answer answer = null;
-		ContentValues values = new ContentValues();  		
-		PaperDBHelper helper = new PaperDBHelper(getApplicationContext());
-		for (String id : ids){
-			values.put(s_PaperTag_ID, id);  
-			values.put(s_PaperTag_Question, mQuestionMgr.GetQuestionItem(id).mDetail);  
-			values.put(s_PaperTag_Type, mQuestionMgr.GetQuestionItem(id).mType); 
-			values.put(s_PaperTag_Reference, mQuestionMgr.GetQuestionItem(id).mReference);
-
-			if ((answer = mAnswerMgr.GetAnswer(id)) != null){
-				values.put(s_PaperTag_Answer, answer.toString());
-			}
-			
-			helper.Insert(values, id);			
-		}
-		helper.close();
+		mQuestionMgr.exportQuestionsToDB(getApplicationContext(), mAnswerMgr);
 	}
 	
 	private void ReadPaper(){
-		mQuestionMgr.Clear();
-		
-		PaperDBHelper helper = new PaperDBHelper(getApplicationContext());
-		Cursor c = helper.Query();
-		c.moveToFirst();
-		while (!c.isAfterLast()){
-			String id = c.getString(s_PaperIdx_ID);
-			String detail = c.getString(s_PaperIdx_Question);
-			int type = c.getInt(s_PaperIdx_Type);
-			String reference = c.getString(s_PaperIdx_Reference);
-			String answer = c.getString(s_PaperIdx_Answer);
-			mQuestionMgr.AddQuestion(id, type, reference, detail, 0);
-			mAnswerMgr.AddAnswer(id, mQuestionMgr.GetQuestionItem(id), answer);
-			c.moveToNext();
-		}
-		mQuestionMgr.NotifyQuestionArrayChanged();
-		c.close();
-		helper.close();
+		mQuestionMgr.importQuestionsFromDB(getApplicationContext());
 	}
     
     
@@ -263,7 +217,7 @@ public class PaperActivity  extends ComunicableActivity {
 				if (v.getText().toString().length() != 0){
 					String rawGotoText = v.getText().toString();
 					Integer gotoItem = Integer.parseInt(rawGotoText);
-					Integer offset = mQuestionMgr.GetUnQuestionCount("T"+rawGotoText);
+					Integer offset = mQuestionMgr.getUnQuestionCount(gotoItem);
 					
 					mListView.setAdapter(mFullAdapter);
 					ChangeFilterButtonText(R.string.AllQuestions);					
@@ -385,7 +339,7 @@ public class PaperActivity  extends ComunicableActivity {
 			String answer = bundle.getString("Reference");
 			String content = bundle.getString("Content");
 			Integer imageCount = bundle.getInt("ImageCount");
-			mQuestionMgr.AddQuestion(id, type, answer, content, imageCount);
+			mQuestionMgr.addQuestion(id, type, answer, content, imageCount);
 			for (int i = 1; i < imageCount + 1; ++i){
 				DownloadManager.getInstance().addTask(id, String.valueOf(i), mInnerMessageHandler);	
 			}
@@ -407,7 +361,7 @@ public class PaperActivity  extends ComunicableActivity {
 			String imageIndex = DownloadManager.getInstance().getCurrentTask().getImageIndex();
 			byte[] data = bundle.getByteArray("Content");
 			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-			mQuestionMgr.AddQuestionImage(id, imageIndex, bmp);
+			mQuestionMgr.addQuestionImage(id, imageIndex, bmp);
 
 			DownloadManager.getInstance().finishCurrentTask();
 			break;
@@ -522,12 +476,12 @@ public class PaperActivity  extends ComunicableActivity {
 	}
 	
 	public void ShowDoneInfo(int undoneCount){
-		int cnt = mQuestionMgr.GetQuestionCount();
+		int cnt = mQuestionMgr.getQuestionCount();
 		((TextView)findViewById(R.id.txtAnswerInfo)).setText(cnt + "/" + (cnt - undoneCount));
 	}
 
 	public void ShowCorrectInfo(int correctCount){
-		int uncorrect = mQuestionMgr.GetQuestionCount() - correctCount;
+		int uncorrect = mQuestionMgr.getQuestionCount() - correctCount;
 		String info = String.format("<font color=\"#8ACE1A\">%s</font>/<font color=\"#ff0000\">%s</font>", correctCount, uncorrect);
 		((TextView)findViewById(R.id.txtAnswerInfo)).setText(Html.fromHtml(info));
 
@@ -535,15 +489,15 @@ public class PaperActivity  extends ComunicableActivity {
 		ChangeFilterButtonText(R.string.AllQuestions);
 	}	
 	 	
-	public void InitUncorrectList(ArrayList<String> correctList, 
-									ArrayList<String> uncorrectList){
+	public void InitUncorrectList(ArrayList<Integer> correctList, 
+									ArrayList<Integer> uncorrectList){
 		Answer aAnswer = null;
-    	for (String id : mQuestionMgr.GetIDs()){
-    		aAnswer = mAnswerMgr.GetAnswer(id);
-    		if (aAnswer != null && aAnswer.IsCorrect()){
-    			correctList.add(id);
-    		}else if (aAnswer != null && !aAnswer.IsCorrect()){
-    			uncorrectList.add(id);
+    	for (Integer index : mQuestionMgr.getIndexes()){
+    		aAnswer = mAnswerMgr.getAnswer(mQuestionMgr.getIdByIndex(index));
+    		if (aAnswer != null && aAnswer.isCorrect()){
+    			correctList.add(index);
+    		}else if (aAnswer != null && !aAnswer.isCorrect()){
+    			uncorrectList.add(index);
     		}
     	}
 	}

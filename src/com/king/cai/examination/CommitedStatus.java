@@ -47,7 +47,7 @@ public class CommitedStatus extends PaperStatus{
 	}
 
 	@Override
-	public void doGettingItemView(ItemViewHolder holder, String id, int fontsize){
-		holder.doGettingItemViews(id, fontsize, false);
+	public void doGettingItemView(ItemViewHolder holder, Integer index, int fontsize){
+		holder.doGettingItemViews(index, fontsize, false);
 	}	
 }

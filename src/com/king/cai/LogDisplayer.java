@@ -26,6 +26,6 @@ public class LogDisplayer extends ComunicableActivity {
 	}
 
 	@Override
-	protected void doServiceReady() {		
+	protected void onServiceReady() {		
 	}
 }

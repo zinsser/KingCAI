@@ -14,31 +14,31 @@ public class LogicAnswerInfo extends Answer{
 	}
 
 	@Override
-	public void AddAnswer(Parcel answers) {
+	public void addAnswer(Parcel answers) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Parcel GetAnswer() {
+	public Parcel getAnswer() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean IsAnswered() {
+	public boolean isAnswered() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean IsCorrect() {
+	public boolean isCorrect() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public Parcel GetRefAnswer() {
+	public Parcel getRefAnswer() {
 		// TODO Auto-generated method stub
 		return null;
 	}

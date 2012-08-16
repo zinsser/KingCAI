@@ -24,19 +24,19 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
 	}
 
 	@Override
-    public void doGettingItemViews(String id, int fontSize, onSubViewClickListener listener){
-    	super.doGettingItemViews(id, fontSize, listener);
+    public void doGettingItemViews(Integer index, int fontSize, onSubViewClickListener listener){
+    	super.doGettingItemViews(index, fontSize, listener);
     	doLayoutSubViews();
 
     	PanelClickListener panelListener = new PanelClickListener(listener);
 
-     	setRadioButtonInfo(mRadioButtonA, id, panelListener);
-     	setRadioButtonInfo(mRadioButtonB, id, panelListener);
-     	setRadioButtonInfo(mRadioButtonC, id, panelListener);
-     	setRadioButtonInfo(mRadioButtonD, id, panelListener);
-     	Answer answer = mHostActivity.getAnswerManager().GetAnswer(id);
+     	setRadioButtonInfo(mRadioButtonA, index, panelListener);
+     	setRadioButtonInfo(mRadioButtonB, index, panelListener);
+     	setRadioButtonInfo(mRadioButtonC, index, panelListener);
+     	setRadioButtonInfo(mRadioButtonD, index, panelListener);
+     	Answer answer = mHostActivity.getAnswerManager().getAnswer(mQuestionMgr.getIdByIndex(index));
      	if (answer != null){
-	    	Parcel parcelValues  = answer.GetAnswer(); 
+	    	Parcel parcelValues  = answer.getAnswer(); 
 	    	if (parcelValues != null){
 	        	boolean[] bValue = parcelValues.createBooleanArray();
 	        	assert bValue.length == 4;
@@ -47,15 +47,10 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
 	    	}
 		}     	
 	}
-
-	private void setRadioButtonInfo(RadioButton btn, String id, PanelClickListener listener){
-		btn.setTag(id);
-		btn.setOnClickListener(listener);
-	}
 	
 	@Override
-    public void doGettingItemViews(String id, int fontSize, boolean bShowRefAnswer){
-     	super.doGettingItemViews(id, fontSize, bShowRefAnswer);
+    public void doGettingItemViews(Integer index, int fontSize, boolean bShowRefAnswer){
+     	super.doGettingItemViews(index, fontSize, bShowRefAnswer);
      	doLayoutSubViews();
      	
      	mRadioButtonA.setEnabled(false);
@@ -64,9 +59,9 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
      	mRadioButtonD.setEnabled(false);
      	
      	AnswerManager answerMgr = mHostActivity.getAnswerManager();
-     	Answer answer = answerMgr.GetAnswer(id);
+     	Answer answer = answerMgr.getAnswer(mQuestionMgr.getIdByIndex(index));
      	if (answer != null){
-	    	Parcel parcelValues  = answer.GetAnswer(); 
+	    	Parcel parcelValues  = answer.getAnswer(); 
 	    	if (parcelValues != null){
 	        	boolean[] bValue = parcelValues.createBooleanArray();
 	        	assert bValue.length == 4;
@@ -88,8 +83,8 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
     	setRadioButtonInfo(mRadioButtonC, colorNormal, colorBackground);
     	setRadioButtonInfo(mRadioButtonD, colorNormal, colorBackground);
    		
-    	if (answer!= null && !answer.IsCorrect()){
-    		Parcel parcelValues = answer.GetRefAnswer();
+    	if (answer!= null && !answer.isCorrect()){
+    		Parcel parcelValues = answer.getRefAnswer();
         	if (parcelValues != null){
 	        	boolean[] bValue = parcelValues.createBooleanArray();
 	        	assert bValue.length == 4;
@@ -111,6 +106,11 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
         	}
     	}
     }	
+
+	private void setRadioButtonInfo(RadioButton btn, Integer index, PanelClickListener listener){
+		btn.setTag(index);
+		btn.setOnClickListener(listener);
+	}
 	
 	private void setRadioButtonInfo(RadioButton btn, int fontColor, int bgColor){
 		btn.setTextColor(fontColor);
@@ -136,9 +136,9 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
 					|| v.getId() == R.id.radioBtnC
 					|| v.getId() == R.id.radioBtnD){
 				RadioButton radioBtn = (RadioButton)v;
-				String qId = (String)radioBtn.getTag();
-				Answer answer = mHostActivity.getAnswerManager().GetAnswer(qId);
-				boolean[] bRadioValue = answer.GetAnswer().createBooleanArray();
+				Integer index = (Integer)radioBtn.getTag();
+				Answer answer = mHostActivity.getAnswerManager().getAnswer(mQuestionMgr.getIdByIndex(index));
+				boolean[] bRadioValue = answer.getAnswer().createBooleanArray();
 				assert bRadioValue.length == 4;
 				boolean bChecked = false;
 				if (v.getId() == R.id.radioBtnA){
@@ -158,9 +158,9 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
 				
 				Parcel answers = Parcel.obtain();
 				answers.writeBooleanArray(bRadioValue);
-				answer.AddAnswer(answers);
+				answer.addAnswer(answers);
 				
-				mSubViewListener.onViewClick(qId, answer);					
+				mSubViewListener.onViewClick(index, answer);					
 			}
 		}
 	};    

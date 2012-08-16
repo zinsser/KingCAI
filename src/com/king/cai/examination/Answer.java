@@ -9,13 +9,13 @@ public abstract class Answer {
 	protected Answer(int type){
 		mType = type;
 	}
-	public int QuestionType(){
+	public int getQuestionType(){
 		return mType;
 	}
 	public abstract String toString();
-	public abstract void AddAnswer(Parcel values);	
-	public abstract Parcel GetAnswer();
-	public abstract Parcel GetRefAnswer();		
-	public abstract boolean IsAnswered();
-	public abstract boolean IsCorrect();
+	public abstract void addAnswer(Parcel values);	
+	public abstract Parcel getAnswer();
+	public abstract Parcel getRefAnswer();
+	public abstract boolean isAnswered();
+	public abstract boolean isCorrect();
 }

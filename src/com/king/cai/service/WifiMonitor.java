@@ -20,6 +20,7 @@ import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.format.Formatter;
 import android.util.Log;
 import java.util.HashMap;
 
@@ -210,6 +211,7 @@ public class WifiMonitor {
     	if (mWifiService != null){
         	DhcpInfo dhcpInfo = mWifiService.getDhcpInfo();
         	if (dhcpInfo != null){
+        		//Formatter.formatIpAddress(dhcpInfo.ipAddress);
 	        	ipAddr = ((dhcpInfo.ipAddress) & 0xff) + "."
 	        			+ ((dhcpInfo.ipAddress >> 8) & 0xff) + "."
 	        			+ ((dhcpInfo.ipAddress >> 16) & 0xff) + "."

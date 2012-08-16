@@ -1,11 +1,6 @@
 package com.king.cai;
 
-import java.util.ArrayList;
-
-
 import com.king.cai.R;
-import com.king.cai.service.SSIDInfo;
-import com.king.cai.service.WifiMonitor;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperActivity;
 
@@ -376,7 +371,7 @@ public class LoginActivity  extends ComunicableActivity  {
     }
 
 	@Override
-	protected void doServiceReady() {
+	protected void onServiceReady() {
 		mButtonLogin.setEnabled(true);
 		Bundle bundle = new Bundle();
 		mServiceChannel.startScanSSID(bundle);

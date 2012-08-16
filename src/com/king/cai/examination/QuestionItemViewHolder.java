@@ -38,16 +38,16 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	}
 	
 	@Override
-    public void doGettingItemViews(String id, int fontSize, onSubViewClickListener listener){
-    	super.doGettingItemViews(id, fontSize, listener);
-    	doLayoutSubViews(id);
+    public void doGettingItemViews(Integer index, int fontSize, onSubViewClickListener listener){
+    	super.doGettingItemViews(index, fontSize, listener);
+    	doLayoutSubViews(index);
     	
     	mMarkIcon = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.mark_icon);
     	mUnMarkIcon  = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.unmark_icon);
     	
-    	mMark.setTag(id);
+    	mMark.setTag(index);
     	
-		Answer answer = mHostActivity.getAnswerManager().GetAnswer(id);
+		Answer answer = mHostActivity.getAnswerManager().getAnswer(mQuestionMgr.getIdByIndex(index));
 		mMark.setImageBitmap(mUnMarkIcon);
 		if (answer != null && answer.mIsMark){
 			mMark.setImageBitmap(mMarkIcon);	
@@ -57,9 +57,9 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	}
 
 	@Override
-    public void doGettingItemViews(String id, int fontSize, boolean bShowRefAnswer){
-    	super.doGettingItemViews(id, fontSize, bShowRefAnswer);
-    	doLayoutSubViews(id);
+    public void doGettingItemViews(Integer index, int fontSize, boolean bShowRefAnswer){
+    	super.doGettingItemViews(index, fontSize, bShowRefAnswer);
+    	doLayoutSubViews(index);
     	
 		AnswerManager answerMgr = mHostActivity.getAnswerManager();
 		
@@ -74,16 +74,16 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	    	mUnMarkIcon  = BitmapFactory.decodeResource(mHostActivity.getResources(), R.drawable.err_result);
 	    	
 	    	mMark.setEnabled(false);
-	    	Answer answer = answerMgr.GetAnswer(id);
-	    	if (answer != null && answer.IsCorrect()){
+	    	Answer answer = answerMgr.getAnswer(mQuestionMgr.getIdByIndex(index));
+	    	if (answer != null && answer.isCorrect()){
 		    	mMark.setImageBitmap(mMarkIcon);
-		    }else if (answer != null && !answer.IsCorrect()){
+		    }else if (answer != null && !answer.isCorrect()){
 		        mMark.setImageBitmap(mUnMarkIcon);
 		    }
     	}
     }
 
-	private void doLayoutSubViews(String id){
+	private void doLayoutSubViews(Integer index){
     	if (mLinearLayoutAnswerArea != null){
     		mLinearLayoutAnswerArea.setVisibility(View.VISIBLE);
     	}
@@ -100,7 +100,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
     		mRatingBarHardness.setVisibility(View.GONE);
     	}
     	
-	    QuestionInfo question = mQuestionMgr.GetQuestionItem(id);
+	    QuestionInfo question = mQuestionMgr.getQuestionItem(index);
 	    if (question.hasImage()){
 	    	mLinearLayoutImage.setVisibility(View.VISIBLE);
 	    	mImageView_1.setVisibility(View.VISIBLE);
@@ -123,11 +123,11 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 		public void onClick(View v) {
 			if (v.getId() == R.id.imageViewMarker){
 				ImageView imgMask = (ImageView)v;
-				String qId = (String)imgMask.getTag();
-				Answer answer = mHostActivity.getAnswerManager().GetAnswer(qId);
+				Integer index = (Integer)imgMask.getTag();
+				Answer answer = mHostActivity.getAnswerManager().getAnswer(mQuestionMgr.getIdByIndex(index));
 				answer.mIsMark = !answer.mIsMark;
 				imgMask.setImageBitmap(answer.mIsMark ? mMarkIcon : mUnMarkIcon);
-				mSubViewListener.onViewClick(qId, answer);
+				mSubViewListener.onViewClick(index, answer);
 			}
 		}
 	}

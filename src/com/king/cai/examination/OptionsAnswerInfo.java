@@ -8,14 +8,9 @@ public class OptionsAnswerInfo extends Answer{
 	private String mRefAnswer;
 	
 	public OptionsAnswerInfo(String refAnswer) {
-		super(mType);
-		mRefAnswer = refAnswer;
-
-		for (int i = 0; i < mAnswers.length; ++i){
-			mAnswers[i] = false;
-		}
+		this(refAnswer, null);
 	}
-
+/*
 	public OptionsAnswerInfo(boolean[] answers) {
 		super(mType);
 		assert answers.length == 4;
@@ -23,12 +18,17 @@ public class OptionsAnswerInfo extends Answer{
 			mAnswers[i] = answers[i]; 
 		}
 	}
-
+*/
 	public OptionsAnswerInfo(String refAnswer, String answer) {
 		super(mType);
 		mRefAnswer = refAnswer;
-		
-		String2BooleanArray(answer, mAnswers);
+		if (answer != null){
+			string2BooleanArray(answer, mAnswers);
+		}else{
+			for (int i = 0; i < mAnswers.length; ++i){
+				mAnswers[i] = false;
+			}			
+		}
 	}	
 	
 	@Override
@@ -42,13 +42,13 @@ public class OptionsAnswerInfo extends Answer{
 	}
 
 	@Override
-	public void AddAnswer(Parcel answers) {
+	public void addAnswer(Parcel answers) {
 		answers.setDataPosition(0);
 		answers.readBooleanArray(mAnswers);
 	}
 
 	@Override
-	public Parcel GetAnswer() {
+	public Parcel getAnswer() {
 		Parcel ret = Parcel.obtain();
 		ret.writeBooleanArray(mAnswers);
 		ret.setDataPosition(0);
@@ -56,27 +56,27 @@ public class OptionsAnswerInfo extends Answer{
 	}
 
 	@Override
-	public Parcel GetRefAnswer() {
+	public Parcel getRefAnswer() {
 		Parcel ret = Parcel.obtain();
 		boolean[] refAnswers =  new boolean[4];
-		String2BooleanArray(mRefAnswer, refAnswers);
+		string2BooleanArray(mRefAnswer, refAnswers);
 		ret.writeBooleanArray(refAnswers);
 		ret.setDataPosition(0);
 		return ret;
 	}	
 	
 	@Override
-	public boolean IsAnswered() {
+	public boolean isAnswered() {
 		return mAnswers[0] || mAnswers[1] || mAnswers[2] || mAnswers[3];
 	}
 
 	@Override
-	public boolean IsCorrect() {
+	public boolean isCorrect() {
 		String temp = toString();
 		return temp.equals(mRefAnswer);
 	}
 
-	private void String2BooleanArray(String strAnswer, boolean[] boolAnswers){
+	private void string2BooleanArray(String strAnswer, boolean[] boolAnswers){
 		for (int i = 0; i < boolAnswers.length; ++i){
 			boolAnswers[i] = false;
 		}

@@ -85,7 +85,7 @@ public abstract class ComunicableActivity extends Activity{
     }    
     
 	protected abstract void doHandleInnerMessage(Message innerMessage);
-	private Handler mInnerMessageHandler = new Handler(){
+	protected Handler mInnerMessageHandler = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
 			switch (msg.what){
@@ -164,13 +164,13 @@ public abstract class ComunicableActivity extends Activity{
     	}    	
     }
 	
-	protected abstract void doServiceReady();	
+	protected abstract void onServiceReady();	
     protected myServiceChannel mServiceChannel = new myServiceChannel();
     protected class myServiceChannel implements ServiceConnection{     
     	public KingService mKingService = null;
     	public void onServiceConnected(ComponentName name, IBinder service) { 
         	mKingService = ((KingService.MyBinder)service).getService();
-        	doServiceReady();
+        	onServiceReady();
         }
         
         public void onServiceDisconnected(ComponentName name) {  
@@ -219,15 +219,9 @@ public abstract class ComunicableActivity extends Activity{
         	}
         }
         
-        public void addDownloadTask(String qid, String imageIndex){
+        public void updateDownloadInfo(int size){
         	if (mKingService != null){
-        		mKingService.addDownloadTask(qid, imageIndex);
-        	}
-        }
-        
-        public void updateDownloadInfo(String qid, String imageIndex, int size){
-        	if (mKingService != null){
-        		mKingService.updateDownloadSize(qid, imageIndex, size);
+        		mKingService.updateDownloadSize(size);
         	}
         }
         

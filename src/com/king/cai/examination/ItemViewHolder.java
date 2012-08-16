@@ -15,7 +15,7 @@ public class ItemViewHolder{
    	protected QuestionManager mQuestionMgr = null;
    	
    	public interface onSubViewClickListener{
-   		public abstract void onViewClick(String questionID, final Answer answer);
+   		public abstract void onViewClick(Integer index, final Answer answer);
    	}
    	
     public ItemViewHolder(PaperActivity hostActivity, View rawView,
@@ -38,24 +38,24 @@ public class ItemViewHolder{
     	}
 	}
 	
-    private void showTextDetail(String id, int fontSize){
+    private void showTextDetail(Integer index, int fontSize){
     	if (mTextDetail != null){
 	    	mTextDetail.setTextSize(fontSize);
-	    	mTextDetail.setText(mQuestionMgr.GetQuestionItem(id).mDetail);
+	    	mTextDetail.setText(mQuestionMgr.getQuestionItem(index).mDetail);
     	}
     }
     
-    public void doGettingItemViews(String id, int fontSize, onSubViewClickListener listener){
+    public void doGettingItemViews(Integer index, int fontSize, onSubViewClickListener listener){
     	doLayoutSubViews();
-    	showTextDetail(id, fontSize);
+    	showTextDetail(index, fontSize);
     }  
     
-    public void doGettingItemViews(String id, int fontSize, boolean bShowRefAnswer){
+    public void doGettingItemViews(Integer index, int fontSize, boolean bShowRefAnswer){
     	doLayoutSubViews();
-    	showTextDetail(id, fontSize);
+    	showTextDetail(index, fontSize);
     }
     
-    public void doGettingItemViews(String id, int fontSize){
+    public void doGettingItemViews(Integer index, int fontSize){
     	doLayoutSubViews();
     	if (mTextDetail != null){
     		mTextDetail.setVisibility(View.GONE);

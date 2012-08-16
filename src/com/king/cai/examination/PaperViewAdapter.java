@@ -15,41 +15,40 @@ public class PaperViewAdapter extends BaseAdapter {
 	private PaperActivity mHostActivity = null;
     private LayoutInflater mInflater;
     private int mFontSize = 22;
-    private ArrayList<String> mIDs = new ArrayList<String>();
+    private ArrayList<Integer> mIndexes = new ArrayList<Integer>();
     private QuestionManager mQuestionMgr = null;
     
     private QuestionListListener mQuestionListener = new QuestionListListener();
 
     public class QuestionListListener implements QuestionManager.QuestionListener{
     	@SuppressWarnings("unchecked")
-    	public void OnQuestionArrayChanged(ArrayList<String> ids) {
-    		if (ids != null){
-    			mIDs.clear();
-    			mIDs = (ArrayList<String>) ids.clone();
-    	        Collections.sort(mIDs);
+    	public void onQuestionArrayChanged(ArrayList<Integer> indexes) {
+    		if (indexes != null){
+    			mIndexes.clear();
+    			mIndexes = (ArrayList<Integer>) indexes.clone();
+    	        Collections.sort(mIndexes);
     	        
     	        notifyDataSetChanged();
     		}
     	}
 
 
-    	public void OnAddQuestion(String id) {
-    		mIDs.add(id);
-            Collections.sort(mIDs);		
+    	public void onAddQuestion(Integer id) {
+    		mIndexes.add(id);
+            Collections.sort(mIndexes);
+	        notifyDataSetChanged();
+    	}
+
+
+    	public void onClearQuestion() {
+    		mIndexes.clear();
+            Collections.sort(mIndexes);		
 	        notifyDataSetChanged();            
     	}
 
 
-    	public void OnClearQuestion() {
-    		mIDs.clear();
-            Collections.sort(mIDs);		
-	        notifyDataSetChanged();            
-    	}
-
-
-		public void OnImageReady(String qid, String imageIndex, Bitmap bmp) {
-			// TODO Auto-generated method stub
-			
+		public void onImageReady(String qid, String imageIndex, Bitmap bmp) {
+			notifyDataSetChanged();
 		}
     }
 
@@ -61,28 +60,28 @@ public class PaperViewAdapter extends BaseAdapter {
 		mHostActivity = hostActivity;
         mInflater = LayoutInflater.from(mHostActivity);
         mQuestionMgr = questionMgr;
-		mQuestionMgr.AddListener(mQuestionListener);
+		mQuestionMgr.addListener(mQuestionListener);
     }
     
     @SuppressWarnings("unchecked")
-	public PaperViewAdapter CloneAdapter(ArrayList<String> ids){
+	public PaperViewAdapter CloneAdapter(ArrayList<Integer> indexes){
     	PaperViewAdapter retAdapter = new PaperViewAdapter();
 
         retAdapter.mHostActivity = this.mHostActivity;
     	retAdapter.mInflater = this.mInflater;
         retAdapter.mFontSize = this.mFontSize;
         retAdapter.mQuestionMgr = this.mQuestionMgr;
-        retAdapter.mQuestionMgr.AddListener(retAdapter.mQuestionListener);
+        retAdapter.mQuestionMgr.addListener(retAdapter.mQuestionListener);
         
-        retAdapter.mIDs = (ArrayList<String>) ids.clone();
-        Collections.sort(retAdapter.mIDs);
+        retAdapter.mIndexes = (ArrayList<Integer>) indexes.clone();
+        Collections.sort(retAdapter.mIndexes);
 
         return retAdapter;
     }
     
     @Override
     public int getItemViewType(int position) {
-        return mQuestionMgr.GetQuestionItem(mIDs.get(position)).GetType();
+        return mQuestionMgr.getQuestionItem(mIndexes.get(position)).getType();
     }
 
     @Override
@@ -92,19 +91,19 @@ public class PaperViewAdapter extends BaseAdapter {
     
     
     public int getCount() {
-        return mIDs.size();
+        return mIndexes.size();
     }
     
 
     public Object getItem(int position) {
-    	Integer pos = position;
-    	for (int i = 0; i < mIDs.size(); ++i){
-    		if (mIDs.get(i).equals(position)){
+/*    	Integer pos = position;
+    	for (int i = 0; i < mIndexes.size(); ++i){
+    		if (mIndexes.get(i).equals(position)){
     			pos = i;
     			break;
     		}
-    	}
-        return pos;
+    	}*/
+        return mIndexes.get(position);
     }
     
 
@@ -118,11 +117,11 @@ public class PaperViewAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.filters, null);
-        	if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsOption()){
+        	if (mQuestionMgr.getQuestionItem(mIndexes.get(position)).isOption()){
         		holder = new OptionItemViewHolder(mHostActivity, convertView, mQuestionMgr);
-        	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsBlank()){
+        	}else if (mQuestionMgr.getQuestionItem(mIndexes.get(position)).isBlank()){
         		holder = new BlankItemViewHolder(mHostActivity, convertView, mQuestionMgr);
-        	}else if (mQuestionMgr.GetQuestionItem(mIDs.get(position)).IsLogic()){
+        	}else if (mQuestionMgr.getQuestionItem(mIndexes.get(position)).isLogic()){
         		
         	}else{
         		holder = new ItemViewHolder(mHostActivity, convertView, mQuestionMgr);
@@ -133,7 +132,7 @@ public class PaperViewAdapter extends BaseAdapter {
             holder = (ItemViewHolder) convertView.getTag();
         }
         
-        mHostActivity.getPaperStatus().doGettingItemView(holder, mIDs.get(position), mFontSize);
+        mHostActivity.getPaperStatus().doGettingItemView(holder, mIndexes.get(position), mFontSize);
 
         return convertView;
     }

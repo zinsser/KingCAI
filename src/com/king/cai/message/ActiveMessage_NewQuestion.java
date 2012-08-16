@@ -52,7 +52,7 @@ public class ActiveMessage_NewQuestion  extends ActiveMessage{
 				String[] questions = subpack.split("@");
 
 				for (String question : questions){
-					//[id]xx[answer]xxx[type]x[image]1/0[content]xxx
+					//[id]xx[answer]xxx[type]x[image]xx[content]xxx
 					if (question.contains("[type]") && question.contains("[content]")
 							&& question.contains("[answer]") 
 							&& question.contains("[id]") && question.contains("[image]")){
