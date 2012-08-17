@@ -14,15 +14,13 @@ public class QuestionManager {
 	private final static String s_PaperTag_Question = "question";
 	private final static String s_PaperTag_Type = "type";	
 	private final static String s_PaperTag_Reference = "reference";
-	private final static String s_PaperTag_Answer = "answer";
 	private final static String s_PaperTag_ImageCount = "imagecount";
 	
 	private final static int s_PaperIdx_ID = 0;
 	private final static int s_PaperIdx_Question = 1;
 	private final static int s_PaperIdx_Type = 2;
 	private final static int s_PaperIdx_Reference = 3;
-	private final static int s_PaperIdx_Answer = 4;
-	private final static int s_PaperIdx_Image = 5;
+	private final static int s_PaperIdx_Image = 4;
 	
 	private HashMap<Integer, QuestionInfo> mQuestions = new HashMap<Integer, QuestionInfo>();
 	private ArrayList<QuestionListener> mListeners = new ArrayList<QuestionListener>();
@@ -65,8 +63,9 @@ public class QuestionManager {
 			String detail = c.getString(s_PaperIdx_Question);
 			int type = c.getInt(s_PaperIdx_Type);
 			String reference = c.getString(s_PaperIdx_Reference);
-			String answer = c.getString(s_PaperIdx_Answer);
-			addQuestion(id, type, reference, detail, 0);
+			int imageCount = c.getInt(s_PaperIdx_Image);
+
+			addQuestion(id, type, reference, detail, imageCount);
 			c.moveToNext();
 		}
 		c.close();
@@ -75,7 +74,6 @@ public class QuestionManager {
 	
 	public void exportQuestionsToDB(Context context, AnswerManager answerMgr){
 		ArrayList<String> ids = getIDs();
-		Answer answer = null;
 		ContentValues values = new ContentValues();  		
 		PaperDBHelper helper = new PaperDBHelper(context);
 		for (String id : ids){
@@ -83,14 +81,11 @@ public class QuestionManager {
 			values.put(s_PaperTag_Question, getQuestionItem(id).mDetail);  
 			values.put(s_PaperTag_Type, getQuestionItem(id).mType); 
 			values.put(s_PaperTag_Reference, getQuestionItem(id).mReference);
-
-			if ((answer = answerMgr.getAnswer(id)) != null){
-				values.put(s_PaperTag_Answer, answer.toString());
-			}
+			values.put(s_PaperTag_ImageCount, getQuestionItem(id).mImageCount);
 			
-			helper.Insert(values, id);			
+			helper.Insert(values, id);
 		}
-		helper.close();		
+		helper.close();
 	}
 	
 	public void notifyQuestionArrayChanged(){
@@ -162,7 +157,7 @@ public class QuestionManager {
 		
 	public QuestionInfo getQuestionItem(Integer index){
 		QuestionInfo question = null;
-		if (index != null && index > 0 && index < mQuestions.size()){
+		if (index != null && index >= 0 && index < mQuestions.size()){
 			question = mQuestions.get(index);
 		}
 		return question;

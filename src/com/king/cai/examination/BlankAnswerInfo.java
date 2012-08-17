@@ -57,7 +57,7 @@ public class BlankAnswerInfo extends Answer{
 		for (int i = 0; i < cnt; ++i){
 			Integer subid = answers.readInt();
 			String answer = answers.readString();
-			mAnswerString.put(subid, answer);			
+			mAnswerString.put(subid, answer);
 		}
 	}
 
@@ -92,7 +92,16 @@ public class BlankAnswerInfo extends Answer{
 	
 	@Override
 	public boolean isAnswered() {
-		return mAnswerString.size() != 0;
+		boolean bFlag = mAnswerString.size() > 0;
+		boolean bRet = false;
+		for (Integer subIndex : mAnswerString.keySet()){
+			bFlag = bFlag && mAnswerString.get(subIndex).length() == 0;
+			if (!bFlag) {
+				bRet = !bFlag;
+				break;
+			}
+		}
+		return bRet;
 	}
 
 	@Override

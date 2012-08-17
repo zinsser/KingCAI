@@ -28,6 +28,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	
 	@Override
 	public void EnterStatus() {
+		mListFirst.clear();
     	FetchUndoneList(mListFirst);
 		mStatusOwner.ShowDoneInfo(mListFirst.size());
 		startTimeTicker(true);
@@ -39,6 +40,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	}
 
 	public void onQuestionArrayChanged(ArrayList<Integer> ids) {
+		mListFirst.clear();
 		FetchUndoneList(mListFirst);
 		mStatusOwner.ShowDoneInfo(mListFirst.size());
 	}
@@ -158,6 +160,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	}
 
 	private void FetchUndoneList(ArrayList<Integer> undonelist){
+		undonelist.clear();
     	for (Integer index : mQuestionMgr.getIndexes()){
     		if (!mQuestionMgr.getQuestionItem(index).isPaperTitle()){
     			mListFirst.add(index);
