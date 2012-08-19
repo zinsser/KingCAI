@@ -10,6 +10,7 @@ import com.king.cai.KingCAIConfig;
 import com.king.cai.examination.DownloadManager;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 
 public class TCPReceiveRunner extends FirableRunner{

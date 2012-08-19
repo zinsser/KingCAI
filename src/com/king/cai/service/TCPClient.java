@@ -13,8 +13,7 @@ import com.king.cai.KingCAIConfig;
 import com.king.cai.service.TCPSenderThread;
 
 
-public class TCPClient {
-	private Message mInnerMessage = null;	
+public class TCPClient {	
 	private String mServerAddr = null;
 	private Handler mInnerHandler = null;
 	private ClientObject mTextClient = null;

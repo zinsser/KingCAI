@@ -24,7 +24,7 @@ public class TCPServerRunner  extends FirableRunner{
 				mTcpSocket.setReceiveBufferSize(8192);
 				mTcpSocket.setReuseAddress(true);
 			}catch (IOException e){
-				KingService.addLog(e.toString());				
+				KingService.getLogService().addLog(e.toString());				
 				e.printStackTrace();
 			}
 		}
@@ -46,7 +46,8 @@ public class TCPServerRunner  extends FirableRunner{
 		    while (in.read(mReceiveBuf.array()) > 0){
 		    	String msg = new String(mReceiveBuf.array(), KingCAIConfig.mCharterSet);
 
-		    	fireMessage(contructTextBundle(socket.getInetAddress().getHostAddress(), ByteBuffer.wrap(msg.getBytes())));
+		    	fireMessage(contructTextBundle(socket.getInetAddress().getHostAddress(), 
+		    			ByteBuffer.wrap(msg.getBytes()), ByteBuffer.wrap(msg.getBytes()).capacity()));
 			    mReceiveBuf.clear();
 		    } 
 		    in.close();
@@ -72,7 +73,7 @@ public class TCPServerRunner  extends FirableRunner{
 				mTcpSocket = null;
 			}
 		} catch (IOException e) {
-			KingService.addLog(e.toString());			
+			KingService.getLogService().addLog(e.toString());			
 			e.printStackTrace();
 		}  
 		
