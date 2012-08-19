@@ -20,17 +20,23 @@ import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
 import android.os.Bundle;
 import android.os.Message;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.format.Formatter;
 import android.util.Log;
 import java.util.HashMap;
 
 public class WifiMonitor {
+	private final static int WIFI_EVENT_Connect_Info = 0;
 	private final static int WIFI_STATUS_SCANNING = 10;
 	private final static int WIFI_STATUS_RESULT_RETRIVED = 11;	
 	private final static int WIFI_STATUS_SCANED = 12;	
 	
-	private WifiStateListener mWifiStateListener = null;
+//	private WifiStateListener mWifiStateListener = null;
+	private WifiInfo mWifiInfo = null;// Wifi–≈œ¢
 	private List<ScanResult> mScanSSIDResults = null;
+	private List<WifiConfiguration> mWifiConfigList = null;
+	
 	private HashMap<String, SSIDInfo> mScanResults = new HashMap<String, SSIDInfo>(); 
 	private WifiManager mWifiService = null;
 	private int mState = WifiManager.WIFI_STATE_UNKNOWN;
@@ -38,23 +44,34 @@ public class WifiMonitor {
     public BroadcastReceiver mReceiver = new WifiStateReceiver();
     private ConnectivityManager mConnManager;
     private Message mInnerMessage = null;
-
+    
     public interface WifiStateListener{
 		public void  onScanResultChanged(final ArrayList<SSIDInfo> serverInfos);
 		public void  onServerInfoChanged(final String wifiInfo);
 	}
 	
 	public WifiMonitor(Context ctx, WifiStateListener listener){
-		mWifiStateListener = listener;
+	//	mWifiStateListener = listener;
 		mWifiService = (WifiManager)ctx.getSystemService(Context.WIFI_SERVICE);
-		mConnManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);		
+		mConnManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (mWifiService != null){
+			mWifiInfo = mWifiService.getConnectionInfo();
+		}
 	}
 
 	public WifiMonitor(Context ctx, Message innerMessage){
-		mWifiStateListener = null;
 		mInnerMessage = innerMessage;
 		mWifiService = (WifiManager)ctx.getSystemService(Context.WIFI_SERVICE);
-		mConnManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);		
+		mConnManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (mWifiService != null){
+			mWifiInfo = mWifiService.getConnectionInfo();
+			Bundle bundle = new Bundle();
+			bundle.putInt("SubEvent", WIFI_EVENT_Connect_Info);
+			bundle.putString("SSID", mWifiInfo.getSSID());
+			bundle.putString("IP", Formatter.formatIpAddress(mWifiInfo.getIpAddress()));
+			mInnerMessage.setData(bundle);
+			mInnerMessage.sendToTarget();
+		}
 	}	
 	
 	public void registIntentFilter(Context ctx){
@@ -69,14 +86,26 @@ public class WifiMonitor {
     	removeWifiConfiguration();
     	ctx.unregisterReceiver(mReceiver);		
 	}
+
+	public void startScanSSID(){
+	}	
+
+	private boolean checkNetworkInfo()
+	{
+		State wifiState = mConnManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+		return wifiState == NetworkInfo.State.CONNECTED;
+	}	
 	
-    public void startScanSSID(Bundle bundle){
+    public void startScanSSID(Message msg){
 		if (!mWifiService.isWifiEnabled() 
 				&& mWifiService.getWifiState() != WifiManager.WIFI_STATE_ENABLING){
 			mWifiService.setWifiEnabled(true);
-		}else if (mState != WIFI_STATUS_SCANNING){
+		}else if (mWifiService.isWifiEnabled() 
+				&& mWifiService.getWifiState() == WifiManager.WIFI_STATE_ENABLED){
 			mWifiService.startScan();
 			mState = WIFI_STATUS_SCANNING;
+		}else{
+			msg.sendToTarget();
 		}
     }
 
@@ -115,11 +144,12 @@ public class WifiMonitor {
 
     private void retriveConnectionInfo(){
     	WifiInfo info = mWifiService.getConnectionInfo();
-    	String IpInfo = KingCAIUtils.IPIntToString(info.getIpAddress());
+    	String IpInfo = Formatter.formatIpAddress(info.getIpAddress());
     	Log.d("WifiStateManager", IpInfo);
-    	if (mWifiStateListener != null){
-        	mWifiStateListener.onServerInfoChanged(IpInfo);    		
-    	}
+    	
+//    	if (mWifiStateListener != null){
+//        	mWifiStateListener.onServerInfoChanged(IpInfo);    		
+//    	}
     }
      
     private void retriveScanResult(){
@@ -130,7 +160,7 @@ public class WifiMonitor {
 				mScanResults.put(result.SSID, new SSIDInfo(result));
 			}
 			
-			mWifiStateListener.onScanResultChanged(null);
+//			mWifiStateListener.onScanResultChanged(null);
 			mState = WIFI_STATUS_SCANED;
 		}
     }
@@ -144,7 +174,20 @@ public class WifiMonitor {
 			if (mState != WIFI_STATUS_RESULT_RETRIVED){
 				mScanSSIDResults.clear();
 				mScanSSIDResults = mWifiService.getScanResults();
+				Bundle bundle = new Bundle();
+				bundle.putInt("Size", mScanSSIDResults.size());
+				int i = 0;
+				for (ScanResult sr: mScanSSIDResults){
+					Parcel p = Parcel.obtain();
+					sr.writeToParcel(p, 0);
+				//	bundle.putParcelable(String.valueOf(i), p);
+					++i;
+				}
+				
 //				retriveScanResult();
+				ScanResult sr = mScanSSIDResults.get(0);
+				
+	//			sr.writeToParcel(dest, flags);
 				mState = WIFI_STATUS_RESULT_RETRIVED;
 			}
     	}   	
@@ -156,7 +199,7 @@ public class WifiMonitor {
 										WifiManager.WIFI_STATE_UNKNOWN);
 			if (wifiState == WifiManager.WIFI_STATE_ENABLED 
 					&& mState != WIFI_STATUS_SCANNING){
-				startScanSSID(new Bundle());
+				startScanSSID();
 			}
     	}
     };

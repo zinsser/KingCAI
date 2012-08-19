@@ -51,8 +51,7 @@ public class UDPServerRunner extends FirableRunner{
 				String rawmsg = new String(mDatagramPacket.getData(), mDatagramPacket.getOffset(), 
 						mDatagramPacket.getLength(), KingCAIConfig.mCharterSet);
 				
-				fireMessage(contructTextBundle(peerAddr, ByteBuffer.wrap(rawmsg.trim().getBytes()),
-									ByteBuffer.wrap(rawmsg.trim().getBytes()).capacity()));
+				fireMessage(contructTextBundle(peerAddr, ByteBuffer.wrap(rawmsg.trim().getBytes())));
 			}
 		}catch(IOException e) {
 			KingService.getLogService().addLog(e.toString());			

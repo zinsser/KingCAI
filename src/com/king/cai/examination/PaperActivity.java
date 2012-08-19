@@ -37,8 +37,10 @@ import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperViewAdapter;
 import com.king.cai.message.RequestMessage_Answer;
 import com.king.cai.message.RequestMessage_Image;
+import com.king.cai.message.RequestMessage_ImageData;
 import com.king.cai.message.RequestMessage_Logout;
 import com.king.cai.message.RequestMessage_Paper;
+import com.king.cai.message.RequestMessage_PaperSize;
 
 public class PaperActivity  extends ComunicableActivity {
 	private final static int GROUP_NORMAL = 0;
@@ -61,7 +63,7 @@ public class PaperActivity  extends ComunicableActivity {
 	private ListView mListView = null;
 	private Button mBtnCommit = null;
 	private Button mBtnFilter = null;
-	
+	private TextView mTextViewStatus = null;
 	private boolean mOffline = false;
 	private String mStudentInfo = null;
 	private String mServerIP = null;
@@ -98,6 +100,8 @@ public class PaperActivity  extends ComunicableActivity {
         mBtnFilter.setOnClickListener(new FilterClickListener());
         
 		((EditText)findViewById(R.id.txtGoto)).setOnEditorActionListener(new SearchEditorListener());
+		
+		mTextViewStatus = (TextView)findViewById(R.id.textViewPaperStatus);
     }
 	
     @Override
@@ -132,16 +136,10 @@ public class PaperActivity  extends ComunicableActivity {
     	mPaperStatus = null;
    		super.onStop();
     }    
-    
-    @Override
-    public void onResume(){
-    	super.onResume();
 
-    }
-    
     @Override
 	protected void onServiceReady(){
-        mServiceChannel.sendMessage(new RequestMessage_Paper(), 0);		
+        mServiceChannel.sendMessage(new RequestMessage_PaperSize(), 0);		
 	}
     
     
@@ -330,7 +328,15 @@ public class PaperActivity  extends ComunicableActivity {
 		case KingCAIConfig.EVENT_PAPER_READY:{
 			Integer size = bundle.getInt("Size");
 			mServiceChannel.updatePaperSize(size);
-		}		
+			mServiceChannel.sendMessage(new RequestMessage_Paper(), 0);
+			mTextViewStatus.setText("Paper Size Ready"+size+"\n");
+			break;
+		}
+		case KingCAIConfig.EVENT_NEW_PAPER:{
+			String paper = bundle.getString("Paper");
+			mTextViewStatus.append("new Paper:"+paper+"\n");
+			break;
+		}
 		case KingCAIConfig.EVENT_NEW_QUESTION:{
 			String id = bundle.getString("ID");
 			Integer type = bundle.getInt("Type");
@@ -341,6 +347,7 @@ public class PaperActivity  extends ComunicableActivity {
 			for (int i = 1; i < imageCount + 1; ++i){
 				DownloadManager.getInstance().addTask(id, String.valueOf(i), mInnerMessageHandler);	
 			}
+			mServiceChannel.updatePaperSize(0);
 			break;
 		}
 		case KingCAIConfig.EVENT_REQUEST_IMAGE:{
@@ -348,10 +355,14 @@ public class PaperActivity  extends ComunicableActivity {
 			String imageIndex = bundle.getString("Index");
 			
 			mServiceChannel.sendMessage(new RequestMessage_Image(qid, imageIndex), 0);
+			break;
 		}		
 		case KingCAIConfig.EVENT_IMAGE_READY:{
+			String qid = bundle.getString("ID");
+			String imageIndex = bundle.getString("Index");
 			Integer size = bundle.getInt("Size");
 			mServiceChannel.updateDownloadInfo(size);
+			mServiceChannel.sendMessage(new RequestMessage_ImageData(qid, imageIndex), 0);
 			break;
 		}	
 		case KingCAIConfig.EVENT_NEW_IMAGE:{
@@ -364,6 +375,8 @@ public class PaperActivity  extends ComunicableActivity {
 			DownloadManager.getInstance().finishCurrentTask();
 			break;
 		}
+		default:
+			break;
 		}
  	}
 	

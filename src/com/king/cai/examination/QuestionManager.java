@@ -77,12 +77,18 @@ public class QuestionManager {
 		ContentValues values = new ContentValues();  		
 		PaperDBHelper helper = new PaperDBHelper(context);
 		for (String id : ids){
-			values.put(s_PaperTag_ID, id);  
-			values.put(s_PaperTag_Question, getQuestionItem(id).mDetail);  
-			values.put(s_PaperTag_Type, getQuestionItem(id).mType); 
-			values.put(s_PaperTag_Reference, getQuestionItem(id).mReference);
-			values.put(s_PaperTag_ImageCount, getQuestionItem(id).mImageCount);
-			
+			if (id != null){
+				values.put(s_PaperTag_ID, id);  
+				if (getQuestionItem(id).mDetail != null){
+					values.put(s_PaperTag_Question, getQuestionItem(id).mDetail);  
+	
+					values.put(s_PaperTag_Type, getQuestionItem(id).mType);
+					if (getQuestionItem(id).mReference != null){
+						values.put(s_PaperTag_Reference, getQuestionItem(id).mReference);
+					}
+					values.put(s_PaperTag_ImageCount, getQuestionItem(id).mImageCount);
+				}
+			}
 			helper.Insert(values, id);
 		}
 		helper.close();
@@ -146,7 +152,8 @@ public class QuestionManager {
 		QuestionInfo question = null;
 		if (id != null){
 			for (Integer index : mQuestions.keySet()){
-				if (mQuestions.get(index).getQuestionID().equals(id)){
+				if (mQuestions.get(index).getQuestionID() != null 
+						&& mQuestions.get(index).getQuestionID().equals(id)){
 					question = mQuestions.get(index);
 					break;
 				}

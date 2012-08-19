@@ -19,7 +19,7 @@ public class TCPReceiveRunner extends FirableRunner{
 	private int mPort = 0;
 	private String mPeerAddr = null;
 	private int mExpectSize = 0;
-	
+	private int mTotalReadSize = 0;
 	public TCPReceiveRunner(Handler innerHandler, 
 						InputStream is, String peer, int port, boolean bCache) {
 		super(innerHandler);
@@ -32,21 +32,26 @@ public class TCPReceiveRunner extends FirableRunner{
 	protected void doRun() {
 		try {
 			mReceiveBuf.clear();
-			int totalReadSize = 0;
 			int subReadSize = -1;
 			do {
-				subReadSize = mInputStream.read(mReceiveBuf.array(), totalReadSize, mExpectSize); 
-				if (subReadSize > 0){
-					totalReadSize += subReadSize;
+				if (mExpectSize != 0){
+					subReadSize = mInputStream.read(mReceiveBuf.array(), mTotalReadSize, mExpectSize); 
+				}else{
+					subReadSize = mInputStream.read(mReceiveBuf.array());
 				}
-			}while (subReadSize > 0 && mExpectSize > 0 && totalReadSize < mExpectSize);
+				if (subReadSize > 0){
+					mTotalReadSize += subReadSize;
+				}
+
+			}while (subReadSize > 0 && mExpectSize > 0 && mTotalReadSize < mExpectSize);
 
 			if (subReadSize > 0){
 				if (mPort != KingCAIConfig.mTextSendPort){
 					Bundle bundle = contructBinaryBundle(mReceiveBuf);
 					fireMessage(bundle);
 				}else{
-					Bundle bundle = contructTextBundle(mPeerAddr, mReceiveBuf, totalReadSize);
+					String str = new String(mReceiveBuf.array(), KingCAIConfig.mCharterSet);
+					Bundle bundle = contructTextBundle(mPeerAddr, mReceiveBuf);
 					fireMessage(bundle);
 				}
 			}
@@ -67,5 +72,6 @@ public class TCPReceiveRunner extends FirableRunner{
 	
 	public void updateExpectSize(Integer size){
 		mExpectSize = size;
+		mTotalReadSize = 0;
 	}
 }

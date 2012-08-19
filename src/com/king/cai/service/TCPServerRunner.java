@@ -47,7 +47,7 @@ public class TCPServerRunner  extends FirableRunner{
 		    	String msg = new String(mReceiveBuf.array(), KingCAIConfig.mCharterSet);
 
 		    	fireMessage(contructTextBundle(socket.getInetAddress().getHostAddress(), 
-		    			ByteBuffer.wrap(msg.getBytes()), ByteBuffer.wrap(msg.getBytes()).capacity()));
+		    			ByteBuffer.wrap(msg.getBytes())));
 			    mReceiveBuf.clear();
 		    } 
 		    in.close();

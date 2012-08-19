@@ -27,7 +27,8 @@ public class ActiveMessage_PaperResponse extends ActiveMessage{
 		//[PaperResponse]xxx
 		String subMessage = super.FromPack(mSocketMessage);
 		if (subMessage.length() > 0){
-			String strSize = subMessage.substring(s_MsgTag.length(), subMessage.length());
+			int lastPos = subMessage.indexOf('\\');
+			String strSize = subMessage.substring(0, lastPos);
 
 			Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_PAPER_READY);
 			Bundle bundle = new Bundle();

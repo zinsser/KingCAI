@@ -15,6 +15,7 @@ public class KingCAIConfig {
 	public final static int EVENT_CLEAN_PAPER = 10;
 	public final static int EVENT_IMAGE_READY = 11;
 	public final static int EVENT_REQUEST_IMAGE = 12;
+	public final static int EVENT_NEW_PAPER = 13;
 	
 	public final static String SOCKET_EVENT_ACTION = "com.king.cai.socket.event";
 	public static final String START_SERVICE_ACTION = "com.king.cai.service";

@@ -1,10 +1,8 @@
 package com.king.cai.service;
 
-import java.util.ArrayList;
 
 import com.king.cai.KingCAIConfig;
 import com.king.cai.message.RequestMessage;
-import com.king.cai.message.RequestMessage_Image;
 import com.king.cai.message.RequestMessage_Login;
 import com.king.cai.message.RequestMessage_QueryServer;
 import com.king.cai.service.UDPServerRunner;
@@ -21,7 +19,6 @@ public class KingService extends Service{
     private String mServerAddr = null;
     private String mActiveSSID = null;
 
-	private UDPServerRunner mUdpReceiverRoutine = null;
     private TCPClient mTcpClient = null;
     private WifiMonitor mWifiMonitor = null;
     private TCPServerRunner mTcpServer = null;
@@ -37,7 +34,7 @@ public class KingService extends Service{
 	@Override
 	public IBinder onBind(Intent intent) {
 		if (mWifiMonitor != null){
-			mWifiMonitor.registIntentFilter(getApplicationContext());
+		//	mWifiMonitor.registIntentFilter(getApplicationContext());
 		}
         return mBinder;
 	}
@@ -45,7 +42,7 @@ public class KingService extends Service{
     @Override  
     public boolean onUnbind(Intent intent) {
     	if (mWifiMonitor != null){
-    		mWifiMonitor.unRegistIntentFilter(getApplicationContext());
+    	//	mWifiMonitor.unRegistIntentFilter(getApplicationContext());
     	}
         return super.onUnbind(intent);  
     }
@@ -78,9 +75,9 @@ public class KingService extends Service{
     	}
     };
 
-    public void startScanSSID(Bundle bundle){
+    public void startScanSSID(Message msg){
     	if (mWifiMonitor != null){
-    		mWifiMonitor.startScanSSID(bundle);
+    		mWifiMonitor.startScanSSID(msg);
     	}
     }
     
@@ -116,11 +113,6 @@ public class KingService extends Service{
 	    	mServerAddr = addr;    	
 	   		mTcpClient = new TCPClient(mHandler, mServerAddr);
     	}
-    	
-//    	if (mTcpServer == null){
-//    		mTcpServer = new TCPServerRunner(mHandler, 2019);
-//    		new Thread(mTcpServer).start();
-//    	}
     }
 	
 	public void connectServer(String number, String password){
@@ -152,11 +144,15 @@ public class KingService extends Service{
 	    sender.start();
 	}
 	
-    public String getLocalIPAddress(){
+    private String getLocalIPAddress(){
     	return mWifiMonitor != null ? mWifiMonitor.getLocalIPAddress() : "0.0.0.0";
     }
     
     public static LoggerManager getLogService(){
     	return LoggerManager.getInstance();
+    }
+    
+    public WifiMonitor getWifiService(){
+    	return mWifiMonitor;
     }
 }

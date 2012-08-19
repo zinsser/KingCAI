@@ -27,12 +27,14 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 
 	private Answer constructAnswer(String id, String answerContent){
 		Answer answer = null;
-		if (mQuestionMgr.getQuestionItem(id).isOption()){
-			answer = new OptionsAnswerInfo(mQuestionMgr.getQuestionItem(id).mReference, answerContent);
-		}else if (mQuestionMgr.getQuestionItem(id).isBlank()){
-			answer = new BlankAnswerInfo(mQuestionMgr.getQuestionItem(id).mReference, answerContent);				
-		}else if (mQuestionMgr.getQuestionItem(id).isLogic()){
-			
+		if (mQuestionMgr.getQuestionItem(id) != null){
+			if (mQuestionMgr.getQuestionItem(id).isOption()){
+				answer = new OptionsAnswerInfo(mQuestionMgr.getQuestionItem(id).mReference, answerContent);
+			}else if (mQuestionMgr.getQuestionItem(id).isBlank()){
+				answer = new BlankAnswerInfo(mQuestionMgr.getQuestionItem(id).mReference, answerContent);				
+			}else if (mQuestionMgr.getQuestionItem(id).isLogic()){
+				
+			}
 		}
 		
 		return answer;
@@ -51,7 +53,8 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 	}
 	
 	public void addAnswer(QuestionInfo question){
-		mAnswers.put(question.getQuestionID(), constructAnswer(question.getQuestionID()));
+		mAnswers.put(question.getQuestionID(), 
+				      constructAnswer(question.getQuestionID()));
 	}
 	
 	public void addAnswer(String id, String s){

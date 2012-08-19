@@ -27,6 +27,11 @@ public class ActiveMessage_NewQuestion  extends ActiveMessage{
 
 	@Override
 	public void Execute() {
+		Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_NEW_PAPER);
+		Bundle bundle = new Bundle();
+		bundle.putString("Paper", mSocketMessage);
+		innerMessage.setData(bundle);
+		innerMessage.sendToTarget();		
 		new QuestionParseTask().execute(super.FromPack(mSocketMessage));
 	}
 	

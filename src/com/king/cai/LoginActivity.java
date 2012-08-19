@@ -218,7 +218,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		}
     }
     
-    public Handler mInnerHandler = new Handler(){
+    public Handler mTimeoutHandler = new Handler(){
     	@Override
     	public void handleMessage(Message msg){
     		switch (msg.what){
@@ -243,7 +243,7 @@ public class LoginActivity  extends ComunicableActivity  {
 					if (mSpinnerSSID.getSelectedItemPosition() != 0){
 		    			mTextViewStatus.setText(R.string.QueryServerStatus);						
 						mServiceChannel.queryServer();						
-						mInnerHandler.sendMessageDelayed(mInnerHandler.obtainMessage(EVENT_QUERY_TIME_OUT), 
+						mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_QUERY_TIME_OUT), 
 													DELAY_QUERY_TIME);
 					}else{
 						mSpinnerSSID.performClick();
@@ -369,12 +369,17 @@ public class LoginActivity  extends ComunicableActivity  {
 		startActivity(openSheetActivity);
 		finish();
     }
-
+    private Handler mWifiReadyHandler = new Handler(){
+    	@Override
+    	public void handleMessage(Message msg){
+    		
+    	}
+    };
 	@Override
 	protected void onServiceReady() {
 		mButtonLogin.setEnabled(true);
-		Bundle bundle = new Bundle();
-		mServiceChannel.startScanSSID(bundle);
+
+		mServiceChannel.startScanSSID(mWifiReadyHandler.obtainMessage());
 	}    
     
     @Override
@@ -382,18 +387,18 @@ public class LoginActivity  extends ComunicableActivity  {
 		Bundle bundle = innerMessage.getData();    	
     	switch (innerMessage.what){
 		case KingCAIConfig.EVENT_QUERY_COMPLETE:
-			mInnerHandler.removeMessages(EVENT_QUERY_TIME_OUT);
+			mTimeoutHandler.removeMessages(EVENT_QUERY_TIME_OUT);
 			mServerIP = bundle.getString("Peer");
 			mSSID = (String)mSpinnerSSID.getAdapter().getItem(mSpinnerSSID.getSelectedItemPosition());
 			mTextViewStatus.setText(R.string.FoundServerStatus);
 			mServiceChannel.updateServerInfo(mServerIP, mSSID);
 			mServiceChannel.connectServer(mTextviewStudentID.getText().toString(), 
 										  mTextviewPassword.getText().toString());
-			mInnerHandler.sendMessageDelayed(mInnerHandler.obtainMessage(EVENT_LOGIN_TIME_OUT), 
+			mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_LOGIN_TIME_OUT), 
 										DELAY_LOGIN_TIME);
 			break;
 		case KingCAIConfig.EVENT_LOGIN_COMPLETE:
-			mInnerHandler.removeMessages(EVENT_LOGIN_TIME_OUT);
+			mTimeoutHandler.removeMessages(EVENT_LOGIN_TIME_OUT);
 			Boolean bResult = bundle.getBoolean("Result");
 			if (bResult){
 				String studentInfo = bundle.getString("Info");

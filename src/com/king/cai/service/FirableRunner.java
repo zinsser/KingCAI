@@ -7,19 +7,17 @@ import android.os.Message;
 
 
 public abstract class FirableRunner implements Runnable{
-//	protected Message mInnerMessage = null;
 	protected Handler mInnerHandler = null;
 	protected boolean mRunning = false;
 	public FirableRunner(Handler innerHandler){
 		mInnerHandler = innerHandler;
 	}
 
-	protected Bundle contructTextBundle(String peerAddr, ByteBuffer msgData, int size){
+	protected Bundle contructTextBundle(String peerAddr, ByteBuffer msgData){
 		Bundle bundle = new Bundle();
 		bundle.putBoolean("Type", true);
 		bundle.putString("Peer", peerAddr);
 		bundle.putByteArray("Content", msgData.array());
-		bundle.putInt("Size", size);
 		
 		return bundle;
 	}

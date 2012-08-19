@@ -23,8 +23,16 @@ public class SSIDInfo{
 		return getSecurity(mResultInfo);
 	}
 
-	public String getTitle(){
+	public String getSSID(){
 		return (mResultInfo == null) ? "" : mResultInfo.SSID;
+	}
+	
+	public int getLevel(){
+		return mResultInfo.level;
+	}
+	
+	public int getFrequency(){
+		return mResultInfo.frequency;
 	}
 	
 	private int getSecurity(ScanResult result){

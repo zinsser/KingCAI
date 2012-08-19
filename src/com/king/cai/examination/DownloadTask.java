@@ -19,6 +19,7 @@ public class DownloadTask {
 	private Handler mInnerHandler;
 	
 	public DownloadTask(String qid, String imageIndex, Handler innerHandler){
+		mInnerHandler = innerHandler;
 		mQuestionID = qid;
 		mImageIndex = imageIndex;
 		mStatus = TaskStatus.TS_Unstart;		
