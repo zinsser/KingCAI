@@ -24,7 +24,7 @@ public class KingService extends Service{
 	private UDPServerRunner mUdpReceiverRoutine = null;
     private TCPClient mTcpClient = null;
     private WifiMonitor mWifiMonitor = null;
-
+    private TCPServerRunner mTcpServer = null;
     
     //这里定义一个Binder类，用在onBind()有方法里，这样Activity那边可以获取到 
     private MyBinder mBinder = new MyBinder();      
@@ -102,24 +102,25 @@ public class KingService extends Service{
 	}
 	
 	private void startUDPServer(){
-		if (mUdpReceiverRoutine == null){
-			mUdpReceiverRoutine = new UDPServerRunner(Message.obtain(mHandler, SOCKET_EVENT), 
-					KingCAIConfig.mUDPPort);
-		}
-		if (!mUdpReceiverRoutine.isRunning()){
-			new Thread(mUdpReceiverRoutine).start();
-		}
+		UDPServerRunner udpReceiverRoutine = new UDPServerRunner(mHandler, KingCAIConfig.mUDPPort);
+		new Thread(udpReceiverRoutine).start();
 	}
 
     public void updateServer(String addr, String ssid){
-    	if (addr != null && !addr.equals(mServerAddr)){
-	    	mServerAddr = addr;
-	    	if (mTcpClient != null){
-	    		mTcpClient.onDestroy();
-	    		mTcpClient = null;
-	    	}
-	   		mTcpClient = new TCPClient(Message.obtain(mHandler, SOCKET_EVENT), mServerAddr);
+    	if (mTcpClient != null){
+    		mTcpClient.onDestroy();
+    		mTcpClient = null;
     	}
+
+    	if (addr != null){
+	    	mServerAddr = addr;    	
+	   		mTcpClient = new TCPClient(mHandler, mServerAddr);
+    	}
+    	
+//    	if (mTcpServer == null){
+//    		mTcpServer = new TCPServerRunner(mHandler, 2019);
+//    		new Thread(mTcpServer).start();
+//    	}
     }
 	
 	public void connectServer(String number, String password){
@@ -146,8 +147,8 @@ public class KingService extends Service{
 		
 	//multicast socket Socket use this function		
 	public void sendMessage(RequestMessage msg) {
-	    MulticastSenderThread sender = new MulticastSenderThread(KingCAIConfig.mMulticastClientGroupIP,
-	    									KingCAIConfig.mImageReceivePort, msg.ToPack());
+	    MulticastSenderThread sender = new MulticastSenderThread(KingCAIConfig.mMulticastServerGroupIP,
+	    									KingCAIConfig.mMulticastServerCommonPort, msg.ToPack());
 	    sender.start();
 	}
 	

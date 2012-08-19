@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
+import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
@@ -19,11 +20,14 @@ public class UDPServerRunner extends FirableRunner{
 	private ByteBuffer mMsgBuffer = ByteBuffer.allocate(8192);
 	private int mPort;
 	
-	public UDPServerRunner(Message innerMessage, int port){
-		super(innerMessage);
+	public UDPServerRunner(Handler innerHandler, int port){
+		super(innerHandler);
 		mPort = port;
 		try {
-			mDatagramSocket = null;
+			if (mDatagramSocket != null){
+				mDatagramSocket.close();
+				mDatagramSocket = null;
+			}
 			mDatagramSocket = new DatagramSocket(mPort);
 			
 			mDatagramPacket = null;
@@ -38,16 +42,17 @@ public class UDPServerRunner extends FirableRunner{
 	protected void doRun(){
 		try {
 			mMsgBuffer.clear();
-			mDatagramSocket.receive(mDatagramPacket);
-			String peerAddr = mDatagramPacket.getAddress().getHostAddress().toString();
-			Log.d("UDPReceiver", mDatagramPacket.getAddress().getHostAddress().toString()
-					+ ":"+ new String(mDatagramPacket.getData(), KingCAIConfig.mCharterSet));
-			
-			String rawmsg = new String(mDatagramPacket.getData(), mDatagramPacket.getOffset(), 
-					mDatagramPacket.getLength(), KingCAIConfig.mCharterSet);
-			
-			fireMessage(contructTextBundle(peerAddr, ByteBuffer.wrap(rawmsg.trim().getBytes()), 
-						ByteBuffer.wrap(rawmsg.trim().getBytes()).capacity()));
+			if (mDatagramSocket != null && mDatagramPacket != null){ 
+				mDatagramSocket.receive(mDatagramPacket);
+				String peerAddr = mDatagramPacket.getAddress().getHostAddress().toString();
+				Log.d("UDPReceiver", mDatagramPacket.getAddress().getHostAddress().toString()
+						+ ":"+ new String(mDatagramPacket.getData(), KingCAIConfig.mCharterSet));
+				
+				String rawmsg = new String(mDatagramPacket.getData(), mDatagramPacket.getOffset(), 
+						mDatagramPacket.getLength(), KingCAIConfig.mCharterSet);
+				
+				fireMessage(contructTextBundle(peerAddr, ByteBuffer.wrap(rawmsg.trim().getBytes())));
+			}
 		}catch(IOException e) {
 			KingService.getLogService().addLog(e.toString());			
 			e.printStackTrace();

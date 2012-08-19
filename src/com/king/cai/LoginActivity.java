@@ -43,8 +43,8 @@ public class LoginActivity  extends ComunicableActivity  {
 	
 	private final static int EVENT_QUERY_TIME_OUT = 1;
 	private final static int EVENT_LOGIN_TIME_OUT = 2;
-	private final static int DELAY_QUERY_TIME = 5000;
-	private final static int DELAY_LOGIN_TIME = 5000;
+	private final static int DELAY_QUERY_TIME = 10000;
+	private final static int DELAY_LOGIN_TIME = 10000;
 	
 	private final static int RESULT_LOAD_HEADER_PHOTO= 1;
 	

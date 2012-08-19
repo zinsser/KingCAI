@@ -1,5 +1,6 @@
 package com.king.cai.common;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 
@@ -134,8 +135,15 @@ public abstract class ComunicableActivity extends Activity{
 				boolean bTextMessage = bundle.getBoolean("Type");				
 				if (bTextMessage){
 					String peerip = bundle.getString("Peer");
-					byte[] msgBuf = bundle.getByteArray("Content");					
-					onReceiveMessage(peerip, new String(msgBuf));
+					byte[] msgBuf = bundle.getByteArray("Content");
+
+					try {
+						String msgContent = new String(msgBuf, KingCAIConfig.mCharterSet);
+						onReceiveMessage(peerip, msgContent);
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+
 				}else{
 					Message newImageMessage = mInnerMessageHandler.obtainMessage(KingCAIConfig.EVENT_NEW_IMAGE);
 					newImageMessage.setData(bundle);

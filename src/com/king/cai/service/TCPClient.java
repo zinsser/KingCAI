@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import android.os.Handler;
 import android.os.Message;
 
 import com.king.cai.KingCAIConfig;
@@ -15,7 +16,7 @@ import com.king.cai.service.TCPSenderThread;
 public class TCPClient {
 	private Message mInnerMessage = null;	
 	private String mServerAddr = null;
-
+	private Handler mInnerHandler = null;
 	private ClientObject mTextClient = null;
 	private ClientObject mBinaryClient = null;
 	
@@ -27,7 +28,7 @@ public class TCPClient {
 		private OutputStream mOutputStream = null;
 		private TCPReceiveRunner mReceiveRunner = null;
 		
-		public ClientObject(Message innerMsg, String addr, int port, boolean bCache){
+		public ClientObject(Handler innerHandler, String addr, int port, boolean bCache){
 			try {
 				mSocket = new Socket(addr, port);
 				mInputStream = mSocket.getInputStream();
@@ -40,7 +41,7 @@ public class TCPClient {
 				e.printStackTrace();
 			} 
 			
-			mReceiveRunner = new TCPReceiveRunner(innerMsg, mInputStream, 
+			mReceiveRunner = new TCPReceiveRunner(innerHandler, mInputStream, 
 									mSocket.getInetAddress().getHostAddress(), mSocket.getPort(),
 									bCache);
 			new Thread(mReceiveRunner).start();
@@ -67,8 +68,8 @@ public class TCPClient {
 		}
 	}
 	
-	public TCPClient(Message innerMessage, String addr){
-		mInnerMessage = innerMessage;
+	public TCPClient(Handler innerHandler, String addr){
+		mInnerHandler = innerHandler;
 		mServerAddr = addr;
 		
 		contructClientObject();
@@ -86,11 +87,11 @@ public class TCPClient {
 
 	private void contructClientObject(){
 		mTextClient = null;
-		mTextClient = new ClientObject(mInnerMessage, mServerAddr, 
-										KingCAIConfig.mTextReceivePort, false);
-		mBinaryClient = null;
-		mBinaryClient = new ClientObject(mInnerMessage, mServerAddr, 
-										KingCAIConfig.mImageReceivePort, true);
+		mTextClient = new ClientObject(mInnerHandler, mServerAddr, 
+										KingCAIConfig.mTextSendPort, false);
+//		mBinaryClient = null;
+//		mBinaryClient = new ClientObject(mInnerHandler, mServerAddr, 
+//										KingCAIConfig.mImageReceivePort, true);
 	}	
 	
 	private void destroyClientObject(){

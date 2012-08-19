@@ -19,9 +19,9 @@ public class TCPReceiveRunner extends FirableRunner{
 	private String mPeerAddr = null;
 	private int mExpectSize = 0;
 	
-	public TCPReceiveRunner(Message innerMessage, 
+	public TCPReceiveRunner(Handler innerHandler, 
 						InputStream is, String peer, int port, boolean bCache) {
-		super(innerMessage);
+		super(innerHandler);
 		mInputStream = is;
 		mPeerAddr = peer;
 		mPort = port;

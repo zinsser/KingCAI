@@ -54,10 +54,10 @@
                   
          </activity> 
         <service android:enabled="true" 
-  				android:name=".service.internal.KingService" >
+  				android:name=".service.KingService" >
             <!--android:permission="android.permission.SET_PREFERRED_APPLICATIONS"> -->
             <intent-filter >
-                <action android:name="com.jczhou.platform.socketservice"/>
+                <action android:name="com.king.cai.service"/>
             </intent-filter>                            
         </service>
         <receiver android:enabled="true" 

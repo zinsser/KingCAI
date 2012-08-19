@@ -30,10 +30,10 @@ public class ActiveMessage_LoginComplete extends ActiveMessage{
 		Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_LOGIN_COMPLETE);
 		if (pack.contains("[pass]")){
 			String studentInfo = pack.substring("[pass]".length(), pack.length());
-			bundle.putBoolean("RESULT", true);
-			bundle.putString("INFO", studentInfo);
+			bundle.putBoolean("Result", true);
+			bundle.putString("Info", studentInfo);
 		}else{
-			bundle.putBoolean("RESULT", false);
+			bundle.putBoolean("Result", false);
 		}
 		innerMessage.setData(bundle);
 		innerMessage.sendToTarget();		

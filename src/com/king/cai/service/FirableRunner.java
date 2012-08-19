@@ -2,14 +2,16 @@ package com.king.cai.service;
 
 import java.nio.ByteBuffer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 
 
 public abstract class FirableRunner implements Runnable{
-	protected Message mInnerMessage = null;
+//	protected Message mInnerMessage = null;
+	protected Handler mInnerHandler = null;
 	protected boolean mRunning = false;
-	public FirableRunner(Message innerMessage){
-		mInnerMessage = innerMessage;
+	public FirableRunner(Handler innerHandler){
+		mInnerHandler = innerHandler;
 	}
 
 	protected Bundle contructTextBundle(String peerAddr, ByteBuffer msgData, int size){
@@ -31,8 +33,9 @@ public abstract class FirableRunner implements Runnable{
 	}
 	
 	protected void fireMessage(Bundle bundle){
-    	mInnerMessage.setData(bundle);
-    	mInnerMessage.sendToTarget();
+		Message innerMessage = mInnerHandler.obtainMessage(KingService.SOCKET_EVENT);
+		innerMessage.setData(bundle);
+		innerMessage.sendToTarget();
 	}
 	
 	public boolean isRunning(){

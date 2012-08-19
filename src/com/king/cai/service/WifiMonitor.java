@@ -117,8 +117,9 @@ public class WifiMonitor {
     	WifiInfo info = mWifiService.getConnectionInfo();
     	String IpInfo = KingCAIUtils.IPIntToString(info.getIpAddress());
     	Log.d("WifiStateManager", IpInfo);
-
-    	mWifiStateListener.onServerInfoChanged(IpInfo);
+    	if (mWifiStateListener != null){
+        	mWifiStateListener.onServerInfoChanged(IpInfo);    		
+    	}
     }
      
     private void retriveScanResult(){
