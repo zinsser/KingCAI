@@ -350,6 +350,10 @@ public class PaperActivity  extends ComunicableActivity {
 			mServiceChannel.updatePaperSize(0);
 			break;
 		}
+		case KingCAIConfig.EVENT_NEW_QUESTION_COMPLETE:{
+			DownloadManager.getInstance().dispatchTask();
+			break;
+		}
 		case KingCAIConfig.EVENT_REQUEST_IMAGE:{
 			String qid = bundle.getString("ID");
 			String imageIndex = bundle.getString("Index");

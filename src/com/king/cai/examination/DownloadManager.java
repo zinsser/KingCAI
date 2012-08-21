@@ -46,7 +46,6 @@ public class DownloadManager {
 	public void addTask(DownloadTask newTask){
 		if (newTask != null && !mTasks.contains(newTask)){
 			mTasks.offer(newTask);
-			dispatchTask();
 		}
 	}
 

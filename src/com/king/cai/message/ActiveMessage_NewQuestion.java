@@ -97,6 +97,10 @@ public class ActiveMessage_NewQuestion  extends ActiveMessage{
 				innerMessage.setData(bundle);
 				innerMessage.sendToTarget();					
 			}
+			{
+				Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_NEW_QUESTION_COMPLETE);
+				innerMessage.sendToTarget();
+			}
 		}
 	};
 }
