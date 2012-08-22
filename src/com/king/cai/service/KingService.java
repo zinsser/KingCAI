@@ -99,7 +99,7 @@ public class KingService extends Service{
 	}
 	
 	private void startUDPServer(){
-		UDPServerRunner udpReceiverRoutine = new UDPServerRunner(mHandler, KingCAIConfig.mUDPPort);
+		UDPServerRunner udpReceiverRoutine = new UDPServerRunner(mHandler, KingCAIConfig.mUdpPort);
 		new Thread(udpReceiverRoutine).start();
 	}
 

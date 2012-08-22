@@ -29,8 +29,8 @@ public class KingCAIConfig {
 	public final static String SSID = "SSID";
 	public final static String Offline = "Offline";
 	
-	public final static int mTextSendPort = 2011;	
-	public final static int mUDPPort = 2012;
+	public final static int mTcpPort = 2011;	
+	public final static int mUdpPort = 2012;
 	public final static String mMulticastServerGroupIP = "224.0.0.100";
 	public final static int mMulticastServerCommonPort = 2013;
 	public final static String mMulticastClientGroupIP = "224.0.0.101";	

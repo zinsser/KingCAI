@@ -1,27 +1,23 @@
 package com.king.cai.service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 
 import com.king.cai.KingCAIConfig;
-import com.king.cai.examination.DownloadManager;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 
 public class TCPReceiveRunner extends FirableRunner{
+	private final int mDefaultBufferSize = 64 * 1024;
 	private InputStream mInputStream = null;
-	private ByteBuffer mReceiveBuf = ByteBuffer.allocate(128 * 1024);
+	private ByteBuffer mReceiveBuf = null;//ByteBuffer.allocate(128 * 1024);
 	private int mPort = 0;
 	private String mPeerAddr = null;
 	private int mExpectSize = 0;
-	private int mTotalReadSize = 0;
 	public TCPReceiveRunner(Handler innerHandler, 
-						InputStream is, String peer, int port, boolean bCache) {
+						InputStream is, String peer, int port) {
 		super(innerHandler);
 		mInputStream = is;
 		mPeerAddr = peer;
@@ -31,27 +27,31 @@ public class TCPReceiveRunner extends FirableRunner{
 	@Override
 	protected void doRun() {
 		try {
-			mReceiveBuf.clear();
 			int subReadSize = -1;
+			int leftSize = mExpectSize > 0 ? mExpectSize : mDefaultBufferSize;
+			mReceiveBuf = null;
+			mReceiveBuf = ByteBuffer.allocate(leftSize);
 			do {
 				if (mExpectSize != 0){
-					subReadSize = mInputStream.read(mReceiveBuf.array(), mTotalReadSize, mExpectSize); 
+					byte[] readBuffer = new byte[leftSize];
+					subReadSize = mInputStream.read(readBuffer, 0, leftSize); 
+					if (subReadSize > 0){
+						mReceiveBuf.put(readBuffer, 0, subReadSize);
+						leftSize -= subReadSize;
+					}	
+					readBuffer = null;
 				}else{
 					subReadSize = mInputStream.read(mReceiveBuf.array());
 				}
-				if (subReadSize > 0){
-					mTotalReadSize += subReadSize;
-				}
-
-			}while (subReadSize > 0 && mExpectSize > 0 && mTotalReadSize < mExpectSize);
+			}while (mExpectSize > 0 && subReadSize > 0 && leftSize > 0);
 
 			if (subReadSize > 0){
-				if (mPort != KingCAIConfig.mTextSendPort){
+				if (mPort != KingCAIConfig.mTcpPort){
 					Bundle bundle = contructBinaryBundle(mReceiveBuf);
 					fireMessage(bundle);
 				}else{
 					String str = new String(mReceiveBuf.array(), KingCAIConfig.mCharterSet);
-					Bundle bundle = contructTextBundle(mPeerAddr, mReceiveBuf);
+					Bundle bundle = contructTextBundle(mPeerAddr, mReceiveBuf.array());
 					fireMessage(bundle);
 				}
 			}
@@ -72,6 +72,5 @@ public class TCPReceiveRunner extends FirableRunner{
 	
 	public void updateExpectSize(Integer size){
 		mExpectSize = size;
-		mTotalReadSize = 0;
 	}
 }

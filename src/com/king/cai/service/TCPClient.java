@@ -41,8 +41,7 @@ public class TCPClient {
 			} 
 			
 			mReceiveRunner = new TCPReceiveRunner(innerHandler, mInputStream, 
-									mSocket.getInetAddress().getHostAddress(), mSocket.getPort(),
-									bCache);
+									mSocket.getInetAddress().getHostAddress(), mSocket.getPort());
 			new Thread(mReceiveRunner).start();
 		}
 		
@@ -87,7 +86,7 @@ public class TCPClient {
 	private void contructClientObject(){
 		mTextClient = null;
 		mTextClient = new ClientObject(mInnerHandler, mServerAddr, 
-										KingCAIConfig.mTextSendPort, false);
+										KingCAIConfig.mTcpPort, false);
 //		mBinaryClient = null;
 //		mBinaryClient = new ClientObject(mInnerHandler, mServerAddr, 
 //										KingCAIConfig.mImageReceivePort, true);
