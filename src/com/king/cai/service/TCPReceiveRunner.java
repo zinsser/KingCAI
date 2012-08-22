@@ -46,14 +46,9 @@ public class TCPReceiveRunner extends FirableRunner{
 			}while (mExpectSize > 0 && subReadSize > 0 && leftSize > 0);
 
 			if (subReadSize > 0){
-				if (mPort != KingCAIConfig.mTcpPort){
-					Bundle bundle = contructBinaryBundle(mReceiveBuf);
-					fireMessage(bundle);
-				}else{
-					String str = new String(mReceiveBuf.array(), KingCAIConfig.mCharterSet);
-					Bundle bundle = contructTextBundle(mPeerAddr, mReceiveBuf.array());
-					fireMessage(bundle);
-				}
+				String str = new String(mReceiveBuf.array(), KingCAIConfig.mCharterSet);
+				Bundle bundle = contructTextBundle(mPeerAddr, mReceiveBuf.array());
+				fireMessage(bundle);
 			}
 		} catch (IOException e) {
 			KingService.getLogService().addLog(e.toString());

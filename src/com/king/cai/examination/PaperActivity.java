@@ -1,6 +1,7 @@
 package com.king.cai.examination;
 
 import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -373,8 +374,8 @@ public class PaperActivity  extends ComunicableActivity {
 			String id = DownloadManager.getInstance().getCurrentTask().getQuestionID();
 			String imageIndex = DownloadManager.getInstance().getCurrentTask().getImageIndex();
 			byte[] data = bundle.getByteArray("Content");
-			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-			mQuestionMgr.addQuestionImage(id, imageIndex, bmp);
+//			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+			mQuestionMgr.addQuestionImage(id, imageIndex, ByteBuffer.wrap(data));
 
 			DownloadManager.getInstance().finishCurrentTask();
 			break;

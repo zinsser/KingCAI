@@ -1,5 +1,6 @@
 package com.king.cai.examination;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class QuestionManager {
 		public abstract void onQuestionArrayChanged(ArrayList<Integer> indexes);
 		public abstract void onAddQuestion(Integer index);		
 		public abstract void onClearQuestion();
-		public abstract void onImageReady(String qid, String imageIndex, Bitmap bmp);
+		public abstract void onImageReady(String qid, String imageIndex, ByteBuffer bmpBytes);
 	}
 	
 	public QuestionManager(){
@@ -70,6 +71,8 @@ public class QuestionManager {
 		}
 		c.close();
 		helper.close();		
+		
+		notifyQuestionArrayChanged();
 	}
 	
 	public void exportQuestionsToDB(Context context, AnswerManager answerMgr){
@@ -112,12 +115,12 @@ public class QuestionManager {
 		}
 	}
 
-	public void addQuestionImage(String id, String imageIndex, Bitmap bmp){
+	public void addQuestionImage(String id, String imageIndex, ByteBuffer bmpBytes){
 		QuestionInfo question = getQuestionItem(id);
-		if (bmp != null){
-			question.addGraphic(imageIndex, bmp);
+		if (bmpBytes != null){
+			question.addGraphic(imageIndex, bmpBytes);
 			for (QuestionListener l : mListeners){
-				l.onImageReady(id, imageIndex, bmp);
+				l.onImageReady(id, imageIndex, bmpBytes);
 			}
 		}
 	}
