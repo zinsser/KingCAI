@@ -377,7 +377,8 @@ public class PaperActivity  extends ComunicableActivity {
 				byte[] data = bundle.getByteArray("Content");
 				Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
 				mQuestionMgr.addQuestionImage(id, imageIndex, ByteBuffer.wrap(data));
-	
+				
+				mServiceChannel.updateDownloadInfo(0);
 				DownloadManager.getInstance().finishCurrentTask();
 			}
 			break;

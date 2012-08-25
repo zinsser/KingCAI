@@ -2,9 +2,9 @@
 <resources>
     <string name="permdesc_write_settings">permdesc_write_settings</string>    
 	<string name="permlab_write_settings">permlab_write_settings</string>
-    <string name="hello">在线测试</string>
-    <string name="app_name">在线测试</string>
-    <string name="Title">在线测试</string>
+    <string name="hello">堂堂清</string>
+    <string name="app_name">堂堂清</string>
+    <string name="Title">堂堂清</string>
     <string name="StudentID">请输入学号</string>
     <string name="Password">请输入密码</string>
     <string name="Login">登录</string>
