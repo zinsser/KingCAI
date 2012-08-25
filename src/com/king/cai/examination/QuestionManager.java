@@ -16,12 +16,14 @@ public class QuestionManager {
 	private final static String s_PaperTag_Type = "type";	
 	private final static String s_PaperTag_Reference = "reference";
 	private final static String s_PaperTag_ImageCount = "imagecount";
+	private final static String s_PaperTag_Image = "image";
 	
 	private final static int s_PaperIdx_ID = 0;
 	private final static int s_PaperIdx_Question = 1;
 	private final static int s_PaperIdx_Type = 2;
 	private final static int s_PaperIdx_Reference = 3;
-	private final static int s_PaperIdx_Image = 4;
+	private final static int s_PaperIdx_ImageCount = 4;
+	private final static int s_PaperIdx_Image = 5;
 	
 	private HashMap<Integer, QuestionInfo> mQuestions = new HashMap<Integer, QuestionInfo>();
 	private ArrayList<QuestionListener> mListeners = new ArrayList<QuestionListener>();
@@ -90,9 +92,12 @@ public class QuestionManager {
 						values.put(s_PaperTag_Reference, getQuestionItem(id).mReference);
 					}
 					values.put(s_PaperTag_ImageCount, getQuestionItem(id).mImageCount);
+					if (getQuestionItem(id).getImageIndex(0) != null){
+						values.put(s_PaperTag_Image, getQuestionItem(id).mGraphics.get(getQuestionItem(id).getImageIndex(0)).array());
+					}
 				}
 			}
-			helper.Insert(values, id);
+//			helper.Insert(values, id);
 		}
 		helper.close();
 	}

@@ -174,12 +174,12 @@ public abstract class ComunicableActivity extends Activity{
 	    		if (activeMsgExecutor != null){
 	    			activeMsgExecutor.setCompleteHandler(mInnerMessageHandler);
 	    			activeMsgExecutor.Execute();
-	    		}else{
+	    		}else if (!msgContent.contains("[type]") && !msgContent.contains("[id]")){
 	    			Bundle bundle = new Bundle();
 	    			bundle.putByteArray("Content", msgData);   //二进制数据采用byte[]原始数据
 	    			Message newImageMessage = mInnerMessageHandler.obtainMessage(KingCAIConfig.EVENT_NEW_IMAGE);
 					newImageMessage.setData(bundle);
-					newImageMessage.sendToTarget();    			
+					newImageMessage.sendToTarget();
 	    		}	
 			}
     	}    	
@@ -242,13 +242,13 @@ public abstract class ComunicableActivity extends Activity{
         
         public void updateDownloadInfo(int size){
         	if (mKingService != null){
-        		mKingService.updateDownloadSize(size);
+        		mKingService.updateExpectSize(size);
         	}
         }
         
         public void updatePaperSize(Integer size){
         	if (mKingService != null){
-        		mKingService.updatePaperSize(size);
+        		mKingService.updateExpectSize(size);
         	}
         }
     };

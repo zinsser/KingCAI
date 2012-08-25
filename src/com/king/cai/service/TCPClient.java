@@ -110,7 +110,7 @@ public class TCPClient {
 		}
 	}
 	
-	public void updatePaperSize(Integer size){
+	public void updateExpectSize(Integer size){
 		if (mTextClient != null && mTextClient.getRunner() != null){
 			mTextClient.getRunner().updateExpectSize( size);
 		}

@@ -12,7 +12,7 @@ public class PaperDBHelper extends SQLiteOpenHelper {
     private static final String DB_PAPER = "Paper.db";  
     private static final String TBL_PAPER = "Paper";  
     private static final String CREATE_TBL = " create table "  
-            + " Paper(id text primary key, question text, type integer, reference text, answer text) ";  
+            + " Paper(id text primary key, question text, type integer, reference text, imagecount integer, image text) ";  
       
     private SQLiteDatabase mDB;
     

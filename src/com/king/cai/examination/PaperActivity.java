@@ -371,13 +371,15 @@ public class PaperActivity  extends ComunicableActivity {
 			break;
 		}	
 		case KingCAIConfig.EVENT_NEW_IMAGE:{
-			String id = DownloadManager.getInstance().getCurrentTask().getQuestionID();
-			String imageIndex = DownloadManager.getInstance().getCurrentTask().getImageIndex();
-			byte[] data = bundle.getByteArray("Content");
-//			Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-			mQuestionMgr.addQuestionImage(id, imageIndex, ByteBuffer.wrap(data));
-
-			DownloadManager.getInstance().finishCurrentTask();
+			if (DownloadManager.getInstance().getCurrentTask() != null){
+				String id = DownloadManager.getInstance().getCurrentTask().getQuestionID();
+				String imageIndex = DownloadManager.getInstance().getCurrentTask().getImageIndex();
+				byte[] data = bundle.getByteArray("Content");
+				Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+				mQuestionMgr.addQuestionImage(id, imageIndex, ByteBuffer.wrap(data));
+	
+				DownloadManager.getInstance().finishCurrentTask();
+			}
 			break;
 		}
 		default:

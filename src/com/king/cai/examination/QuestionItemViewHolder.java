@@ -101,17 +101,19 @@ public class QuestionItemViewHolder extends ItemViewHolder{
     	}
     	
 	    QuestionInfo question = mQuestionMgr.getQuestionItem(index);
-	    if (question.hasImage()){
+	    if (question.hasImage() ){
 	    	mLinearLayoutImage.setVisibility(View.VISIBLE);
 	    	mImageView_1.setVisibility(View.VISIBLE);
-	    	byte[] bmpBytes = question.getImage(question.getImageIndex(0)).array();
-			Bitmap bmp = BitmapFactory.decodeByteArray(bmpBytes, 0, bmpBytes.length);
-	    	
-	    	if (bmp != null){
-	    		mImageView_1.setImageBitmap(bmp);
-	    	}
-
 	    	mLinearLayout_ImageView_2.setVisibility(View.GONE);
+	    	
+	    	if (question.getImageIndex(0) != null){
+		    	byte[] bmpBytes = question.getImage(question.getImageIndex(0)).array();
+				Bitmap bmp = BitmapFactory.decodeByteArray(bmpBytes, 0, bmpBytes.length);
+		    	
+		    	if (bmp != null){
+		    		mImageView_1.setImageBitmap(bmp);
+		    	}
+	    	}
 	    }
 	}
 	

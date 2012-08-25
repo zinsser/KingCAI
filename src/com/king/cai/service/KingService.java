@@ -125,9 +125,9 @@ public class KingService extends Service{
 		}
 	}
 	
-    public void updatePaperSize(Integer size){
+    public void updateExpectSize(Integer size){
     	if (mTcpClient != null){
-    		mTcpClient.updatePaperSize(size);
+    		mTcpClient.updateExpectSize(size);
     	}
     }
 	//TCP Socket use this function

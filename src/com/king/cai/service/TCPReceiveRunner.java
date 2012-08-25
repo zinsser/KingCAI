@@ -16,6 +16,9 @@ public class TCPReceiveRunner extends FirableRunner{
 	private int mPort = 0;
 	private String mPeerAddr = null;
 	private int mExpectSize = 0;
+	private int mLeftSize = mDefaultBufferSize;
+	private int mTotalSize = 0;
+	
 	public TCPReceiveRunner(Handler innerHandler, 
 						InputStream is, String peer, int port) {
 		super(innerHandler);
@@ -28,22 +31,16 @@ public class TCPReceiveRunner extends FirableRunner{
 	protected void doRun() {
 		try {
 			int subReadSize = -1;
-			int leftSize = mExpectSize > 0 ? mExpectSize : mDefaultBufferSize;
+			
 			mReceiveBuf = null;
-			mReceiveBuf = ByteBuffer.allocate(leftSize);
+			mReceiveBuf = ByteBuffer.allocate(mDefaultBufferSize);
 			do {
-				if (mExpectSize != 0){
-					byte[] readBuffer = new byte[leftSize];
-					subReadSize = mInputStream.read(readBuffer, 0, leftSize); 
-					if (subReadSize > 0){
-						mReceiveBuf.put(readBuffer, 0, subReadSize);
-						leftSize -= subReadSize;
-					}	
-					readBuffer = null;
-				}else{
-					subReadSize = mInputStream.read(mReceiveBuf.array());
+				subReadSize = mInputStream.read(mReceiveBuf.array(), mTotalSize, mReceiveBuf.capacity() - mTotalSize);
+				
+				if (subReadSize > 0 && mExpectSize > 0){
+					mTotalSize += subReadSize;
 				}
-			}while (mExpectSize > 0 && subReadSize > 0 && leftSize > 0);
+			}while (mExpectSize > 0 && subReadSize > 0 && mTotalSize < mExpectSize);
 
 			if (subReadSize > 0){
 				String str = new String(mReceiveBuf.array(), KingCAIConfig.mCharterSet);
@@ -54,6 +51,8 @@ public class TCPReceiveRunner extends FirableRunner{
 			KingService.getLogService().addLog(e.toString());
 			e.printStackTrace();
 		}
+		
+		mTotalSize = 0;
 	}
 
 	@Override
@@ -67,5 +66,7 @@ public class TCPReceiveRunner extends FirableRunner{
 	
 	public void updateExpectSize(Integer size){
 		mExpectSize = size;
+		mLeftSize = mExpectSize;
+		mTotalSize = 0;
 	}
 }
