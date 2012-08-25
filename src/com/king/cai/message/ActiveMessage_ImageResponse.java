@@ -31,7 +31,8 @@ public class ActiveMessage_ImageResponse  extends ActiveMessage{
 			String strSize = subMessage.substring(0, idPos);
 			int subIDPos = subMessage.indexOf("[sub]");
 			String qid = subMessage.substring(idPos + "[id]".length(), subIDPos);
-			String imageIndex = subMessage.substring(subIDPos + "[sub]".length(), subMessage.length() - 1);
+			int lastPos = subMessage.indexOf('\\');
+			String imageIndex = subMessage.substring(subIDPos + "[sub]".length(), lastPos);
 			
 			Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_IMAGE_READY);
 			Bundle bundle = new Bundle();
