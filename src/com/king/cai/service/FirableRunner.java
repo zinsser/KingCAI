@@ -13,11 +13,11 @@ public abstract class FirableRunner implements Runnable{
 		mInnerHandler = innerHandler;
 	}
 
-	protected Bundle contructTextBundle(String peerAddr, ByteBuffer msgData){
+	protected Bundle contructTextBundle(String peerAddr, byte[] msgData){
 		Bundle bundle = new Bundle();
 		bundle.putBoolean("Type", true);
 		bundle.putString("Peer", peerAddr);
-		bundle.putByteArray("Content", msgData.array());
+		bundle.putByteArray("Content", msgData);
 		
 		return bundle;
 	}

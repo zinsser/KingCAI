@@ -1,6 +1,7 @@
 package com.king.cai.examination;
 
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
@@ -58,7 +59,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 		mStatusOwner.ShowDoneInfo(mListFirst.size());
 	}
 
-	public void onImageReady(String qid, String imageIndex, Bitmap bmp) {
+	public void onImageReady(String qid, String imageIndex, ByteBuffer bmpBytes) {
 	}
 	
 	public void doGettingItemView(ItemViewHolder holder, Integer index, int fontsize){

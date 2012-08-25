@@ -1,5 +1,6 @@
 package com.king.cai.examination;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,7 +21,7 @@ public class QuestionInfo {
 	public String mDetail;
 	public String mReference;
 	public int mImageCount;
-	public HashMap<String, Bitmap> mGraphics = new HashMap<String, Bitmap>();
+	public HashMap<String, ByteBuffer> mGraphics = new HashMap<String, ByteBuffer>();
 	public ArrayList<String> mImageIndexes = new ArrayList<String>();
 	
 	public QuestionInfo(String id, int type, String reference, String detail, int imageCount){
@@ -31,16 +32,16 @@ public class QuestionInfo {
 		mType = analysisDetailTypeByReference(type, reference);
 	}
 	
-	public void addGraphic(String imageIndex, Bitmap graphic){
+	public void addGraphic(String imageIndex, ByteBuffer bmpBytes){
 		mImageIndexes.add(imageIndex);
-		mGraphics.put(imageIndex, graphic);
+		mGraphics.put(imageIndex, bmpBytes);
 	}
 	
 	public String getQuestionID(){
 		return mID;
 	}
 	
-	public Bitmap getImage(String imageIndex){
+	public ByteBuffer getImage(String imageIndex){
 		if (mGraphics.size() < 1) return null;
 		return mGraphics.get(imageIndex);
 	}

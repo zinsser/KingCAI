@@ -7,7 +7,6 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import com.king.cai.KingCAIConfig;
@@ -51,7 +50,7 @@ public class UDPServerRunner extends FirableRunner{
 				String rawmsg = new String(mDatagramPacket.getData(), mDatagramPacket.getOffset(), 
 						mDatagramPacket.getLength(), KingCAIConfig.mCharterSet);
 				
-				fireMessage(contructTextBundle(peerAddr, ByteBuffer.wrap(rawmsg.trim().getBytes())));
+				fireMessage(contructTextBundle(peerAddr, rawmsg.trim().getBytes()));
 			}
 		}catch(IOException e) {
 			KingService.getLogService().addLog(e.toString());			

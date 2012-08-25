@@ -1,5 +1,6 @@
 package com.king.cai.examination;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -87,6 +88,6 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 		mAnswers.clear();
 	}
 
-	public void onImageReady(String qid, String imageIndex, Bitmap bmp) {
+	public void onImageReady(String qid, String imageIndex, ByteBuffer bmpBytes) {
 	}
 }

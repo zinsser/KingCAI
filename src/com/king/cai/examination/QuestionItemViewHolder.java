@@ -104,7 +104,9 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	    if (question.hasImage()){
 	    	mLinearLayoutImage.setVisibility(View.VISIBLE);
 	    	mImageView_1.setVisibility(View.VISIBLE);
-	    	Bitmap bmp = question.getImage(question.getImageIndex(0));
+	    	byte[] bmpBytes = question.getImage(question.getImageIndex(0)).array();
+			Bitmap bmp = BitmapFactory.decodeByteArray(bmpBytes, 0, bmpBytes.length);
+	    	
 	    	if (bmp != null){
 	    		mImageView_1.setImageBitmap(bmp);
 	    	}
