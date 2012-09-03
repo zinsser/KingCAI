@@ -47,9 +47,9 @@
 	<string name="About">关于在线测试</string>
 	<string name="AboutDetail">软件名称:\n  %1$s \n版本号:\n  %2$s \nAndroid 平台最低兼容版本:\n  %3$s \n软件发布时间:\n  %4$s</string>	
 	<string name="CompanyName">深圳市智源科技有限公司</string>
-	<string name="NoInfo">你尚未登录系统进行学习！\n如果不具备网络学习环境，建议你离线登录。</string>
-	<string name="AppInitStatus">应用启动成功，请输入用户名密码</string>	
-	<string name="FindSSIDStatus">正在查找wifi热点......</string>
+	<string name="NoInfo">您尚未登录系统进行学习！\n如果不具备网络学习环境，建议离线登录。</string>
+	<string name="AppInitStatus">应用启动成功，请输入用户名、密码以及班级</string>	
+	<string name="FindSSIDStatus">正在查找wifi热点...</string>
 	<string name="FindFailSSIDStatus">未找到wifi热点</string>	
 	<string name="FoundSSIDStatus">已找到wifi热点</string>		
 	<string name="ConnectSSIDStatus">正在连接wifi热点</string>	
@@ -65,5 +65,13 @@
 	<string name="Setting">设置</string>	
 	<string name="WifiSetting">设置Wifi网络</string>	
 	<string name="SecretTitle">修改 %s 的密码</string>	
-	<string name="ErrNotInputID">请输入学号</string>	
+	<string name="PasswordTitle">修改密码</string>	
+	<string name="ErrNotInputID">请输入学号</string>
+	<string name="ErrNotSame">两次新密码输入不一致，请重新输入新密码！</string>
+	<string name="ErrOldNewSame">新旧密码相同，请重新输入新密码！</string>
+	<string name="PwdOK">密码修改成功！</string>
+	<string name="PwdFail">密码修改失败！</string>
+	<string name="ExtraStudentInfo"> 姓名：%1$s   \t学号：%2$s   \n 继续加油，上次考试完成的很出色！</string>
+	<string name="Committing">正在为你提交试卷</string>
+	<string name="CommittingFilter">正在提交试卷，无法使用该项功能</string>	
 </resources>

@@ -1,5 +1,7 @@
 package com.king.cai.examination;
 
+import com.king.cai.R;
+
 import android.widget.ListView;
 
 
@@ -11,11 +13,12 @@ public class WaitingStatus extends PaperStatus{
 
 	@Override
 	public void onCommitClick() {
-		mStatusOwner.switch2CommitStatus();		
+		mStatusOwner.showToast(R.string.Committing);		
 	}
 
 	@Override
 	public void onFilterClick(ListView listView, PaperViewAdapter fullAdapter) {
+		mStatusOwner.showToast(R.string.CommittingFilter);
 	}
 
 	@Override
@@ -26,9 +29,11 @@ public class WaitingStatus extends PaperStatus{
 
 	@Override
 	public void EnterStatus() {
+		mStatusOwner.showToast(R.string.Committing);		
 	}
 
 	@Override
 	public void LeaveStatus() {
 	}
 }
+

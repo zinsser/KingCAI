@@ -41,6 +41,10 @@ public class QuestionInfo {
 		return mID;
 	}
 	
+	public String getReference(){
+		return mReference;
+	}
+	
 	public ByteBuffer getImage(String imageIndex){
 		if (mGraphics.size() < 1) return null;
 		return mGraphics.get(imageIndex);

@@ -1,20 +1,21 @@
 package com.king.cai.examination;
 
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.king.cai.R;
 import com.king.cai.examination.ItemViewHolder;
 
 public class CommitedStatus extends PaperStatus{
-
-	public CommitedStatus(PaperActivity owner){
+	private boolean mShowAnswers = false;
+	public CommitedStatus(PaperActivity owner, boolean showAnswer){
 		super(owner);
+		mShowAnswers = showAnswer;
 	}
 	
 	@Override
 	public void EnterStatus() {
 		mStatusOwner.InitUncorrectList(mListFirst, mListSecond);
-
 		//TODO:打开或注释此行代码可以实现立即显示正确与否
 		mStatusOwner.ShowCorrectInfo(mListFirst.size());
 	}		
@@ -38,7 +39,8 @@ public class CommitedStatus extends PaperStatus{
 		}else if (mFilterLevel == 2){
 			listView.setAdapter(fullAdapter.CloneAdapter(mListSecond));			
 			mStatusOwner.ChangeFilterButtonText(R.string.IncorrectQuestions);
-		}		
+		}	
+		((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();		
 	}
 
 	@Override
@@ -48,6 +50,6 @@ public class CommitedStatus extends PaperStatus{
 
 	@Override
 	public void doGettingItemView(ItemViewHolder holder, Integer index, int fontsize){
-		holder.doGettingItemViews(index, fontsize, false);
+		holder.doGettingItemViews(index, fontsize, mShowAnswers);
 	}	
 }

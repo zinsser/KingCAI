@@ -26,7 +26,8 @@ public class ActiveMessage_ImageResponse  extends ActiveMessage{
 	public void Execute() {
 		//[ImageBC]2000[id]xx[sub]xx
 		String subMessage = super.FromPack(mSocketMessage);
-		if (subMessage.contains("[id]") && subMessage.contains("[sub]")){
+		if (subMessage.contains("[id]") && subMessage.contains("[sub]")
+				&& !subMessage.contains("@")){
 			int idPos = subMessage.indexOf("[id]");
 			String strSize = subMessage.substring(0, idPos);
 			int subIDPos = subMessage.indexOf("[sub]");
@@ -38,9 +39,17 @@ public class ActiveMessage_ImageResponse  extends ActiveMessage{
 			Bundle bundle = new Bundle();
 			bundle.putString("ID", qid);
 			bundle.putString("Index", imageIndex);
-			bundle.putInt("Size", Integer.parseInt(strSize));
-			innerMessage.setData(bundle);
-			innerMessage.sendToTarget();
+			
+			Integer size = 65535;
+			try {
+				size = Integer.parseInt(strSize);
+			}catch (NumberFormatException e){
+				e.printStackTrace();
+			}finally{
+				bundle.putInt("Size", size);
+				innerMessage.setData(bundle);
+				innerMessage.sendToTarget();
+			}
 		}
 	}
 }

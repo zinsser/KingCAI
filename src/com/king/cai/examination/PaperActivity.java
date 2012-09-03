@@ -8,6 +8,7 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,10 +44,12 @@ import com.king.cai.message.RequestMessage_ImageData;
 import com.king.cai.message.RequestMessage_Logout;
 import com.king.cai.message.RequestMessage_Paper;
 import com.king.cai.message.RequestMessage_PaperSize;
+import com.king.cai.message.RequestMessage_ResetPassword;
 
 public class PaperActivity  extends ComunicableActivity {
 	private final static int GROUP_NORMAL = 0;
 	private final static int MENU_FONT_SIZE = 0;
+	private final static int MENU_MODIFY_PASSWORD = 1;	
 	private final static int MENU_WIFI_MANAGER = 2;
 	private final static int MENU_ABOUT = 3;
 	
@@ -53,7 +57,7 @@ public class PaperActivity  extends ComunicableActivity {
 	private final static int DIALOG_ABOUT = 2;
 	
 	private int mCurrentFontSize = 1;//normal
-	
+		
 	private final static String s_ConfigFileName = "KingCAI_Config";
 	private final static String s_CfgTag_FontSize = "fontsize";
 	private final static String s_CfgTag_ExitStatus = "exitstatus"; //true:normal false:exception
@@ -66,9 +70,12 @@ public class PaperActivity  extends ComunicableActivity {
 	private Button mBtnFilter = null;
 	private TextView mTextViewStatus = null;
 	private boolean mOffline = false;
+	
+	private String mStudentID = null;
 	private String mStudentInfo = null;
 	private String mServerIP = null;
 	private String mSSID = null;
+	
 	private PaperViewAdapter mFullAdapter = null;
 	private PaperStatus mPaperStatus = null;	
 	
@@ -103,6 +110,7 @@ public class PaperActivity  extends ComunicableActivity {
 		((EditText)findViewById(R.id.txtGoto)).setOnEditorActionListener(new SearchEditorListener());
 		
 		mTextViewStatus = (TextView)findViewById(R.id.textViewPaperStatus);
+		mTextViewStatus.setVisibility(View.GONE);
     }
 	
     @Override
@@ -133,8 +141,10 @@ public class PaperActivity  extends ComunicableActivity {
     public void onStop(){
     	SaveConfig(true);
     	mServiceChannel.sendMessage(new RequestMessage_Logout(), 0);
-    	mPaperStatus.LeaveStatus();
-    	mPaperStatus = null;
+    	if (mPaperStatus != null){
+    		mPaperStatus.LeaveStatus();
+        	mPaperStatus = null;
+    	}
    		super.onStop();
     }    
 
@@ -242,7 +252,8 @@ public class PaperActivity  extends ComunicableActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
     	menu.add(GROUP_NORMAL, MENU_FONT_SIZE, 0, R.string.FontSize);
-    	menu.add(GROUP_NORMAL, MENU_WIFI_MANAGER, 0, R.string.ManagerWifi);
+//    	menu.add(GROUP_NORMAL, MENU_WIFI_MANAGER, 0, R.string.ManagerWifi);
+    	menu.add(GROUP_NORMAL, MENU_MODIFY_PASSWORD, 0, R.string.ModifyPassword);
     	menu.add(GROUP_NORMAL, MENU_ABOUT, 0, R.string.About);
     	
     	return super.onCreateOptionsMenu(menu);
@@ -254,6 +265,9 @@ public class PaperActivity  extends ComunicableActivity {
     	case MENU_FONT_SIZE:
     		showDialog(SET_FONT_SIZE_DIALOG);
     		break;
+    	case MENU_MODIFY_PASSWORD:
+    		showChangePasswordDialog();
+    		break;
     	case MENU_WIFI_MANAGER:
     		break;
     	case MENU_ABOUT:
@@ -263,6 +277,54 @@ public class PaperActivity  extends ComunicableActivity {
     	
     	return super.onOptionsItemSelected(item);
     }
+
+    private void showChangePasswordDialog(){
+		LayoutInflater inflater = LayoutInflater.from(getApplication());
+		final View modifyView = inflater.inflate(R.layout.modifypassword, null);
+		final Dialog dlg = new Dialog(this, R.style.NoTitleDialog);
+		dlg.setContentView(modifyView);
+		((TextView)modifyView.findViewById(R.id.textViewTitle)).setText(R.string.PasswordTitle);
+		Button buttonOK = (Button)modifyView.findViewById(R.id.buttonOK);
+		buttonOK.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				String pwdFirst = ((EditText)modifyView.findViewById(R.id.editTextFirstPassword)).getText().toString();
+				String pwdSecond = ((EditText)modifyView.findViewById(R.id.editTextSecond)).getText().toString();
+				String pwdOld = ((EditText)modifyView.findViewById(R.id.editTextOldPassword)).getText().toString();
+
+				if (pwdFirst != null && pwdFirst.equals(pwdSecond)){
+					if (!pwdFirst.equals(pwdOld)){
+						mServiceChannel.sendMessage(new RequestMessage_ResetPassword(mStudentID, pwdOld, pwdFirst), 0);
+						hiddenKeyboard((EditText)modifyView.findViewById(R.id.editTextFirstPassword));
+						dlg.dismiss();
+					}else{
+						showToast(R.string.ErrOldNewSame);
+					}
+				}else{
+					showToast(R.string.ErrNotSame);
+				}
+
+//		    		StudentDBHelper dbHelper = new StudentDBHelper(LoginActivity.this);
+//		    		ContentValues values = dbHelper.FindItem(mID);
+//					String oldPwd = (String)values.get(StudentDBHelper.s_StudentTag_Passwd);
+//					if (oldPwd != null && oldPwd.equals(textOld)){
+//						if (textFirst.getText().equals(textSecond.getText())){
+//							values.put(StudentDBHelper.s_StudentTag_Passwd, textFirst.toString());
+//							dbHelper.Update(values, mID);
+//						}
+//					}
+			}
+		});
+		Button buttonCancel = (Button)modifyView.findViewById(R.id.buttonCancel);    		
+		buttonCancel.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				dlg.dismiss();
+			}
+		});
+		
+		dlg.show();
+	}
     
     @Override
     protected Dialog onCreateDialog(int id){
@@ -330,7 +392,7 @@ public class PaperActivity  extends ComunicableActivity {
 			Integer size = bundle.getInt("Size");
 			mServiceChannel.updatePaperSize(size);
 			mServiceChannel.sendMessage(new RequestMessage_Paper(), 0);
-			mTextViewStatus.setText("Paper Size Ready"+size+"\n");
+			mTextViewStatus.setText("Paper Size Ready:"+size+"\n");
 			break;
 		}
 		case KingCAIConfig.EVENT_NEW_PAPER:{
@@ -383,6 +445,16 @@ public class PaperActivity  extends ComunicableActivity {
 			}
 			break;
 		}
+		case KingCAIConfig.EVENT_RESET_PWDACK:{
+			boolean result = bundle.getBoolean("Result");
+			showToast(result ? R.string.PwdOK : R.string.PwdFail);
+			break;
+		}
+		case KingCAIConfig.EVENT_COMMIT_ACK:{
+			boolean ack = bundle.getBoolean("Result");
+			switch2CommitStatus(ack);
+			break;
+		}
 		default:
 			break;
 		}
@@ -390,26 +462,27 @@ public class PaperActivity  extends ComunicableActivity {
 	
 	
     private void ParseIntentExtraParam(){
+    	Bundle extra = getIntent().getExtras();
+    	if (getIntent().hasExtra(KingCAIConfig.StudentID)){
+    		mStudentID = extra.getString(KingCAIConfig.StudentID);
+    	}
+    	
         if (getIntent().hasExtra(KingCAIConfig.StudentInfo)){
-            Bundle extra = getIntent().getExtras();
             mStudentInfo = extra.getString(KingCAIConfig.StudentInfo);
-            mTextViewTitle.setText(mStudentInfo + "  - " + getTitle());
+            mTextViewTitle.setText(mStudentInfo.trim() + "  - " + getTitle());
         }
         
         if (getIntent().hasExtra(KingCAIConfig.ServerIP)){
-            Bundle extra = getIntent().getExtras();
             String servip = extra.getString(KingCAIConfig.ServerIP);
             mServerIP = new String(servip != null ? servip : "");
         }
         
         if (getIntent().hasExtra(KingCAIConfig.SSID)){
-            Bundle extra = getIntent().getExtras();
             String ssid = extra.getString(KingCAIConfig.SSID);
             mSSID = new String(ssid != null ? ssid : "");
         }
         
         if (getIntent().hasExtra(KingCAIConfig.Offline)){
-        	Bundle extra = getIntent().getExtras();
         	mOffline = extra.getBoolean(KingCAIConfig.Offline);
         }
     }
@@ -475,10 +548,18 @@ public class PaperActivity  extends ComunicableActivity {
 	public void CommitAnswers(){
 		HiddenKeyBoard(findViewById(R.id.txtGoto));
 		mServiceChannel.sendMessage(new RequestMessage_Answer(mAnswerMgr.toString()), 0);
+		
+		//–¥»Î
+		SharedPreferences sp = getSharedPreferences(KingCAIConfig.s_ExtraInfoFileName, 0);
+		SharedPreferences.Editor editor = sp.edit();
+		editor.putString(KingCAIConfig.LastLoginID, mStudentID);
+		editor.putString(KingCAIConfig.LastLoginName, mStudentInfo);
+		editor.putString(KingCAIConfig.Grade, mSSID);
+		editor.putBoolean(KingCAIConfig.ExtraStudentInfo, true);
+		editor.commit();
 	}
 	
 	public void switch2WaitingStatus(){
-		CommitAnswers();
 		mPaperStatus.LeaveStatus();
 		mPaperStatus = null;
 		mPaperStatus = new WaitingStatus(this);
@@ -487,10 +568,10 @@ public class PaperActivity  extends ComunicableActivity {
 		adapter.notifyDataSetChanged();
 	}
 	
-	public void switch2CommitStatus(){
+	public void switch2CommitStatus(boolean showAnswer){
 		mPaperStatus.LeaveStatus();
 		mPaperStatus = null;
-		mPaperStatus = new CommitedStatus(this);
+		mPaperStatus = new CommitedStatus(this, showAnswer);
 		mPaperStatus.EnterStatus();		
 	}
 	

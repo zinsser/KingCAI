@@ -34,7 +34,7 @@ public class KingService extends Service{
 	@Override
 	public IBinder onBind(Intent intent) {
 		if (mWifiMonitor != null){
-		//	mWifiMonitor.registIntentFilter(getApplicationContext());
+	//		mWifiMonitor.registIntentFilter(getApplicationContext());
 		}
         return mBinder;
 	}
@@ -42,7 +42,7 @@ public class KingService extends Service{
     @Override  
     public boolean onUnbind(Intent intent) {
     	if (mWifiMonitor != null){
-    	//	mWifiMonitor.unRegistIntentFilter(getApplicationContext());
+//    		mWifiMonitor.unRegistIntentFilter(getApplicationContext());
     	}
         return super.onUnbind(intent);  
     }
@@ -75,6 +75,14 @@ public class KingService extends Service{
     	}
     };
 
+    public boolean isNetworkConnected(){
+    	boolean bRet = true;
+    	if (mWifiMonitor != null){
+    		mWifiMonitor.isNetworkConnected();
+    	}
+    	return bRet;
+    }
+    
     public void startScanSSID(Message msg){
     	if (mWifiMonitor != null){
     		mWifiMonitor.startScanSSID(msg);

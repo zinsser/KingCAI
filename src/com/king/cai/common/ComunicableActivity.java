@@ -29,6 +29,8 @@ import android.os.Process;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public abstract class ComunicableActivity extends Activity{
@@ -85,6 +87,11 @@ public abstract class ComunicableActivity extends Activity{
     	toast.show();
     }    
     
+    protected void hiddenKeyboard(EditText destCtrl){
+		InputMethodManager im =(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE); 
+		im.hideSoftInputFromWindow(destCtrl.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS); 
+    }
+    
 	protected abstract void doHandleInnerMessage(Message innerMessage);
 	protected Handler mInnerMessageHandler = new Handler(){
 		@Override
@@ -136,13 +143,8 @@ public abstract class ComunicableActivity extends Activity{
 				if (bTextMessage){
 					String peerip = bundle.getString("Peer");
 					byte[] msgBuf = bundle.getByteArray("Content");
-
-//					try {
-						onReceiveMessage(peerip, msgBuf);
-//					} catch (UnsupportedEncodingException e) {
-//						e.printStackTrace();
-//					}
-
+					
+					onReceiveMessage(peerip, msgBuf);
 				}else{
 					Message newImageMessage = mInnerMessageHandler.obtainMessage(KingCAIConfig.EVENT_NEW_IMAGE);
 					newImageMessage.setData(bundle);
@@ -155,7 +157,7 @@ public abstract class ComunicableActivity extends Activity{
     	private void onReceiveMessage(String peer, byte[] msgData){
 			String msgContent = null;
 			try {
-				msgContent = new String(msgData, KingCAIConfig.mCharterSet);
+				msgContent = new String(msgData, KingCAIConfig.mCharterSet).trim();
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -174,7 +176,8 @@ public abstract class ComunicableActivity extends Activity{
 	    		if (activeMsgExecutor != null){
 	    			activeMsgExecutor.setCompleteHandler(mInnerMessageHandler);
 	    			activeMsgExecutor.Execute();
-	    		}else if (!msgContent.contains("[type]") && !msgContent.contains("[id]")){
+	    		}else if (!msgContent.contains("[type]") && !msgContent.contains("[id]")
+	    				&& msgData.length > 10){
 	    			Bundle bundle = new Bundle();
 	    			bundle.putByteArray("Content", msgData);   //二进制数据采用byte[]原始数据
 	    			Message newImageMessage = mInnerMessageHandler.obtainMessage(KingCAIConfig.EVENT_NEW_IMAGE);
@@ -197,7 +200,15 @@ public abstract class ComunicableActivity extends Activity{
         public void onServiceDisconnected(ComponentName name) {  
         	mKingService = null;
         }
-                
+              
+        public boolean isNetworkConnected(){
+        	boolean bConnected = false;
+        	if (mKingService != null){
+        		bConnected = mKingService.isNetworkConnected();
+        	}        	
+        	return bConnected;
+        }
+        
         public void startScanSSID(Message msg){
         	if (mKingService != null){
         		mKingService.startScanSSID(msg);

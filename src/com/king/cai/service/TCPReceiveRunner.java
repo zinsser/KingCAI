@@ -31,7 +31,7 @@ public class TCPReceiveRunner extends FirableRunner{
 	protected void doRun() {
 		try {
 			int subReadSize = -1;
-			
+			if (mReceiveBuf != null) mReceiveBuf.clear();
 			mReceiveBuf = null;
 			mReceiveBuf = ByteBuffer.allocate(mDefaultBufferSize);
 			do {

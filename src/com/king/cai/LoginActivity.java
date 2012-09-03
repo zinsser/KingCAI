@@ -92,7 +92,6 @@ public class LoginActivity  extends ComunicableActivity  {
         	
         });
         mTextViewBaseInfo = (TextView)findViewById(R.id.textViewBaseInfo);
-        mTextViewBaseInfo.setText(R.string.NoInfo);
         
         mTextViewStatus = (TextView)findViewById(R.id.textViewStatus);
         
@@ -103,7 +102,7 @@ public class LoginActivity  extends ComunicableActivity  {
     public void onStart(){
     	super.onStart();
     	ReadLastLogin();
-    	mTextViewStatus.setText(R.string.FindSSIDStatus);
+    	mTextViewStatus.setText(R.string.AppInitStatus);    	
     }
     
     @Override
@@ -134,21 +133,38 @@ public class LoginActivity  extends ComunicableActivity  {
 
     
 	private void ReadLastLogin(){
-		String ssid;
-		SharedPreferences sp = getSharedPreferences(s_ConfigFileName, 0);
-		mID = sp.getString(s_Tag_Number, "");
-		ssid = sp.getString(s_Tag_Grade, "");
-		if (ssid.length() == 0){
-			mSpinnerSSID.setSelection(0);
-		}else{
-			for (int i = 1; i < mSpinnerSSID.getAdapter().getCount(); ++i){
-				if (mSpinnerSSID.getAdapter().getItem(i).equals(ssid)){
-					mSpinnerSSID.setSelection(i);
-					break;
+		{
+			String ssid;
+			SharedPreferences sp = getSharedPreferences(s_ConfigFileName, 0);
+			mID = sp.getString(s_Tag_Number, "");
+			ssid = sp.getString(s_Tag_Grade, "");
+			if (ssid.length() == 0){
+				mSpinnerSSID.setSelection(0);
+			}else{
+				for (int i = 1; i < mSpinnerSSID.getAdapter().getCount(); ++i){
+					if (mSpinnerSSID.getAdapter().getItem(i).equals(ssid)){
+						mSpinnerSSID.setSelection(i);
+						break;
+					}
 				}
 			}
+			mTextviewStudentID.setText(mID);
+		}    
+		{
+			SharedPreferences sp = getSharedPreferences(KingCAIConfig.s_ExtraInfoFileName, 0);
+			String name = sp.getString(KingCAIConfig.LastLoginName, "000");
+			String id = sp.getString(KingCAIConfig.LastLoginID, "000");
+			Boolean bExtraInfo = sp.getBoolean(KingCAIConfig.ExtraStudentInfo, false);
+			if (bExtraInfo && name != null && id != null){
+				String tips = String.format(getResources().getString(R.string.ExtraStudentInfo),
+						name, id);
+
+				mTextViewBaseInfo.setText(tips); 	
+			}else{
+				mTextViewBaseInfo.setText(R.string.NoInfo);	
+			}
+	        
 		}
-		mTextviewStudentID.setText(mID);
 	}
 	
     private void SaveLastLogin(){
@@ -239,7 +255,14 @@ public class LoginActivity  extends ComunicableActivity  {
 				InputMethodManager im =(InputMethodManager)btn.getContext().getSystemService(Context.INPUT_METHOD_SERVICE); 
 				im.hideSoftInputFromWindow(mTextviewStudentID.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS); 
 				im.hideSoftInputFromWindow(mTextviewPassword.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-				if (!mCheckBoxOffline.isChecked()){
+
+				mID = mTextviewStudentID.getText().toString();
+				if (mID == null || mID.length() <= 0){
+					showToast(R.string.ErrNotInputID);
+					mTextviewStudentID.requestFocus();
+				}else if (mCheckBoxOffline.isChecked()){
+					StartPaperActivity(mID, "初三一班  张三丰", mCheckBoxOffline.isChecked());
+				}else{
 					if (mSpinnerSSID.getSelectedItemPosition() != 0){
 		    			mTextViewStatus.setText(R.string.QueryServerStatus);						
 						mServiceChannel.queryServer();						
@@ -248,15 +271,6 @@ public class LoginActivity  extends ComunicableActivity  {
 					}else{
 						mSpinnerSSID.performClick();
 		    			mTextViewStatus.setText(R.string.SelectClassTip);
-					}
-				}else{
-					mID = mTextviewStudentID.getText().toString();
-					
-					if (mID == null || mID.length() <= 0){
-						showToast(R.string.ErrNotInputID);
-						mTextviewStudentID.requestFocus();
-					}else{
-						StartPaperActivity("初三一班  张三丰", mCheckBoxOffline.isChecked());
 					}
 				}
 	    	}else if (btn == mImgViewHeader){
@@ -292,7 +306,7 @@ public class LoginActivity  extends ComunicableActivity  {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-    	menu.add(GROUP_NORMAL, MENU_MODIFY_PASSWORD, 0, R.string.ModifyPassword);
+//    	menu.add(GROUP_NORMAL, MENU_MODIFY_PASSWORD, 0, R.string.ModifyPassword);    	
     	menu.add(GROUP_NORMAL, MENU_SETTING, 0, R.string.Setting);
     	menu.add(GROUP_NORMAL, MENU_WIFI_SETTING, 0, R.string.WifiSetting);
     	
@@ -358,10 +372,11 @@ public class LoginActivity  extends ComunicableActivity  {
     	return super.onOptionsItemSelected(item);
     }    
 
-    public void StartPaperActivity(String studentInfo, boolean bOffline){
+    public void StartPaperActivity(String id, String studentInfo, boolean bOffline){
 //    	SaveStudentInfo(mID, studentInfo, mTxtPassword.getText().toString(), mImgViewHeader.getDrawable().toString());
     	
 		Intent openSheetActivity = new Intent(LoginActivity.this, PaperActivity.class);
+		openSheetActivity.putExtra(KingCAIConfig.StudentID, id);
 		openSheetActivity.putExtra(KingCAIConfig.StudentInfo, studentInfo);
 		openSheetActivity.putExtra(KingCAIConfig.ServerIP, mServerIP);
 		openSheetActivity.putExtra(KingCAIConfig.SSID, mSSID);
@@ -369,17 +384,24 @@ public class LoginActivity  extends ComunicableActivity  {
 		startActivity(openSheetActivity);
 		finish();
     }
+
     private Handler mWifiReadyHandler = new Handler(){
     	@Override
     	public void handleMessage(Message msg){
-    		
+    		//TODO:获取激活的SSID
     	}
     };
+    
 	@Override
 	protected void onServiceReady() {
 		mButtonLogin.setEnabled(true);
-
-		mServiceChannel.startScanSSID(mWifiReadyHandler.obtainMessage());
+    	mTextViewStatus.setText(R.string.FindSSIDStatus); 
+    	
+    	if (!mServiceChannel.isNetworkConnected()) {
+    		mServiceChannel.startScanSSID(mWifiReadyHandler.obtainMessage());
+    	}else {
+    		mWifiReadyHandler.obtainMessage().sendToTarget();
+    	}
 	}    
     
     @Override
@@ -403,7 +425,7 @@ public class LoginActivity  extends ComunicableActivity  {
 			if (bResult){
 				String studentInfo = bundle.getString("Info");
 				mTextViewStatus.setText(R.string.SuccessLoginStatus);
-				StartPaperActivity(studentInfo, mCheckBoxOffline.isChecked());
+				StartPaperActivity(mID, studentInfo, mCheckBoxOffline.isChecked());
 			}else{
 				mTextViewStatus.setText(R.string.FailLoginStatus);
 				showToast(R.string.InputCorrectIDTip);			

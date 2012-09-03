@@ -3,8 +3,8 @@ package com.king.cai.examination;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
-import android.graphics.Bitmap;
 import android.widget.BaseAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +17,24 @@ public class PaperViewAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private int mFontSize = 22;
     private ArrayList<Integer> mIndexes = new ArrayList<Integer>();
+//    private ArrayList<Integer> mRandomIndexes = new ArrayList<Integer>();
     private QuestionManager mQuestionMgr = null;
     
     private QuestionListListener mQuestionListener = new QuestionListListener();
 
+    private void randomIndex(ArrayList<Integer> sortedIndexes, ArrayList<Integer> randomIndexes){
+    	Random r = new Random();
+    	randomIndexes.clear();
+		int i = 0;
+		while (i < sortedIndexes.size()) {
+			int index = r.nextInt(sortedIndexes.size());
+			if (!randomIndexes.contains(sortedIndexes.get(index))){
+				randomIndexes.add(sortedIndexes.get(index));
+				i++;
+			}
+		}
+    }
+    
     public class QuestionListListener implements QuestionManager.QuestionListener{
     	@SuppressWarnings("unchecked")
     	public void onQuestionArrayChanged(ArrayList<Integer> indexes) {
@@ -28,7 +42,7 @@ public class PaperViewAdapter extends BaseAdapter {
     			mIndexes.clear();
     			mIndexes = (ArrayList<Integer>) indexes.clone();
     	        Collections.sort(mIndexes);
-    	        
+//    	        randomIndex(mIndexes, mRandomIndexes);
     	        notifyDataSetChanged();
     		}
     	}
@@ -37,13 +51,14 @@ public class PaperViewAdapter extends BaseAdapter {
     	public void onAddQuestion(Integer id) {
     		mIndexes.add(id);
             Collections.sort(mIndexes);
+//            randomIndex(mIndexes, mRandomIndexes);
 	        notifyDataSetChanged();
     	}
 
 
     	public void onClearQuestion() {
     		mIndexes.clear();
-            Collections.sort(mIndexes);		
+//    		mRandomIndexes.clear();
 	        notifyDataSetChanged();            
     	}
 
@@ -76,7 +91,7 @@ public class PaperViewAdapter extends BaseAdapter {
         
         retAdapter.mIndexes = (ArrayList<Integer>) indexes.clone();
         Collections.sort(retAdapter.mIndexes);
-
+//        randomIndex(retAdapter.mIndexes, retAdapter.mRandomIndexes);
         return retAdapter;
     }
     

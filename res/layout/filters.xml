@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#DCDCDC"
+    android:background="#E8E8E8"
     android:longClickable="false"
     android:orientation="vertical" >
 
@@ -21,7 +21,7 @@
 	    android:id="@+id/linearLayoutImage" 
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"   
-    	android:background="#DCDCDC"
+    	android:background="#E8E8E8"
 	   	android:layout_gravity="center"     	
     	android:layout_marginLeft="10dip"    
 	    android:orientation="horizontal" >
@@ -29,7 +29,7 @@
 		    android:id="@+id/linearLayoutImage_1" 
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"    
-	    	android:background="#DCDCDC"  	    	  
+	    	android:background="#E8E8E8"  	    	  
 		    android:orientation="vertical" >
 		    <ImageView
 	            android:id="@+id/imageView_1"
@@ -50,7 +50,7 @@
 		    android:id="@+id/linearLayoutImage_2"		    
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"    
-	    	android:background="#DCDCDC"    
+	    	android:background="#E8E8E8"    
 		    android:orientation="vertical" >
 			<ImageView
 	            android:id="@+id/imageView_2"
@@ -71,14 +71,14 @@
         android:id="@+id/linearLayoutAnswerAera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:background="#DCDCDC"            
+    	android:background="#E8E8E8"            
         android:orientation="horizontal" > 
 
 	    <LinearLayout
             android:id="@+id/linearLayoutOption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-    		android:background="#DCDCDC"	            
+    		android:background="#E8E8E8"	            
             android:orientation="horizontal" >          
 
             <RadioButton
@@ -120,7 +120,7 @@
             android:id="@+id/linearLayoutBlanks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-    		android:background="#DCDCDC"
+    		android:background="#E8E8E8"
             android:layout_marginLeft="15dp"
             android:paddingTop="3dip"
            	android:paddingBottom="3dip"	            
@@ -139,7 +139,7 @@
             android:id="@+id/linearLayoutOtherInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-    		android:background="#DCDCDC"	            
+    		android:background="#E8E8E8"	            
             android:orientation="horizontal" >    	            
 	        <ImageView
 	            android:id="@+id/imageViewMarker"

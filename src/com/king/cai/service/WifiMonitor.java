@@ -43,6 +43,7 @@ public class WifiMonitor {
 	private int mActiveNetworkID = -1;
     public BroadcastReceiver mReceiver = new WifiStateReceiver();
     private ConnectivityManager mConnManager;
+    private Message mFinishScanMessage = null;
     private Message mInnerMessage = null;
     
     public interface WifiStateListener{
@@ -96,16 +97,24 @@ public class WifiMonitor {
 		return wifiState == NetworkInfo.State.CONNECTED;
 	}	
 	
+	public boolean isNetworkConnected(){
+		boolean bRet = mWifiService.isWifiEnabled();
+		if (bRet){
+			//TODO:将激活的SSID保存起来
+			
+		}
+		return bRet;
+	}
+	
     public void startScanSSID(Message msg){
+    	mFinishScanMessage = msg;
 		if (!mWifiService.isWifiEnabled() 
 				&& mWifiService.getWifiState() != WifiManager.WIFI_STATE_ENABLING){
 			mWifiService.setWifiEnabled(true);
 		}else if (mWifiService.isWifiEnabled() 
-				&& mWifiService.getWifiState() == WifiManager.WIFI_STATE_ENABLED){
+				/*&& mWifiService.getWifiState() == WifiManager.WIFI_STATE_ENABLED*/){
 			mWifiService.startScan();
 			mState = WIFI_STATUS_SCANNING;
-		}else{
-			msg.sendToTarget();
 		}
     }
 

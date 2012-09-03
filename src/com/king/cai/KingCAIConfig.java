@@ -17,6 +17,8 @@ public class KingCAIConfig {
 	public final static int EVENT_IMAGE_READY = 12;
 	public final static int EVENT_REQUEST_IMAGE = 13;
 	public final static int EVENT_NEW_PAPER = 14;
+	public final static int EVENT_RESET_PWDACK = 15;
+	public final static int EVENT_COMMIT_ACK = 16;
 	
 	public final static String SOCKET_EVENT_ACTION = "com.king.cai.socket.event";
 	public static final String START_SERVICE_ACTION = "com.king.cai.service";
@@ -24,6 +26,14 @@ public class KingCAIConfig {
 	
 	public final static String mCharterSet = "GBK";
 
+	public final static String s_ExtraInfoFileName = "KingCAI_ExtraInfo";
+	public final static String ExtraStudentInfo = "ExtraInfo";
+	  
+	public final static String LastLoginID = "ID";
+	public final static String LastLoginName = "Name";
+	public final static String Grade = "Grade";
+	
+	public final static String StudentID = "ID";
 	public final static String StudentInfo = "StudentInfo";
 	public final static String ServerIP = "ServerIP";
 	public final static String SSID = "SSID";

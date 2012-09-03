@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.CountDownTimer;
 import android.view.WindowManager;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 
@@ -116,6 +117,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 			listView.setAdapter(fullAdapter.CloneAdapter(mListSecond));			
 			mStatusOwner.ChangeFilterButtonText(R.string.UncertainQuestions);
 		}
+		((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();		
 	}
 	
 	@Override
@@ -126,6 +128,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
+					mStatusOwner.CommitAnswers();
 					mStatusOwner.switch2WaitingStatus();
 				}
 			})

@@ -2,6 +2,7 @@ package com.king.cai.examination;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import android.graphics.Bitmap;
@@ -54,17 +55,29 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 	}
 	
 	public void addAnswer(QuestionInfo question){
-		mAnswers.put(question.getQuestionID(), 
-				      constructAnswer(question.getQuestionID()));
+		if (!mAnswers.keySet().contains(question.getQuestionID())){
+			mAnswers.put(question.getQuestionID(), 
+					constructAnswer(question.getQuestionID()));
+		}
 	}
 	
 	public void addAnswer(String id, String s){
-		mAnswers.put(id, constructAnswer(id, s));
+		if (!mAnswers.keySet().contains(id)){
+			mAnswers.put(id, constructAnswer(id, s));
+		}
 	}
 	
 	public String toString(){
 		String retAnswer = "@";
-		for (String id : mAnswers.keySet()){
+		
+		String[] keys = (String[])mAnswers.keySet().toArray(new String[mAnswers.keySet().size()]);
+		ArrayList<String> keyList = new ArrayList<String>();
+		for (String key : keys){
+			keyList.add(key);
+		}
+		Collections.sort(keyList);
+		
+		for (String id : keyList){
 			if (!mQuestionMgr.getQuestionItem(id).isPaperTitle()){
 				if (mAnswers.get(id) != null){
 					retAnswer += id + mAnswers.get(id).toString() + "@";
