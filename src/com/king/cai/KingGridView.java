@@ -31,7 +31,7 @@ public class KingGridView extends GridView{
 				canvas.drawBitmap(background, x, y, null);
 			}
 		}
-
+		setNumColumns(width / 140);
 		super.dispatchDraw(canvas);
 	}
 }

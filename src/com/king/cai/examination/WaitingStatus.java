@@ -18,7 +18,8 @@ public class WaitingStatus extends PaperStatus{
 
 	@Override
 	public void onFilterClick(ListView listView, PaperViewAdapter fullAdapter) {
-		mStatusOwner.showToast(R.string.CommittingFilter);
+//		mStatusOwner.showToast(R.string.CommittingFilter);
+		mStatusOwner.switch2CommitStatus(true);
 	}
 
 	@Override

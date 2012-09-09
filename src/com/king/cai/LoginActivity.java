@@ -109,7 +109,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		        intent.setData(Uri.fromFile(rootDir));
 		        startActivity(intent);
 		        */
-				String rootDir = Environment.getExternalStorageDirectory().getPath()+ "/DCIM"; 
+				String rootDir = Environment.getExternalStorageDirectory().getPath(); 
 				Intent openExplorerIntent = new Intent(LoginActivity.this, ExplorerActivity.class);
 				openExplorerIntent.putExtra("RootDir", rootDir);
 				startActivity(openExplorerIntent);

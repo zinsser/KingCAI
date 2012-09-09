@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.king.cai.R;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,11 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 public class ExplorerActivity extends Activity {
 	private GridView mExplorerView = null;
@@ -56,7 +56,14 @@ public class ExplorerActivity extends Activity {
     	mTextViewTitle.setText(mRootDir);
         mExplorerView = (GridView)findViewById(R.id.gridViewExplorer);
         ExplorerAdapter adapter = new ExplorerAdapter();
-        mExplorerView.setAdapter(adapter); 
+        mExplorerView.setAdapter(adapter);
+        
+        findViewById(R.id.buttonReturn).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				finish();
+			}
+		});
 	}
 	
 	//initpath = file:///sdcard/kingcai
@@ -71,7 +78,7 @@ public class ExplorerActivity extends Activity {
 						R.drawable.cartoon_folder, new FolderClickListener(f.getParent())));
 		}
 		
-		if (files.length > 0){
+		if (files != null && files.length > 0){
 			for (File file : files){
 				mFiles.add(new FileInfo(file.getName(), file.getPath(),
 							getResIdByFile(file), 
@@ -100,10 +107,15 @@ public class ExplorerActivity extends Activity {
 			mFile = file;
 		}
 		public void onClick(View v) {
+			
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.setDataAndType(Uri.fromFile(mFile), getMIMEByFile(mFile));
-			startActivity(intent);
+			try{
+				startActivity(intent);
+			}catch (ActivityNotFoundException e){
+				Toast.makeText(ExplorerActivity.this, "未找到读取该文件的应用程序\n  请安装后重试!", 2000).show();
+			}
 		}
 	}
 	
@@ -130,6 +142,7 @@ public class ExplorerActivity extends Activity {
 		new FileInfoWithMime("mp3", "audio/*", R.drawable.cover_ebk),
 		new FileInfoWithMime("m4a", "audio/*", R.drawable.cover_ebk),
 		new FileInfoWithMime("wav", "audio/*", R.drawable.cover_ebk),
+		new FileInfoWithMime("amr", "audio/*", R.drawable.cover_ebk),
 		
 		new FileInfoWithMime("mp4", "video/*", R.drawable.cover_ebk),
 		new FileInfoWithMime("3gp", "video/*", R.drawable.cover_ebk),
@@ -138,7 +151,11 @@ public class ExplorerActivity extends Activity {
 		new FileInfoWithMime("xls", "application/vnd.ms-excel", R.drawable.cover_chm),
 		new FileInfoWithMime("docx", "application/msword", R.drawable.cover_chm),
 		new FileInfoWithMime("pptx", "application/vnd.ms-powerpoint", R.drawable.cover_chm),
+		new FileInfoWithMime("doc", "application/msword", R.drawable.cover_chm),
+		new FileInfoWithMime("ppt", "application/vnd.ms-powerpoint", R.drawable.cover_chm),
 		new FileInfoWithMime("html", "text/html", R.drawable.cover_html),
+		new FileInfoWithMime("mht", "text/html", R.drawable.cover_html),
+		new FileInfoWithMime("htm", "text/html", R.drawable.cover_html),
 		new FileInfoWithMime("pdf", "application/pdf", R.drawable.cover_pdb)
 	}; 
 	
