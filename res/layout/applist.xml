@@ -2,38 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/login_bg_blue"
     android:orientation="vertical" >
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+    	android:layout_marginTop="40dp"        
+        android:text="@string/app_name"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="40dp"
+        android:textColor="#FFFFFF"/>
+
+	<ImageView
+		android:layout_width="150dip"
+		android:layout_height="200dip"
+		android:layout_gravity="center_horizontal"
+		android:scaleType="fitCenter"
+		android:src="@drawable/logo_finger" />
+    
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/applist_bg" >
+        android:layout_height="match_parent">
 
         <TableRow
             android:id="@+id/tableRow1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
-
-            <Button
-                android:id="@+id/btnTestOnLine"
-                android:layout_width="125dp"
-                android:layout_height="120dp"
-                android:background="@drawable/testonline"
-                android:text="在线测试" />
-
-            <Button
-                android:id="@+id/btnWordStudy"
-                android:layout_width="125dp"
-                android:layout_height="120dp"
-                android:background="@drawable/wordstudy"
-                android:text="英语单词学习" />
-
-            <Button
-                android:id="@+id/btnFunctionWordStudy"
-                android:layout_width="125dp"
-                android:layout_height="120dp"
-                android:background="@drawable/mathfunc"
-                android:text="数学函数学习" />
 
         </TableRow>
 

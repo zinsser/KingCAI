@@ -1,19 +1,24 @@
 package com.king.cai;
 
+import java.io.File;
+
 import com.king.cai.R;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperActivity;
 
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ComponentInfo;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 
 import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 
 import android.os.Message;
@@ -94,7 +99,17 @@ public class LoginActivity  extends ComunicableActivity  {
         mTextViewBaseInfo = (TextView)findViewById(R.id.textViewBaseInfo);
         
         mTextViewStatus = (TextView)findViewById(R.id.textViewStatus);
-        
+        findViewById(R.id.buttonStudy).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent intent = new Intent();
+		        intent.setComponent(new ComponentName("org.openintents.filemanager", 
+		        									  "org.openintents.filemanager.FileManagerActivity"));
+		        File rootDir = new File(Environment.getExternalStorageDirectory().getPath()+"/Data");
+		        intent.setData(Uri.fromFile(rootDir));
+		        startActivity(intent);				
+			}
+		});
         cleanForm();
     }
 

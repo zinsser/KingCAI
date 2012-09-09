@@ -51,8 +51,8 @@ public class KingService extends Service{
     public void onCreate() {  
 		super.onCreate();
 		mWifiMonitor = null;
-		mWifiMonitor = new WifiMonitor(getApplicationContext(), 
-										Message.obtain(mHandler, WIFI_EVENT));
+//		mWifiMonitor = new WifiMonitor(getApplicationContext(), 
+//										Message.obtain(mHandler, WIFI_EVENT));
     }
     
     public static final int SOCKET_EVENT = 0;

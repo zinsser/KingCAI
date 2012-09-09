@@ -7,7 +7,7 @@
     <string name="Title">堂堂清</string>
     <string name="StudentID">请输入学号</string>
     <string name="Password">请输入密码</string>
-    <string name="Login">登录</string>
+    <string name="Login">测试</string>
     <string name="Exit">退出</string>
     <string name="Commit">我要交卷</string>
     <string name="Filter">筛选</string>
@@ -73,5 +73,6 @@
 	<string name="PwdFail">密码修改失败！</string>
 	<string name="ExtraStudentInfo"> 姓名：%1$s   \t学号：%2$s   \n 继续加油，上次考试完成的很出色！</string>
 	<string name="Committing">正在为你提交试卷</string>
-	<string name="CommittingFilter">正在提交试卷，无法使用该项功能</string>	
+	<string name="CommittingFilter">正在提交试卷，无法使用该项功能</string>
+	<string name="Study">学习资料</string>		
 </resources>

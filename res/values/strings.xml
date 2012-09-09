@@ -7,7 +7,7 @@
     <string name="Title">Classroom Testing</string>
     <string name="StudentID">Please input student ID</string>
     <string name="Password">Please input Password</string>
-    <string name="Login">Login</string>
+    <string name="Login">Test</string>
     <string name="Exit">Exit</string>
     <string name="Commit">Commit</string>   
     <string name="Filter">Filter</string>
@@ -74,4 +74,5 @@
 	<string name="ExtraStudentInfo"> 姓名：%1$s    \t学号：%2$s   \n 继续加油，上次考试完成的很出色！</string>		
 	<string name="Committing">正在为你提交试卷</string>
 	<string name="CommittingFilter">正在提交试卷，无法使用该项功能</string>	
+	<string name="Study">Study</string>
 </resources>
