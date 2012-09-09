@@ -47,7 +47,7 @@
             android:screenOrientation="portrait" >
          </activity>	
         <activity
-            android:name=".AppEnumActivity"
+            android:name=".ExplorerActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@android:style/Theme.NoTitleBar"

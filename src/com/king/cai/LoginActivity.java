@@ -102,12 +102,17 @@ public class LoginActivity  extends ComunicableActivity  {
         findViewById(R.id.buttonStudy).setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				Intent intent = new Intent();
+/*				Intent intent = new Intent();
 		        intent.setComponent(new ComponentName("org.openintents.filemanager", 
 		        									  "org.openintents.filemanager.FileManagerActivity"));
-		        File rootDir = new File(Environment.getExternalStorageDirectory().getPath()+"/Data");
+		        File rootDir = new File();
 		        intent.setData(Uri.fromFile(rootDir));
-		        startActivity(intent);				
+		        startActivity(intent);
+		        */
+				String rootDir = Environment.getExternalStorageDirectory().getPath()+ "/DCIM"; 
+				Intent openExplorerIntent = new Intent(LoginActivity.this, ExplorerActivity.class);
+				openExplorerIntent.putExtra("RootDir", rootDir);
+				startActivity(openExplorerIntent);
 			}
 		});
         cleanForm();

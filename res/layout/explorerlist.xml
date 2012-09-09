@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+    	android:layout_marginTop="40dp"        
+        android:text="@string/app_name"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="40dp"
+        android:visibility="gone"
+        android:textColor="#FFFFFF"/>
+
+	<ImageView
+		android:layout_width="15dip"
+		android:layout_height="20dip"
+		android:layout_gravity="center_horizontal"
+		android:scaleType="fitCenter"
+		        android:visibility="gone"
+		android:src="@drawable/logo_finger" />
+
+	<RelativeLayout 
+	    android:id="@+id/linearLayoutTitle"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@drawable/titlebar_big">
+	
+	    <TextView
+	        android:id="@+id/textViewExplorerTitle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+            android:shadowColor="#ff000000"
+            android:shadowDx="2"
+            android:shadowDy="0"
+            android:shadowRadius="1"
+	        android:textSize="24dp"
+	        android:textColor="#FFFFFF"
+	        android:textStyle="bold" />
+	        
+	</RelativeLayout>
+	
+	<com.king.cai.KingGridView
+	    android:id="@+id/gridViewExplorer"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_below="@id/linearLayoutTitle"
+	    android:cacheColorHint="#00000000"
+	    android:columnWidth="90.0dip"
+	    android:fadingEdge="none"
+	    android:horizontalSpacing="5dp"
+	    android:listSelector="#00000000"
+	    android:numColumns="3"
+	    android:scrollbars="none"
+	    android:verticalSpacing="20dp" />		
+
+</RelativeLayout>
