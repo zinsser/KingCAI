@@ -16,6 +16,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <!-- <uses-permission android:name="android.permission.SET_PREFERRED_APPLICATIONS"/> -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
 	  
     <application android:name=".TestOnLineApp"
@@ -28,16 +30,16 @@
 	    	android:theme="@android:style/Theme.Light.NoTitleBar"  
 	    	android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" >
- <!--              <intent-filter >
+               <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
 
-          <intent-filter >
+ <!--          <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>                           
+            </intent-filter> -->                           
         </activity>
         <activity
             android:name=".examination.PaperActivity" 

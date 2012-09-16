@@ -16,6 +16,7 @@ import android.widget.ListView;
 import com.king.cai.R;
 import com.king.cai.examination.ItemViewHolder;
 import com.king.cai.examination.QuestionManager.QuestionListener;
+import com.king.cai.message.RequestMessage_Answer;
 
 
 public class AnswerStatus extends PaperStatus implements QuestionListener{
@@ -72,6 +73,11 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 		});
 	}
 
+	public boolean onBackkeyDown(){
+//		showAlertDialog();		
+		return true;
+	}	
+	
     private void startTimeTicker(final boolean bCountDown){
     	long TotalTickTime = bCountDown ? 2700000 : 86400000;
     	mTickTimer = new CountDownTimer(TotalTickTime, 1000) {
@@ -84,7 +90,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 			    	//TODO: save question info&answer info to a pair file
 					mStatusOwner.SaveConfig(false);
 					mStatusOwner.SavePaper();
-					mStatusOwner.CommitAnswers();
+					mStatusOwner.CommitAnswers(RequestMessage_Answer.s_ExceptionCommitMsgTag);
 				}
 				mStatusOwner.mTextViewTitle.setText(rawtitle + "  - " + SecondsToString(mTotalTicks));
 			}
@@ -128,7 +134,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
-					mStatusOwner.CommitAnswers();
+					mStatusOwner.CommitAnswers(RequestMessage_Answer.s_NormalCommitMsgTag);
 					mStatusOwner.switch2WaitingStatus();
 				}
 			})

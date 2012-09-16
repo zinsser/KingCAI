@@ -36,11 +36,12 @@ public class TCPReceiveRunner extends FirableRunner{
 			mReceiveBuf = ByteBuffer.allocate(mDefaultBufferSize);
 			do {
 				subReadSize = mInputStream.read(mReceiveBuf.array(), mTotalSize, mReceiveBuf.capacity() - mTotalSize);
+				String str = new String(mReceiveBuf.array(), KingCAIConfig.mCharterSet);
 				
 				if (subReadSize > 0 && mExpectSize > 0){
 					mTotalSize += subReadSize;
 				}
-			}while (mExpectSize > 0 && subReadSize > 0 && mTotalSize < mExpectSize);
+			}while (mExpectSize > 0 && subReadSize > 0 && mTotalSize < mExpectSize );
 
 			if (subReadSize > 0){
 				String str = new String(mReceiveBuf.array(), KingCAIConfig.mCharterSet);

@@ -1,5 +1,8 @@
 package com.king.cai.examination;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -43,6 +46,11 @@ public class CommitedStatus extends PaperStatus{
 		((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();		
 	}
 
+	public boolean onBackkeyDown(){
+		showAlertDialog();		
+		return true;
+	}
+	
 	@Override
 	public void onCommitClick() {
 		mStatusOwner.showToast(R.string.CommitTips);		

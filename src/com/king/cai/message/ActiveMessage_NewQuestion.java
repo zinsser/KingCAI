@@ -77,7 +77,9 @@ public class ActiveMessage_NewQuestion  extends ActiveMessage{
 			return null;
 		}
 		@Override  
-		protected void onPostExecute(String result) {  
+		protected void onPostExecute(String result) {
+			Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_NEW_QUESTION_COMPLETE);
+			innerMessage.sendToTarget();
 		}  
 		
 		@Override  
@@ -96,10 +98,6 @@ public class ActiveMessage_NewQuestion  extends ActiveMessage{
 				bundle.putInt("ImageCount", obj.mImageCount);
 				innerMessage.setData(bundle);
 				innerMessage.sendToTarget();					
-			}
-			{
-				Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_NEW_QUESTION_COMPLETE);
-				innerMessage.sendToTarget();
 			}
 		}
 	};

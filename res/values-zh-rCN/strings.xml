@@ -7,7 +7,7 @@
     <string name="Title">堂堂清</string>
     <string name="StudentID">请输入学号</string>
     <string name="Password">请输入密码</string>
-    <string name="Login">测试</string>
+    <string name="Login">进入测试</string>
     <string name="Exit">退出</string>
     <string name="Commit">我要交卷</string>
     <string name="Filter">筛选</string>
@@ -37,18 +37,19 @@
     <string name="CurrentBlankQuestion">请输入第%1$s(%2$s)道题答案</string>
     <string name="ServerNotFound">无法找到服务器</string>        
     <string name="SelectClassTip">请选择班级！</string>   
-    <string name="InputCorrectIDTip">请输入正确的学号及密码！</string>   
+    <string name="InputCorrectID">请输入正确的学号！</string>   
+    <string name="InputPassword">请输入正确的密码！</string>    
 	<string name="Sure">确定</string>        
 	<string name="Cancel">取消</string>	
 	<string name="InputOldPasswd">请输入旧密码</string>	
 	<string name="InputFirstNewPasswd">请输入新密码</string>
 	<string name="InputSecondPasswd">请再次输入新密码</string>	
 	<string name="BaseInfo">基本信息</string>	
-	<string name="About">关于在线测试</string>
+	<string name="About">关于堂堂清</string>
 	<string name="AboutDetail">软件名称:\n  %1$s \n版本号:\n  %2$s \nAndroid 平台最低兼容版本:\n  %3$s \n软件发布时间:\n  %4$s</string>	
 	<string name="CompanyName">深圳市智源科技有限公司</string>
 	<string name="NoInfo">您尚未登录系统进行学习！\n如果不具备网络学习环境，建议离线登录。</string>
-	<string name="AppInitStatus">应用启动成功，请输入用户名、密码以及班级</string>	
+	<string name="AppInitStatus">请输入学号、密码以及班级</string>	
 	<string name="FindSSIDStatus">正在查找wifi热点...</string>
 	<string name="FindFailSSIDStatus">未找到wifi热点</string>	
 	<string name="FoundSSIDStatus">已找到wifi热点</string>		
@@ -61,7 +62,10 @@
 	<string name="LoginServerStatus">正在请求登录教师服务器</string>
 	<string name="LoginTimeOut">登录超时，请确认教师服务器是否开启</string>	
 	<string name="SuccessLoginStatus">登录成功，即将进入考试界面</string>	
-	<string name="FailLoginStatus">登录失败，请检查用户名密码及热点</string>	
+	<string name="FailLoginErrID">登录失败，学号错误！</string>	
+	<string name="FailLoginErrPwd">登录失败，密码错误！</string>
+	<string name="FailLoginErrReenter">登录失败，您已经交卷，不能重复登录！</string>	
+	<string name="FailLoginErrDoubleEnter">登录失败，该学号已登录！</string>	
 	<string name="Setting">设置</string>	
 	<string name="WifiSetting">设置Wifi网络</string>	
 	<string name="SecretTitle">修改 %s 的密码</string>	
@@ -71,8 +75,11 @@
 	<string name="ErrOldNewSame">新旧密码相同，请重新输入新密码！</string>
 	<string name="PwdOK">密码修改成功！</string>
 	<string name="PwdFail">密码修改失败！</string>
-	<string name="ExtraStudentInfo"> 姓名：%1$s   \t学号：%2$s   \n 继续加油，上次考试完成的很出色！</string>
+	<string name="ExtraStudentInfo"> 姓名：%1$s   \t学号：%2$s   \n 继续加油，上次考试完成得很出色！</string>
 	<string name="Committing">正在为你提交试卷</string>
 	<string name="CommittingFilter">正在提交试卷，无法使用该项功能</string>
 	<string name="Study">学习资料</string>		
+	<string name="ProgressTipQuestion">共 %1$s 题，正在下载第 %2$s 题，请稍候...</string>	
+	<string name="ProgressTipAnswer">正在下载已答试题答案，请稍候...</string>	
+	<string name="ProgressTipImage">正在下载图片，请稍候...</string>	
 </resources>

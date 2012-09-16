@@ -2,8 +2,11 @@ package com.king.cai.examination;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.text.Html;
+import android.view.WindowManager;
 import android.widget.ListView;
 
 import com.king.cai.R;
@@ -33,9 +36,28 @@ public abstract class PaperStatus{
 		mFilterLevel = 0;
 	}
 
+	protected void showAlertDialog(){
+		AlertDialog dlg = new AlertDialog.Builder(mStatusOwner)
+				.setTitle(R.string.ExitPromptTitle)
+				.setMessage(R.string.ExitPromptMsg)
+				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+		
+					public void onClick(DialogInterface dialog, int whichButton) {
+						
+						mStatusOwner.finish();
+					}
+				})
+				.setNegativeButton(android.R.string.cancel, null)
+				.setCancelable(false)
+				.create();
+		dlg.show();
+		dlg.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
+	}
+	
+	public abstract boolean onBackkeyDown();
 	public abstract void onCommitClick();
 	public abstract void onFilterClick(ListView listView, PaperViewAdapter fullAdapter);
-
+	
 	public abstract void doGettingItemView(ItemViewHolder holder, Integer index, int fontsize);	
 	
 	public abstract void EnterStatus();

@@ -27,14 +27,36 @@ public class ActiveMessage_LoginComplete extends ActiveMessage{
 		String pack = super.FromPack(mSocketMessage);
 		Bundle bundle = new Bundle();
 		//[pass]xxxx
+		//[id_error]
+		//[password_error]
+		//[answer_commit]
+		//[auto_commit]xxxx
+		//[id_exist]
 		Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_LOGIN_COMPLETE);
 		if (pack.contains("[pass]")){
 			String studentInfo = pack.substring("[pass]".length(), pack.length());
 			bundle.putBoolean("Result", true);
 			bundle.putString("Info", studentInfo);
-		}else{
+			bundle.putString("ErrCause", "[pass]");
+		}else if (pack.contains("[error_commit]")){
+			String studentInfo = pack.substring("[auto_commit]".length(), pack.length());
+			bundle.putBoolean("Result", true);
+			bundle.putString("Info", studentInfo);
+			bundle.putString("ErrCause", "[autocommit]");
+		}else if (pack.contains("[id_error]")){
 			bundle.putBoolean("Result", false);
+			bundle.putString("ErrCause", "[id]");
+		}else if (pack.contains("[password_error]")){
+			bundle.putBoolean("Result", false);			
+			bundle.putString("ErrCause", "[pwd]");
+		}else if (pack.contains("[answer_commit]")){
+			bundle.putBoolean("Result", false);
+			bundle.putString("ErrCause", "[normalcommit]");
+		}else if (pack.contains("[id_exist]")){
+			bundle.putBoolean("Result", false);
+			bundle.putString("ErrCause", "[id_exist]");
 		}
+		
 		innerMessage.setData(bundle);
 		innerMessage.sendToTarget();		
 	}

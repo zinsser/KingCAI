@@ -7,7 +7,7 @@
     <string name="Title">Classroom Testing</string>
     <string name="StudentID">Please input student ID</string>
     <string name="Password">Please input Password</string>
-    <string name="Login">Test</string>
+    <string name="Login">Login Test</string>
     <string name="Exit">Exit</string>
     <string name="Commit">Commit</string>   
     <string name="Filter">Filter</string>
@@ -37,7 +37,8 @@
     <string name="CurrentBlankQuestion">the %1$s(%2$s) Question</string>
     <string name="ServerNotFound">Server could not be found!</string>    
     <string name="SelectClassTip">Please SELECT a class!</string> 
-    <string name="InputCorrectIDTip">Please input a correct ID or password!</string>
+    <string name="InputCorrectID">Please input a correct ID!</string>
+    <string name="InputPassword">请输入正确的密码！</string>     
 	<string name="Sure">OK</string>        
 	<string name="Cancel">Cancel</string>	
 	<string name="InputOldPasswd">Please input OLD password</string>	
@@ -61,7 +62,10 @@
 	<string name="LoginServerStatus">正在请求登录教师服务器</string>	
 	<string name="LoginTimeOut">登录超时，请确认教师服务器是否开启</string>	
 	<string name="SuccessLoginStatus">登录成功，即将进入考试界面</string>	
-	<string name="FailLoginStatus">登录失败，请检查用户名密码</string>	
+	<string name="FailLoginErrID">登录失败，请检查用户名是否正确！</string>	
+	<string name="FailLoginErrPwd">登录失败，请检查密码是否输入正确！</string>
+	<string name="FailLoginErrReenter">登录失败，您已经交卷，不能重复登录！</string>
+	<string name="FailLoginErrDoubleEnter">登录失败，该账号已登录！</string>	
 	<string name="Setting">Setting</string>
 	<string name="WifiSetting">Wifi Setting</string>	
 	<string name="SecretTitle">%s is modified</string>
@@ -71,8 +75,11 @@
 	<string name="ErrOldNewSame">新旧密码相同，请重新输入新密码！</string>
 	<string name="PwdOK">密码修改成功！</string>
 	<string name="PwdFail">密码修改失败！</string>	
-	<string name="ExtraStudentInfo"> 姓名：%1$s    \t学号：%2$s   \n 继续加油，上次考试完成的很出色！</string>		
+	<string name="ExtraStudentInfo"> 姓名：%1$s    \t学号：%2$s   \n 继续加油，上次考试完成得很出色！</string>		
 	<string name="Committing">正在为你提交试卷</string>
 	<string name="CommittingFilter">正在提交试卷，无法使用该项功能</string>	
 	<string name="Study">Study</string>
+	<string name="ProgressTipQuestion">共 %1$s 题，正在下载第 %2$s 题，请稍候...</string>	
+	<string name="ProgressTipAnswer">正在下载已答试题答案，请稍候...</string>	
+	<string name="ProgressTipImage">正在下载图片，请稍候...</string>	
 </resources>

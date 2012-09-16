@@ -32,6 +32,7 @@ public class WifiMonitor {
 	private final static int WIFI_STATUS_RESULT_RETRIVED = 11;	
 	private final static int WIFI_STATUS_SCANED = 12;	
 	
+	private Context mContext = null;
 //	private WifiStateListener mWifiStateListener = null;
 	private WifiInfo mWifiInfo = null;// Wifi信息
 	private List<ScanResult> mScanSSIDResults = null;
@@ -52,6 +53,7 @@ public class WifiMonitor {
 	}
 	
 	public WifiMonitor(Context ctx, WifiStateListener listener){
+		mContext = ctx;
 	//	mWifiStateListener = listener;
 		mWifiService = (WifiManager)ctx.getSystemService(Context.WIFI_SERVICE);
 		mConnManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -61,6 +63,7 @@ public class WifiMonitor {
 	}
 
 	public WifiMonitor(Context ctx, Message innerMessage){
+		mContext = ctx;
 		mInnerMessage = innerMessage;
 		mWifiService = (WifiManager)ctx.getSystemService(Context.WIFI_SERVICE);
 		mConnManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -88,8 +91,23 @@ public class WifiMonitor {
     	ctx.unregisterReceiver(mReceiver);		
 	}
 
-	public void startScanSSID(){
+	public boolean isNetworkConnected(){
+		boolean bRet = mWifiService.isWifiEnabled();
+		if (bRet && mConnManager != null){
+			NetworkInfo networkInfo = mConnManager.getActiveNetworkInfo();   //getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+			if (networkInfo == null || !mConnManager.getBackgroundDataSetting()){
+				bRet = false;
+			}else if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
+				bRet = networkInfo.isConnected();
+			}
+		}
+		
+		return bRet;
 	}	
+	
+	
+	public void startScanSSID(){
+	}
 
 	private boolean checkNetworkInfo()
 	{
@@ -97,14 +115,6 @@ public class WifiMonitor {
 		return wifiState == NetworkInfo.State.CONNECTED;
 	}	
 	
-	public boolean isNetworkConnected(){
-		boolean bRet = mWifiService.isWifiEnabled();
-		if (bRet){
-			//TODO:将激活的SSID保存起来
-			
-		}
-		return bRet;
-	}
 	
     public void startScanSSID(Message msg){
     	mFinishScanMessage = msg;

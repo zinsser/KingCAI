@@ -19,6 +19,10 @@ public class KingCAIConfig {
 	public final static int EVENT_NEW_PAPER = 14;
 	public final static int EVENT_RESET_PWDACK = 15;
 	public final static int EVENT_COMMIT_ACK = 16;
+	public final static int EVENT_LAST_ANSWER = 17;
+	public final static int EVENT_LAST_ANSWER_COMPLETE = 18;
+	
+	public final static int EVENT_SIMULATOR = 100;
 	
 	public final static String SOCKET_EVENT_ACTION = "com.king.cai.socket.event";
 	public static final String START_SERVICE_ACTION = "com.king.cai.service";
@@ -38,7 +42,8 @@ public class KingCAIConfig {
 	public final static String ServerIP = "ServerIP";
 	public final static String SSID = "SSID";
 	public final static String Offline = "Offline";
-	
+	public final static String ExceptionExit = "ExceptionExit";	
+		
 	public final static int mTcpPort = 2011;	
 	public final static int mUdpPort = 2012;
 	public final static String mMulticastServerGroupIP = "224.0.0.100";

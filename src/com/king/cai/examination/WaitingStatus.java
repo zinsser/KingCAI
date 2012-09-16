@@ -11,6 +11,11 @@ public class WaitingStatus extends PaperStatus{
 		super(owner);
 	}
 
+	public boolean onBackkeyDown(){
+		showAlertDialog();		
+		return true;
+	}
+	
 	@Override
 	public void onCommitClick() {
 		mStatusOwner.showToast(R.string.Committing);		

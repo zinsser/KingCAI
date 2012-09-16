@@ -1,6 +1,8 @@
 package com.king.cai.service;
 
 
+import java.util.List;
+
 import com.king.cai.KingCAIConfig;
 import com.king.cai.message.RequestMessage;
 import com.king.cai.message.RequestMessage_Login;
@@ -8,7 +10,10 @@ import com.king.cai.message.RequestMessage_QueryServer;
 import com.king.cai.service.UDPServerRunner;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,6 +55,7 @@ public class KingService extends Service{
     @Override  
     public void onCreate() {  
 		super.onCreate();
+//		disableOtherApps();
 		mWifiMonitor = null;
 //		mWifiMonitor = new WifiMonitor(getApplicationContext(), 
 //										Message.obtain(mHandler, WIFI_EVENT));
@@ -80,6 +86,12 @@ public class KingService extends Service{
     	if (mWifiMonitor != null){
     		mWifiMonitor.isNetworkConnected();
     	}
+    	return bRet;
+    }
+    
+    public boolean hasUpdatedApp(){
+    	boolean bRet = false;
+    	
     	return bRet;
     }
     
@@ -162,5 +174,19 @@ public class KingService extends Service{
     
     public WifiMonitor getWifiService(){
     	return mWifiMonitor;
+    }
+    
+    private void disableOtherApps(){
+    	PackageManager packageMgr = getPackageManager();
+        List<PackageInfo> pkgInfos = packageMgr.getInstalledPackages(0/*PackageManager.GET_ACTIVITIES*/);
+        String packageName = getPackageName(); 
+        for(PackageInfo info : pkgInfos) {
+        	if (!packageName.equals(info.packageName)
+        		&& !"android".equals(info.packageName)){
+        		packageMgr.setApplicationEnabledSetting(info.packageName, 
+        								PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 
+        								PackageManager.DONT_KILL_APP);
+        	}
+        }
     }
 }

@@ -24,17 +24,27 @@ public class ActiveMessage_PaperResponse extends ActiveMessage{
 
 	@Override
 	public void Execute() {
-		//[PaperResponse]xxx
+		//[PaperResponse]xxx[count]xxx
 		String subMessage = super.FromPack(mSocketMessage);
 		if (subMessage.length() > 0){
 			int lastPos = subMessage.indexOf('\\');
-			String strSize = subMessage.substring(0, lastPos);
-
+			int countPos = subMessage.indexOf("[count]");
+			String strSize = subMessage.substring(0, countPos);
+			String strCount = subMessage.substring(countPos + "[count]".length(), lastPos);
+			
 			Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_PAPER_READY);
 			Bundle bundle = new Bundle();
-			bundle.putInt("Size", Integer.parseInt(strSize));
-			innerMessage.setData(bundle);
-			innerMessage.sendToTarget();			
+			bundle.putString("Count", strCount);
+			Integer size = 65535;
+			try {
+				size = Integer.parseInt(strSize);
+			}catch (NumberFormatException e){
+				e.printStackTrace();
+			}finally{
+				bundle.putInt("Size", size);
+				innerMessage.setData(bundle);
+				innerMessage.sendToTarget();
+			}
 		}
 	}
 }

@@ -67,6 +67,26 @@ public class AnswerManager implements QuestionManager.QuestionListener{
 		}
 	}
 	
+	private void modifyAnswer(String id, String s){
+		if (mAnswers.keySet().contains(id)){
+			mAnswers.put(id, constructAnswer(id, s));
+		}
+	}
+	public void fromString(String srcAnswer){
+		String[] answers = srcAnswer.split("@");
+		for (String answer : answers){
+			if (answer.contains("#")){
+				String[] idAnswerPair = answer.split("#");
+				String multiAnswer = "#";
+				for (int i = 1; i < idAnswerPair.length; ++i){
+					multiAnswer += idAnswerPair[i] + "#";
+				}
+				multiAnswer += "#";
+				modifyAnswer(idAnswerPair[0], multiAnswer);
+			}
+		}
+	}
+	
 	public String toString(){
 		String retAnswer = "@";
 		

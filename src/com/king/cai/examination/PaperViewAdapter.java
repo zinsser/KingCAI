@@ -148,7 +148,10 @@ public class PaperViewAdapter extends BaseAdapter {
             holder = (ItemViewHolder) convertView.getTag();
         }
         
-        mHostActivity.getPaperStatus().doGettingItemView(holder, mIndexes.get(position), mFontSize);
+        if (mHostActivity != null && mHostActivity.getPaperStatus() != null 
+        		&& position < mIndexes.size()){
+        	mHostActivity.getPaperStatus().doGettingItemView(holder, mIndexes.get(position), mFontSize);
+        }
 
         return convertView;
     }

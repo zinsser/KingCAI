@@ -10,7 +10,8 @@ public abstract class ActiveMessage {
 	}
 	
 	protected String FromPack(String msgPack){
-		return msgPack.substring(mMsgTag.length(), msgPack.length());
+		int tagIdx = msgPack.indexOf(mMsgTag);
+		return msgPack.substring(tagIdx + mMsgTag.length(), msgPack.length());
 	}	
 	
 	protected String GetMessageTag(){

@@ -77,7 +77,6 @@ public class LoginActivity  extends ComunicableActivity  {
         BtnClickListener btnListener = new BtnClickListener();
         mButtonLogin = (Button)findViewById(R.id.btnLogin);
         mButtonLogin.setOnClickListener(btnListener);  
-        mButtonLogin.setEnabled(true);
         
         mCheckBoxOffline = (CheckBox)findViewById(R.id.checkBoxOffline);
         mImgViewHeader = (ImageView)findViewById(R.id.imageViewHeaderPhoto);
@@ -85,7 +84,6 @@ public class LoginActivity  extends ComunicableActivity  {
         
         mTextviewStudentID = (EditText)findViewById(R.id.txtStudentID);
         mTextviewPassword = (EditText)findViewById(R.id.txtPassword);
-        
         initSpinnerBar();
         findViewById(R.id.imageViewSpinnerDown).setOnClickListener(new View.OnClickListener(){
 
@@ -109,7 +107,7 @@ public class LoginActivity  extends ComunicableActivity  {
 		        intent.setData(Uri.fromFile(rootDir));
 		        startActivity(intent);
 		        */
-				String rootDir = Environment.getExternalStorageDirectory().getPath(); 
+				String rootDir = "/";//Environment.getExternalStorageDirectory().getPath(); 
 				Intent openExplorerIntent = new Intent(LoginActivity.this, ExplorerActivity.class);
 				openExplorerIntent.putExtra("RootDir", rootDir);
 				startActivity(openExplorerIntent);
@@ -169,6 +167,7 @@ public class LoginActivity  extends ComunicableActivity  {
 				}
 			}
 			mTextviewStudentID.setText(mID);
+			mTextviewPassword.setText(mID);
 		}    
 		{
 			SharedPreferences sp = getSharedPreferences(KingCAIConfig.s_ExtraInfoFileName, 0);
@@ -184,7 +183,7 @@ public class LoginActivity  extends ComunicableActivity  {
 				mTextViewBaseInfo.setText(R.string.NoInfo);	
 			}
 	        
-		}
+		}		
 	}
 	
     private void SaveLastLogin(){
@@ -281,7 +280,7 @@ public class LoginActivity  extends ComunicableActivity  {
 					showToast(R.string.ErrNotInputID);
 					mTextviewStudentID.requestFocus();
 				}else if (mCheckBoxOffline.isChecked()){
-					StartPaperActivity(mID, "初三一班  张三丰", mCheckBoxOffline.isChecked());
+					StartPaperActivity(mID, "初三一班  张三丰", mCheckBoxOffline.isChecked(), false);
 				}else{
 					if (mSpinnerSSID.getSelectedItemPosition() != 0){
 		    			mTextViewStatus.setText(R.string.QueryServerStatus);						
@@ -321,7 +320,7 @@ public class LoginActivity  extends ComunicableActivity  {
     private void cleanForm(){
     	mTextviewStudentID.setText("");
     	mTextviewPassword.setText("");
-    	mTextViewStatus.setText(R.string.AppInitStatus);
+//    	mTextViewStatus.setText(R.string.AppInitStatus);
     }
 
     @Override
@@ -392,7 +391,7 @@ public class LoginActivity  extends ComunicableActivity  {
     	return super.onOptionsItemSelected(item);
     }    
 
-    public void StartPaperActivity(String id, String studentInfo, boolean bOffline){
+    public void StartPaperActivity(String id, String studentInfo, boolean bOffline, boolean bExceptionExit){
 //    	SaveStudentInfo(mID, studentInfo, mTxtPassword.getText().toString(), mImgViewHeader.getDrawable().toString());
     	
 		Intent openSheetActivity = new Intent(LoginActivity.this, PaperActivity.class);
@@ -401,6 +400,8 @@ public class LoginActivity  extends ComunicableActivity  {
 		openSheetActivity.putExtra(KingCAIConfig.ServerIP, mServerIP);
 		openSheetActivity.putExtra(KingCAIConfig.SSID, mSSID);
 		openSheetActivity.putExtra(KingCAIConfig.Offline, bOffline);
+		openSheetActivity.putExtra(KingCAIConfig.ExceptionExit, bExceptionExit);
+		
 		startActivity(openSheetActivity);
 		finish();
     }
@@ -414,8 +415,7 @@ public class LoginActivity  extends ComunicableActivity  {
     
 	@Override
 	protected void onServiceReady() {
-		mButtonLogin.setEnabled(true);
-    	mTextViewStatus.setText(R.string.FindSSIDStatus); 
+//    	mTextViewStatus.setText(R.string.FindSSIDStatus); 
     	
     	if (!mServiceChannel.isNetworkConnected()) {
     		mServiceChannel.startScanSSID(mWifiReadyHandler.obtainMessage());
@@ -443,13 +443,25 @@ public class LoginActivity  extends ComunicableActivity  {
 			mTimeoutHandler.removeMessages(EVENT_LOGIN_TIME_OUT);
 			Boolean bResult = bundle.getBoolean("Result");
 			if (bResult){
-				String studentInfo = bundle.getString("Info");
 				mTextViewStatus.setText(R.string.SuccessLoginStatus);
-				StartPaperActivity(mID, studentInfo, mCheckBoxOffline.isChecked());
+				String errCause = bundle.getString("ErrCause");
+				String studentInfo = bundle.getString("Info");
+				StartPaperActivity(mID, studentInfo, mCheckBoxOffline.isChecked(), 
+							errCause.equals("[autocommit]"));
 			}else{
-				mTextViewStatus.setText(R.string.FailLoginStatus);
-				showToast(R.string.InputCorrectIDTip);			
-				cleanForm();				
+				String errCause = bundle.getString("ErrCause");
+				if (errCause != null){
+					if (errCause.contains("[id]")){
+						mTextViewStatus.setText(R.string.FailLoginErrID);					
+					}else if (errCause.contains("[pwd]")){
+						mTextViewStatus.setText(R.string.FailLoginErrPwd);
+					}else if (errCause.contains("[normalcommit]")){
+						mTextViewStatus.setText(R.string.FailLoginErrReenter);
+					}else if (errCause.contains("[id_exist]")){
+						mTextViewStatus.setText(R.string.FailLoginErrDoubleEnter);
+					}
+				}
+				cleanForm();
 			}
 			break;
     	}
