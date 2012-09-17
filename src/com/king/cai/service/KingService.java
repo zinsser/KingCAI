@@ -135,6 +135,30 @@ public class KingService extends Service{
     	}
     }
 	
+    public static class LoginInfo{
+    	public String mID = null;
+    	public String mInfo = null;
+    	public boolean mOffline = false;
+    	public boolean mExceptionExit = false;
+    	
+    	public LoginInfo(String id, String studentInfo, boolean bOffline, boolean bExceptionExit){
+    		mID = id;
+    		mInfo = studentInfo;
+    		mOffline = bOffline;
+    		mExceptionExit = bExceptionExit;
+    	}
+    }
+
+    private LoginInfo mLoginInfo = null;
+    
+    public void updateLoginInfo(String id, String studentInfo, boolean bOffline, boolean bExceptionExit){
+    	mLoginInfo = new LoginInfo(id, studentInfo, bOffline, bExceptionExit);
+    }
+    
+    public LoginInfo getLoginInfo(){
+    	return mLoginInfo;
+    } 
+    
 	public void connectServer(String number, String password){
 		sendMessage(new RequestMessage_Login(number, password), 0);
 	}

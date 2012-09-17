@@ -20,7 +20,7 @@
 		android:layout_height="20dip"
 		android:layout_gravity="center_horizontal"
 		android:scaleType="fitCenter"
-		        android:visibility="gone"
+		android:visibility="gone"
 		android:src="@drawable/logo_finger" />
 
 	<RelativeLayout 

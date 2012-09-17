@@ -4,7 +4,8 @@
     package="com.king.cai"
     android:versionCode="3"
     android:versionName="3.0" >
-
+ <!--    android:sharedUserId="android.uid.system"
+    android:sharedUserLabel="@string/sharedUserLabel" -->
     
     <uses-sdk android:minSdkVersion="8" />
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -18,6 +19,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <!--<uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"/> -->
 
 	  
     <application android:name=".TestOnLineApp"
@@ -30,16 +32,16 @@
 	    	android:theme="@android:style/Theme.Light.NoTitleBar"  
 	    	android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" >
-               <intent-filter >
+              <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
- <!--          <intent-filter >
+  <!--          <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter> -->                           
+            </intent-filter>   -->                         
         </activity>
         <activity
             android:name=".examination.PaperActivity" 

@@ -9,6 +9,7 @@ import com.king.cai.message.ActiveMessage;
 import com.king.cai.message.ActiveMessageManager;
 import com.king.cai.message.RequestMessage;
 import com.king.cai.service.KingService;
+import com.king.cai.service.KingService.LoginInfo;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -261,6 +262,21 @@ public abstract class ComunicableActivity extends Activity{
         	if (mKingService != null){
         		mKingService.updateExpectSize(size);
         	}
+        }
+        
+        public void updateLoginInfo(String id, String studentInfo, boolean bOffline, boolean bExceptionExit){
+        	if (mKingService != null){
+        		mKingService.updateLoginInfo(id, studentInfo, bOffline, bExceptionExit);
+        	}
+        }
+        
+        public LoginInfo getLoginInfo(){
+        	LoginInfo bRet = null;
+        	if (mKingService != null){
+        		bRet = mKingService.getLoginInfo();
+        	}
+        	
+        	return bRet;
         }
     };
 }

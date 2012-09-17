@@ -76,7 +76,7 @@ public class OptionItemViewHolder extends QuestionItemViewHolder {
      		return;
      	}
     	int colorNormal = Color.rgb(0, 0, 0); 
-    	int colorBackground = Color.rgb(220, 220, 220);
+    	int colorBackground = Color.rgb(232, 232, 232);
     	
     	setRadioButtonInfo(mRadioButtonA, colorNormal, colorBackground);
     	setRadioButtonInfo(mRadioButtonB, colorNormal, colorBackground);

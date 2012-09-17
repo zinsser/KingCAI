@@ -1,24 +1,20 @@
 package com.king.cai;
 
-import java.io.File;
 
 import com.king.cai.R;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperActivity;
 
-import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ComponentInfo;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 
 import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 
 import android.os.Message;
@@ -62,6 +58,10 @@ public class LoginActivity  extends ComunicableActivity  {
 	private Button mButtonLogin = null;
     private CheckBox mCheckBoxOffline = null;	
     private ImageView mImgViewHeader = null;
+    
+    private Button mButtonEnterTest = null;
+    private Button mButtonStudy = null;
+    
 	private String mServerIP;
 	private String mSSID = "һ�꼶";
 	private String mID;
@@ -446,8 +446,12 @@ public class LoginActivity  extends ComunicableActivity  {
 				mTextViewStatus.setText(R.string.SuccessLoginStatus);
 				String errCause = bundle.getString("ErrCause");
 				String studentInfo = bundle.getString("Info");
+
+				mServiceChannel.updateLoginInfo(mID, studentInfo, mCheckBoxOffline.isChecked(), 
+						errCause.equals("[autocommit]"));
 				StartPaperActivity(mID, studentInfo, mCheckBoxOffline.isChecked(), 
 							errCause.equals("[autocommit]"));
+				showLoginInfo();
 			}else{
 				String errCause = bundle.getString("ErrCause");
 				if (errCause != null){
@@ -465,5 +469,9 @@ public class LoginActivity  extends ComunicableActivity  {
 			}
 			break;
     	}
+    }
+    
+    private void showLoginInfo(){
+    	
     }
 }

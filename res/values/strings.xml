@@ -2,12 +2,14 @@
 <resources>
     <string name="permdesc_write_settings">permdesc_write_settings</string>
 	<string name="permlab_write_settings">permlab_write_settings</string>
+	<string name="sharedUserLabel">sharedUserLabel</string>
     <string name="hello">Hello World, KingCAIActivity!</string>
     <string name="app_name">KingCAI</string>
     <string name="Title">Classroom Testing</string>
     <string name="StudentID">Please input student ID</string>
     <string name="Password">Please input Password</string>
-    <string name="Login">Login Test</string>
+    <string name="Login">Login</string>
+    <string name="Test">Enter Test</string>	
     <string name="Exit">Exit</string>
     <string name="Commit">Commit</string>   
     <string name="Filter">Filter</string>

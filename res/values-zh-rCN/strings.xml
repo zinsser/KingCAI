@@ -2,12 +2,15 @@
 <resources>
     <string name="permdesc_write_settings">permdesc_write_settings</string>    
 	<string name="permlab_write_settings">permlab_write_settings</string>
+	<string name="sharedUserLabel">sharedUserLabel</string>
     <string name="hello">堂堂清</string>
     <string name="app_name">堂堂清</string>
     <string name="Title">堂堂清</string>
     <string name="StudentID">请输入学号</string>
     <string name="Password">请输入密码</string>
-    <string name="Login">进入测试</string>
+    <string name="Login">登录</string>
+    <string name="Test">进入测试</string>	
+	<string name="Study">学习资料</string>			
     <string name="Exit">退出</string>
     <string name="Commit">我要交卷</string>
     <string name="Filter">筛选</string>
@@ -78,7 +81,6 @@
 	<string name="ExtraStudentInfo"> 姓名：%1$s   \t学号：%2$s   \n 继续加油，上次考试完成得很出色！</string>
 	<string name="Committing">正在为你提交试卷</string>
 	<string name="CommittingFilter">正在提交试卷，无法使用该项功能</string>
-	<string name="Study">学习资料</string>		
 	<string name="ProgressTipQuestion">共 %1$s 题，正在下载第 %2$s 题，请稍候...</string>	
 	<string name="ProgressTipAnswer">正在下载已答试题答案，请稍候...</string>	
 	<string name="ProgressTipImage">正在下载图片，请稍候...</string>	

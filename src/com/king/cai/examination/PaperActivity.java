@@ -43,7 +43,7 @@ import com.king.cai.examination.PaperViewAdapter;
 import com.king.cai.message.RequestMessage_Answer;
 import com.king.cai.message.RequestMessage_Image;
 import com.king.cai.message.RequestMessage_ImageData;
-import com.king.cai.message.RequestMessage_LastAnswer;
+//import com.king.cai.message.RequestMessage_LastAnswer;
 import com.king.cai.message.RequestMessage_Logout;
 import com.king.cai.message.RequestMessage_Paper;
 import com.king.cai.message.RequestMessage_PaperSize;
@@ -75,13 +75,13 @@ public class PaperActivity  extends ComunicableActivity {
 	private TextView mTextViewStatus = null;
 	private boolean mOffline = false;
 	private boolean mExceptionExit = false;
-	private ProgressDialog mProgressDialog = null;
 	private String mStudentID = null;
 	private String mStudentInfo = null;
 	private String mServerIP = null;
 	private String mSSID = null;
 	
 	private String mQuestionCount = null;
+	private ProgressDialog mProgressDialog = null;
 	
 	private PaperViewAdapter mFullAdapter = null;
 	private PaperStatus mPaperStatus = null;	
@@ -254,7 +254,7 @@ public class PaperActivity  extends ComunicableActivity {
 
     @Override
     public void onAttachedToWindow() {  
-        this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);  
+        getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);  
         super.onAttachedToWindow();  
     }
     
@@ -393,8 +393,9 @@ public class PaperActivity  extends ComunicableActivity {
 				.setNegativeButton(android.R.string.ok, null);
     		return builder.create();
     	}else if (id == DIALOG_PROGRESS_LOAD_PAPER){
+    		mProgressDialog = null;
     		mProgressDialog  = new ProgressDialog(this);
-    		mProgressDialog.setMessage("Please wait while loading...");    		
+    		mProgressDialog.setMessage("正在执行操作...");    		
     		mProgressDialog.setIndeterminate(true);
     		mProgressDialog.setCancelable(false);
             return mProgressDialog;    		
@@ -508,7 +509,7 @@ public class PaperActivity  extends ComunicableActivity {
 		}
 		case KingCAIConfig.EVENT_NEW_QUESTION_COMPLETE:{
 			if (mExceptionExit){
-				mServiceChannel.sendMessage(new RequestMessage_LastAnswer(), 0);
+//				mServiceChannel.sendMessage(new RequestMessage_LastAnswer(), 0);
 				if (mProgressDialog != null){
 					mProgressDialog.setMessage(getResources().getString(R.string.ProgressTipAnswer));
 				}
@@ -646,7 +647,16 @@ public class PaperActivity  extends ComunicableActivity {
 		}
 
 		return super.onKeyDown(keyCode, event);
-	}	
+	}
+	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event){
+		if (keyCode == KeyEvent.KEYCODE_HOME){
+			return true;
+		}
+		
+		return super.onKeyDown(keyCode, event);		
+	}
 
 	public void CommitAnswers(String tag){
 		HiddenKeyBoard(findViewById(R.id.txtGoto));
@@ -667,12 +677,17 @@ public class PaperActivity  extends ComunicableActivity {
 		mPaperStatus = null;
 		mPaperStatus = new WaitingStatus(this);
 		mPaperStatus.EnterStatus();
+//		showDialog(DIALOG_PROGRESS_LOAD_PAPER);
+		
 		PaperViewAdapter adapter = (PaperViewAdapter)mListView.getAdapter();
 		adapter.notifyDataSetChanged();
 	}
 	
 	public void switch2CommitStatus(boolean showAnswer){
 		mPaperStatus.LeaveStatus();
+		if (mProgressDialog != null){
+			mProgressDialog.dismiss();
+		}
 		mPaperStatus = null;
 		mPaperStatus = new CommitedStatus(this, showAnswer);
 		mPaperStatus.EnterStatus();		
