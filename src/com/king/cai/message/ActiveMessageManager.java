@@ -14,7 +14,9 @@ public class ActiveMessageManager {
 		mActiveMsgMap.put(ActiveMessage_PaperResponse.s_MsgTag, new ActiveMessage_PaperResponse.PaperResponseFunctor());		
 		mActiveMsgMap.put(ActiveMessaeg_ResetPwdACK.s_MsgTag, new ActiveMessaeg_ResetPwdACK.ResetPwdACKFunctor());
 		mActiveMsgMap.put(ActiveMessage_CommitACK.s_MsgTag, new ActiveMessage_CommitACK.CommitACKFunctor());
-//		mActiveMsgMap.put(ActiveMessage_LastAnswer.s_MsgTag, new ActiveMessage_LastAnswer.LastAnswerFunctor());				
+		mActiveMsgMap.put(ActiveMessage_LastAnswer.s_MsgTag, new ActiveMessage_LastAnswer.LastAnswerFunctor());				
+		mActiveMsgMap.put(ActiveMessage_TestTimeout.s_MsgTag, new ActiveMessage_TestTimeout.TestTimeoutFunctor());
+		mActiveMsgMap.put(ActiveMessage_AutoSaveACK.s_MsgTag, new ActiveMessage_AutoSaveACK.AutoSaveACKFunctor());				
 	}
 	
 	public static abstract class ActiveFunctor {

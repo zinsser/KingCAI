@@ -139,24 +139,24 @@ public class ExplorerActivity extends Activity {
 		new FileInfoWithMime("bmp", "image/*", R.drawable.cover_ebk),
 		new FileInfoWithMime("gif", "image/*", R.drawable.cover_ebk),	
 		
-		new FileInfoWithMime("mp3", "audio/*", R.drawable.cover_ebk),
-		new FileInfoWithMime("m4a", "audio/*", R.drawable.cover_ebk),
-		new FileInfoWithMime("wav", "audio/*", R.drawable.cover_ebk),
-		new FileInfoWithMime("amr", "audio/*", R.drawable.cover_ebk),
+		new FileInfoWithMime("mp3", "audio/*", R.drawable.cover_mp3),
+		new FileInfoWithMime("m4a", "audio/*", R.drawable.cover_mp3),
+		new FileInfoWithMime("wav", "audio/*", R.drawable.cover_mp3),
+		new FileInfoWithMime("amr", "audio/*", R.drawable.cover_mp3),
 		
-		new FileInfoWithMime("mp4", "video/*", R.drawable.cover_ebk),
-		new FileInfoWithMime("3gp", "video/*", R.drawable.cover_ebk),
+		new FileInfoWithMime("mp4", "video/*", R.drawable.cover_mp4),
+		new FileInfoWithMime("3gp", "video/*", R.drawable.cover_mp4),
 		
 		new FileInfoWithMime("chm", "application/x-chm", R.drawable.cover_chm),
-		new FileInfoWithMime("xls", "application/vnd.ms-excel", R.drawable.cover_chm),
-		new FileInfoWithMime("docx", "application/msword", R.drawable.cover_chm),
-		new FileInfoWithMime("pptx", "application/vnd.ms-powerpoint", R.drawable.cover_chm),
-		new FileInfoWithMime("doc", "application/msword", R.drawable.cover_chm),
-		new FileInfoWithMime("ppt", "application/vnd.ms-powerpoint", R.drawable.cover_chm),
+		new FileInfoWithMime("xls", "application/vnd.ms-excel", R.drawable.cover_xls),
+		new FileInfoWithMime("docx", "application/msword", R.drawable.cover_doc),
+		new FileInfoWithMime("pptx", "application/vnd.ms-powerpoint", R.drawable.cover_ppt),
+		new FileInfoWithMime("doc", "application/msword", R.drawable.cover_doc),
+		new FileInfoWithMime("ppt", "application/vnd.ms-powerpoint", R.drawable.cover_ppt),
 		new FileInfoWithMime("html", "text/html", R.drawable.cover_html),
 		new FileInfoWithMime("mht", "text/html", R.drawable.cover_html),
 		new FileInfoWithMime("htm", "text/html", R.drawable.cover_html),
-		new FileInfoWithMime("pdf", "application/pdf", R.drawable.cover_pdb)
+		new FileInfoWithMime("pdf", "application/pdf", R.drawable.cover_pdf)
 	}; 
 	
     private FileInfoWithMime getFileInfoWithMime(File file){

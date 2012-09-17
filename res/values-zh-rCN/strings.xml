@@ -22,12 +22,12 @@
     <string name="QuestionUndone"><font size="30">共 %d 道题尚未作答!</font></string>   
     <string name="QuestionCorrect"><font size="30">共 %d 道题回答正确!</font></string>
     <string name="QuestionIncorrect"><font size="30">共 %d 道题回答错误!</font></string>       
-    <string name="CommitTips">你已经交卷了!</string>   
+    <string name="CommitTips">您已经交卷!</string>   
     <string name="CommittingTitle">交卷确认</string>
     <string name="CommitPromptMsg">确认是否交卷？</string> 
     <string name="ExitPromptTitle">退出应用</string>    
     <string name="ExitPromptMsg">是否确认<b>退出</b>在线测试?</string>    
-    <string name="OptionPanelTips">你已交卷，无法继续作答</string>
+    <string name="OptionPanelTips">您已交卷，无法继续作答</string>
     <string name="AllQuestions">全部试题</string>    
     <string name="UndoneQuestions">未答试题</string>
     <string name="UncertainQuestions">疑惑试题</string>
@@ -51,7 +51,7 @@
 	<string name="About">关于堂堂清</string>
 	<string name="AboutDetail">软件名称:\n  %1$s \n版本号:\n  %2$s \nAndroid 平台最低兼容版本:\n  %3$s \n软件发布时间:\n  %4$s</string>	
 	<string name="CompanyName">深圳市智源科技有限公司</string>
-	<string name="NoInfo">您尚未登录系统进行学习！\n如果不具备网络学习环境，建议离线登录。</string>
+	<string name="NoInfo">您尚未登录系统进行学习！</string>
 	<string name="AppInitStatus">请输入学号、密码以及班级</string>	
 	<string name="FindSSIDStatus">正在查找wifi热点...</string>
 	<string name="FindFailSSIDStatus">未找到wifi热点</string>	
@@ -61,8 +61,8 @@
 	<string name="ConnectedFailSSIDStatus">wifi热点连接失败</string>		
 	<string name="QueryServerStatus">正在查找教师服务器</string>	
 	<string name="FailQueryServerStatus">未找到教师服务器</string>	
-	<string name="FoundServerStatus">教师服务器已找到，正在请求登录</string>	
-	<string name="LoginServerStatus">正在请求登录教师服务器</string>
+	<string name="FoundServerStatus">教师服务器已找到，正在登录</string>	
+	<string name="LoginServerStatus">正在登录教师服务器</string>
 	<string name="LoginTimeOut">登录超时，请确认教师服务器是否开启</string>	
 	<string name="SuccessLoginStatus">登录成功，即将进入考试界面</string>	
 	<string name="FailLoginErrID">登录失败，学号错误！</string>	
@@ -79,9 +79,10 @@
 	<string name="PwdOK">密码修改成功！</string>
 	<string name="PwdFail">密码修改失败！</string>
 	<string name="ExtraStudentInfo"> 姓名：%1$s   \t学号：%2$s   \n 继续加油，上次考试完成得很出色！</string>
-	<string name="Committing">正在为你提交试卷</string>
-	<string name="CommittingFilter">正在提交试卷，无法使用该项功能</string>
-	<string name="ProgressTipQuestion">共 %1$s 题，正在下载第 %2$s 题，请稍候...</string>	
+	<string name="Committing">正在交卷</string>
+	<string name="CommittingFilter">正在交卷，无法使用该项功能</string>
+	<string name="ProgressTipPaper">"正在下载试卷信息，请稍候..."</string>	
+	<string name="ProgressTipQuestion">正在下载试卷，共 %s 题，请稍候...</string>	
 	<string name="ProgressTipAnswer">正在下载已答试题答案，请稍候...</string>	
 	<string name="ProgressTipImage">正在下载图片，请稍候...</string>	
 </resources>

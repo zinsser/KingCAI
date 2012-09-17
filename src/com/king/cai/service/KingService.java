@@ -27,7 +27,7 @@ public class KingService extends Service{
     private TCPClient mTcpClient = null;
     private WifiMonitor mWifiMonitor = null;
     private TCPServerRunner mTcpServer = null;
-    
+    private MulticastReceiverRunner mMulticastReceiverRoutine = null;
     //这里定义一个Binder类，用在onBind()有方法里，这样Activity那边可以获取到 
     private MyBinder mBinder = new MyBinder();      
 	public class MyBinder extends Binder{
@@ -123,6 +123,17 @@ public class KingService extends Service{
 		new Thread(udpReceiverRoutine).start();
 	}
 
+	private void startMulticastServer(){
+		if (mMulticastReceiverRoutine != null){
+			mMulticastReceiverRoutine.stopRunner();
+			mMulticastReceiverRoutine = null;
+		}
+		
+		mMulticastReceiverRoutine = new MulticastReceiverRunner(mHandler, 
+											KingCAIConfig.mMulticastClientGroupIP, KingCAIConfig.mMulticastClientCommonPort);
+		new Thread(mMulticastReceiverRoutine).start();
+	}
+	
     public void updateServer(String addr, String ssid){
     	if (mTcpClient != null){
     		mTcpClient.onDestroy();
@@ -133,6 +144,7 @@ public class KingService extends Service{
 	    	mServerAddr = addr;    	
 	   		mTcpClient = new TCPClient(mHandler, mServerAddr);
     	}
+    	startMulticastServer();		
     }
 	
     public static class LoginInfo{

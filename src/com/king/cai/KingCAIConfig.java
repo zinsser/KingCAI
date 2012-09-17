@@ -21,6 +21,8 @@ public class KingCAIConfig {
 	public final static int EVENT_COMMIT_ACK = 16;
 	public final static int EVENT_LAST_ANSWER = 17;
 	public final static int EVENT_LAST_ANSWER_COMPLETE = 18;
+	public final static int EVENT_TEST_TIMEOUT = 19;
+	public final static int EVENT_AUTOSAVE_ACK = 20;
 	
 	public final static int EVENT_SIMULATOR = 100;
 	
@@ -49,7 +51,7 @@ public class KingCAIConfig {
 	public final static String mMulticastServerGroupIP = "224.0.0.100";
 	public final static int mMulticastServerCommonPort = 2013;
 	public final static String mMulticastClientGroupIP = "224.0.0.101";	
-	public final static int mMulticastClientCommonPort = 2014;
+	public final static int mMulticastClientCommonPort = 2016;
 	public final static String mMulticastClientImageGroupIP = "224.0.0.102";	
 	public final static int mImageReceivePort = 2015;
 //	public final static String mMulticastServerImageGroupIP = "224.0.0.103";	

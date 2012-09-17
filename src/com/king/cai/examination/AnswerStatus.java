@@ -73,8 +73,10 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 		});
 	}
 
-	public boolean onBackkeyDown(){
-//		showAlertDialog();		
+	public boolean onBackkeyDown(boolean pcDied){
+		if (pcDied){
+			showAlertDialog();		
+		}
 		return true;
 	}	
 	
@@ -111,7 +113,6 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	
 	@Override
 	public void onFilterClick(ListView listView, PaperViewAdapter fullAdapter) {
-		
 		mFilterLevel = (mFilterLevel + 1) % 3;
 		if (mFilterLevel == 0){
 			listView.setAdapter(fullAdapter);	

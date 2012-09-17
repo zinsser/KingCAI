@@ -81,7 +81,8 @@
 	<string name="Committing">正在为你提交试卷</string>
 	<string name="CommittingFilter">正在提交试卷，无法使用该项功能</string>	
 	<string name="Study">Study</string>
-	<string name="ProgressTipQuestion">共 %1$s 题，正在下载第 %2$s 题，请稍候...</string>	
+	<string name="ProgressTipPaper">"正在下载试卷信息，请稍候..."</string>
+	<string name="ProgressTipQuestion">正在下载试卷，共 %s 题，请稍候...</string>	
 	<string name="ProgressTipAnswer">正在下载已答试题答案，请稍候...</string>	
 	<string name="ProgressTipImage">正在下载图片，请稍候...</string>	
 </resources>

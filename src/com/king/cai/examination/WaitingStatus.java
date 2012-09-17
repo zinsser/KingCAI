@@ -11,7 +11,7 @@ public class WaitingStatus extends PaperStatus{
 		super(owner);
 	}
 
-	public boolean onBackkeyDown(){
+	public boolean onBackkeyDown(boolean pcDied){
 		showAlertDialog();		
 		return true;
 	}

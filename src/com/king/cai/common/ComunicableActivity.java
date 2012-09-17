@@ -77,13 +77,13 @@ public abstract class ComunicableActivity extends Activity{
     }
     
     public void showToast(String msg){
-    	Toast toast = Toast.makeText(this, msg, 2000);
+    	Toast toast = Toast.makeText(this, msg, 5000);
     	toast.setGravity(Gravity.CENTER, 0, 0 - getToastYPos());
     	toast.show();
     }
 
     public void showToast(int resId){
-    	Toast toast = Toast.makeText(this, resId, 2000);
+    	Toast toast = Toast.makeText(this, resId, 5000);
     	toast.setGravity(Gravity.CENTER, 0, 0 - getToastYPos());
     	toast.show();
     }    

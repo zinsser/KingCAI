@@ -46,7 +46,7 @@ public class CommitedStatus extends PaperStatus{
 		((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();		
 	}
 
-	public boolean onBackkeyDown(){
+	public boolean onBackkeyDown(boolean pcDied){
 		showAlertDialog();		
 		return true;
 	}
