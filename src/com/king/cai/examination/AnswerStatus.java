@@ -73,10 +73,8 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 		});
 	}
 
-	public boolean onBackkeyDown(boolean pcDied){
-		if (pcDied){
-			showAlertDialog();		
-		}
+	public boolean onBackkeyDown(){
+//		showAlertDialog();		
 		return true;
 	}	
 	

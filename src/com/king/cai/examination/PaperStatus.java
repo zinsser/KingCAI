@@ -54,7 +54,7 @@ public abstract class PaperStatus{
 		dlg.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
 	}
 	
-	public abstract boolean onBackkeyDown(boolean pcDied);
+	public abstract boolean onBackkeyDown();
 	public abstract void onCommitClick();
 	public abstract void onFilterClick(ListView listView, PaperViewAdapter fullAdapter);
 	

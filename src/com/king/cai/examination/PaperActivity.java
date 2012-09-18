@@ -12,6 +12,7 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
@@ -33,6 +34,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -393,6 +395,7 @@ public class PaperActivity  extends ComunicableActivity {
 				.setNegativeButton(android.R.string.ok, null);
     		return builder.create();
     	}else if (id == DIALOG_PROGRESS_LOAD_PAPER){
+    		mProgressDialog = null;
     		mProgressDialog  = new ProgressDialog(this);
     		mProgressDialog.setMessage(getResources().getString(R.string.ProgressTipPaper));    		
     		mProgressDialog.setIndeterminate(true);
@@ -577,7 +580,6 @@ public class PaperActivity  extends ComunicableActivity {
 		}
 		case KingCAIConfig.EVENT_AUTOSAVE_ACK:{
 			mTimeoutHandler.removeMessages(EVENT_AUTOSAVEACK_TIMEOUT);
-			mPCDied = false;
 			break;
 		}
 		default:
@@ -586,7 +588,7 @@ public class PaperActivity  extends ComunicableActivity {
  	}
 	public static final int EVENT_TEST_TIMEOUT = 0;
 	public static final int EVENT_AUTOSAVEACK_TIMEOUT = 1;
-	public static final int AUTOSAVE_ACK_TIME = 60;
+	public static final int AUTOSAVE_ACK_TIME = 20 * 1000;
 	private Handler mTimeoutHandler = new Handler(){
 
 		@Override
@@ -597,14 +599,41 @@ public class PaperActivity  extends ComunicableActivity {
 				break;
 			}
 			case EVENT_AUTOSAVEACK_TIMEOUT:{
-				mPCDied  = true;
+				//TODO: 显示服务器崩溃信息
+				showPCCrashNotifyDialog();
 				break;
 			}
 			}
 
 		}
 	};
+
+    private void showPCCrashNotifyDialog(){
+		LayoutInflater inflater = LayoutInflater.from(getApplication());
+		final View crashView = inflater.inflate(R.layout.crash, null);
+		final Dialog dlg = new Dialog(this, R.style.NoTitleDialog);
+		dlg.setContentView(crashView);
+		Button buttonOK = (Button)crashView.findViewById(R.id.buttonCrash);
+		buttonOK.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				CheckBox ckbLogin = (CheckBox)crashView.findViewById(R.id.checkBoxRelogin);
+				if (ckbLogin != null && ckbLogin.isChecked()){
+//					startLoginActivity();
+				}
+				
+				dlg.dismiss();
+			}
+		});
+		
+		dlg.show();
+	}
 	
+    private void startLoginActivity(){
+    	Intent intent = new Intent();
+    	
+    	startActivity(intent);
+    }
 	
     private void ParseIntentExtraParam(){
     	Bundle extra = getIntent().getExtras();
@@ -668,7 +697,7 @@ public class PaperActivity  extends ComunicableActivity {
 		//按下键盘上返回按钮
 		if(keyCode == KeyEvent.KEYCODE_BACK ){
 			((EditText)findViewById(R.id.txtGoto)).requestFocus();
-			return mPaperStatus != null ? mPaperStatus.onBackkeyDown(mPCDied) : false;
+			return mPaperStatus != null ? mPaperStatus.onBackkeyDown() : false;
 		}else if (keyCode == KeyEvent.KEYCODE_HOME){
 			showToast("you should commit the paper first then exit");
 			return true;
