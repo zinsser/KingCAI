@@ -96,22 +96,7 @@ public class LoginActivity  extends ComunicableActivity  {
         mTextViewBaseInfo = (TextView)findViewById(R.id.textViewBaseInfo);
         
         mTextViewStatus = (TextView)findViewById(R.id.textViewStatus);
-        findViewById(R.id.buttonStudy).setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-/*				Intent intent = new Intent();
-		        intent.setComponent(new ComponentName("org.openintents.filemanager", 
-		        									  "org.openintents.filemanager.FileManagerActivity"));
-		        File rootDir = new File();
-		        intent.setData(Uri.fromFile(rootDir));
-		        startActivity(intent);
-		        */
-				String rootDir = "/";//Environment.getExternalStorageDirectory().getPath(); 
-				Intent openExplorerIntent = new Intent(LoginActivity.this, ExplorerActivity.class);
-				openExplorerIntent.putExtra("RootDir", rootDir);
-				startActivity(openExplorerIntent);
-			}
-		});
+
         cleanForm();
     }
 
@@ -217,7 +202,7 @@ public class LoginActivity  extends ComunicableActivity  {
 
 		helper.close();
 	}
-    
+     
     private void initSpinnerBar(){
         mSpinnerSSID = (Spinner) findViewById(R.id.spinnerSSID);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
@@ -279,7 +264,9 @@ public class LoginActivity  extends ComunicableActivity  {
 					showToast(R.string.ErrNotInputID);
 					mTextviewStudentID.requestFocus();
 				}else if (mCheckBoxOffline.isChecked()){
-					StartPaperActivity(mID, "初三一班  张三丰", mCheckBoxOffline.isChecked(), false);
+					mServiceChannel.updateLoginInfo(mID, "初三一班  张三丰", mCheckBoxOffline.isChecked(), false);					
+					startWorkspaceActivity();
+//					StartPaperActivity(mID, "初三一班  张三丰", mCheckBoxOffline.isChecked(), false);
 				}else{
 					if (mSpinnerSSID.getSelectedItemPosition() != 0){
 		    			mTextViewStatus.setText(R.string.QueryServerStatus);						
@@ -405,6 +392,12 @@ public class LoginActivity  extends ComunicableActivity  {
 		finish();
     }
 
+    public void startWorkspaceActivity(){
+		Intent openActivity = new Intent(LoginActivity.this, WorkspaceActivity.class);
+		startActivity(openActivity);
+		finish();
+    }    
+    
     private Handler mWifiReadyHandler = new Handler(){
     	@Override
     	public void handleMessage(Message msg){
@@ -448,9 +441,10 @@ public class LoginActivity  extends ComunicableActivity  {
 
 				mServiceChannel.updateLoginInfo(mID, studentInfo, mCheckBoxOffline.isChecked(), 
 						errCause.equals("[autocommit]"));
-				StartPaperActivity(mID, studentInfo, mCheckBoxOffline.isChecked(), 
-							errCause.equals("[autocommit]"));
-				showLoginInfo();
+//				StartPaperActivity(mID, studentInfo, mCheckBoxOffline.isChecked(), 
+//							errCause.equals("[autocommit]"));
+				startWorkspaceActivity();
+//				showLoginInfo();
 			}else{
 				String errCause = bundle.getString("ErrCause");
 				if (errCause != null){
@@ -468,9 +462,5 @@ public class LoginActivity  extends ComunicableActivity  {
 			}
 			break;
     	}
-    }
-    
-    private void showLoginInfo(){
-    	
     }
 }

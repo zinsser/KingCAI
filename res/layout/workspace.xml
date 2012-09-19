@@ -59,7 +59,7 @@
 	
 	
 				<Button
-				    android:id="@+id/buttonStudy"
+				    android:id="@+id/buttonStudyOnWorkspace"
 				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
 				    android:layout_gravity="right"
@@ -69,7 +69,7 @@
 				    android:textColor="#FFFFFF"
 				    android:textSize="24dp" />	
 				<Button
-				    android:id="@+id/buttonTest"
+				    android:id="@+id/buttonTestOnWorkspace"
 				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
 				    android:layout_gravity="right"	
