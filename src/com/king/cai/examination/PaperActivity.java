@@ -38,6 +38,7 @@ import android.widget.TextView;
 
 import com.king.cai.KingCAIConfig;
 import com.king.cai.R;
+import com.king.cai.WorkspaceActivity;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperViewAdapter;
 import com.king.cai.message.RequestMessage_Answer;
@@ -67,7 +68,6 @@ public class PaperActivity  extends ComunicableActivity {
 	private final static String s_CfgTag_ExitStatus = "exitstatus"; //true:normal false:exception
 	
 	private int mSysBacklightTimeout = 0;
-	private boolean mPCDied = false;
 	public TextView mTextViewTitle = null;
 	private ListView mListView = null;
 	private Button mBtnCommit = null;
@@ -344,16 +344,6 @@ public class PaperActivity  extends ComunicableActivity {
 				}else{
 					showToast(R.string.ErrNotSame);
 				}
-
-//		    		StudentDBHelper dbHelper = new StudentDBHelper(LoginActivity.this);
-//		    		ContentValues values = dbHelper.FindItem(mID);
-//					String oldPwd = (String)values.get(StudentDBHelper.s_StudentTag_Passwd);
-//					if (oldPwd != null && oldPwd.equals(textOld)){
-//						if (textFirst.getText().equals(textSecond.getText())){
-//							values.put(StudentDBHelper.s_StudentTag_Passwd, textFirst.toString());
-//							dbHelper.Update(values, mID);
-//						}
-//					}
 			}
 		});
 		Button buttonCancel = (Button)modifyView.findViewById(R.id.buttonCancel);    		
@@ -624,6 +614,8 @@ public class PaperActivity  extends ComunicableActivity {
 				mPaperStatus.EnterStatus();    	
 				break;
 			}
+			default:
+				break;
 			}
 
 		}
@@ -640,7 +632,7 @@ public class PaperActivity  extends ComunicableActivity {
 			public void onClick(View v) {
 				CheckBox ckbLogin = (CheckBox)crashView.findViewById(R.id.checkBoxRelogin);
 				if (ckbLogin != null && ckbLogin.isChecked()){
-//					startLoginActivity();
+					startWorkspaceActivity(CAUSE_RELOGIN);
 				}
 				
 				dlg.dismiss();
@@ -650,9 +642,11 @@ public class PaperActivity  extends ComunicableActivity {
 		dlg.show();
 	}
 	
-    private void startLoginActivity(){
-    	Intent intent = new Intent();
-    	
+    public static final String CAUSE_NORMAL = "Normal";
+    public static final String CAUSE_RELOGIN = "Relogin";
+    private void startWorkspaceActivity(String cause){
+    	Intent intent = new Intent(this, WorkspaceActivity.class);
+    	intent.putExtra("Cause", cause);
     	startActivity(intent);
     }
 	

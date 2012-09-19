@@ -91,7 +91,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	private void parseIntent(){
 		Bundle bundle = getIntent().getExtras();
 		if (getIntent().hasExtra("Cause") && bundle != null){
-			String cause = bundle.getString("From");
+			String cause = bundle.getString("Cause");
 			if (cause.equals("Paper")){
 
 			}else if (cause.equals("Relogin")){
