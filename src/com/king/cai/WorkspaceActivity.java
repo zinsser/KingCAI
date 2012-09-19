@@ -12,6 +12,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,11 +28,13 @@ import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperActivity;
 import com.king.cai.message.ActiveMessage_NewQuestion.ProgressObject;
 import com.king.cai.message.ActiveMessage_NewQuestion.QuestionParseTask;
+import com.king.cai.message.RequestMessage_Logout;
 import com.king.cai.service.KingService.LoginInfo;
 
 public class WorkspaceActivity extends ComunicableActivity  {
 	private Button mButtonPaper = null;
 	private Button mButtonLogin = null;
+	private Button mButtonLogout = null;	
 	private LinearLayout mLinearLayoutInfo = null;
 	private LoginInfo mLoginInfo = null;
 	
@@ -57,7 +60,13 @@ public class WorkspaceActivity extends ComunicableActivity  {
 				startLoginActivity();
 			}
 		});
-		
+		mButtonLogout = (Button)findViewById(R.id.buttonLogoutOnWorkspace);
+		mButtonLogout.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				onLogout();
+			}
+		});
 		mAppmenuView = (GridView)findViewById(R.id.gridViewAppmenu);
         AppmenuAdapter adapter = new AppmenuAdapter();
         mAppmenuView.setAdapter(adapter);	
@@ -73,7 +82,6 @@ public class WorkspaceActivity extends ComunicableActivity  {
         mButtonPaper.setEnabled(false);
         mButtonPaper.setOnClickListener(new View.OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				startPaperActivity();
 			}
@@ -101,7 +109,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	}
 
 	private void startExplorerActivity(){
-		String rootDir = "/";//Environment.getExternalStorageDirectory().getPath(); 
+		String rootDir = Environment.getExternalStorageDirectory().getPath()+"/KingCAI"; //"/";// 
 		Intent openExplorerIntent = new Intent(WorkspaceActivity.this, ExplorerActivity.class);
 		openExplorerIntent.putExtra("RootDir", rootDir);
 		startActivity(openExplorerIntent);		
@@ -123,6 +131,12 @@ public class WorkspaceActivity extends ComunicableActivity  {
 			openPaperActivity.putExtra(KingCAIConfig.ExceptionExit, mLoginInfo.mExceptionExit);		
 		}
 		startActivity(openPaperActivity);		
+	}
+
+	private void onLogout(){
+		mLinearLayoutInfo.setVisibility(View.GONE);
+		mButtonLogin.setVisibility(View.VISIBLE);
+		mServiceChannel.sendMessage(new RequestMessage_Logout(), 0);
 	}
 	
 	@Override
@@ -185,7 +199,6 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	
 	public View.OnClickListener mAppItemClickListener = new View.OnClickListener() {
 		
-		@Override
 		public void onClick(View v) {
 			PackageInfo info = (PackageInfo)v.getTag();
 			if (info.activities.length > 0){

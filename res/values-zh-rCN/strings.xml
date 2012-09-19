@@ -9,8 +9,8 @@
     <string name="StudentID">请输入学号</string>
     <string name="Password">请输入密码</string>
     <string name="Login">登录</string>
-    <string name="Test">进入测试</string>	
-	<string name="Study">学习资料</string>			
+    <string name="Test">在线测试</string>	
+	<string name="Study">课程资源</string>
     <string name="Exit">退出</string>
     <string name="Commit">我要交卷</string>
     <string name="Filter">筛选</string>

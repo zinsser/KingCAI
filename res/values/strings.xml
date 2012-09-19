@@ -93,4 +93,6 @@
 	<string name="DownloadComplete">试题下载结束</string>		
 	<string name="DownloadInfo">共  %1$s 题， %2$s 已完成下载！</string>	
 	<string name="EnforcedCommitTips"> %s 分钟后将自动交卷！</string>
+	<string name="Logout">注销</string>	
+	
 </resources>

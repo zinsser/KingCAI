@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 public class ExplorerActivity extends Activity {
 	private GridView mExplorerView = null;
 	private String mRootDir;
+	private Button mButtonParentDir = null;
 	
 	public class FileInfo{
 		public String mName;
@@ -39,6 +41,7 @@ public class ExplorerActivity extends Activity {
 	}
 	private ArrayList<FileInfo> mFiles = new ArrayList<FileInfo>(); 
 	private TextView mTextViewTitle = null;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,10 +61,15 @@ public class ExplorerActivity extends Activity {
         ExplorerAdapter adapter = new ExplorerAdapter();
         mExplorerView.setAdapter(adapter);
         
-        findViewById(R.id.buttonReturn).setOnClickListener(new View.OnClickListener() {
+        mButtonParentDir = (Button)findViewById(R.id.buttonReturn);
+        mButtonParentDir.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				finish();
+				String parentPath = (String)v.getTag();
+				if (parentPath != null){
+					constructFileList(parentPath);
+					((BaseAdapter)mExplorerView.getAdapter()).notifyDataSetChanged();
+				}
 			}
 		});
 	}
@@ -74,10 +82,9 @@ public class ExplorerActivity extends Activity {
 		mFiles.clear();
 		
 		if (!mRootDir.equals(path)) {
-			mFiles.add(new FileInfo("..", f.getPath(), 
-						R.drawable.cartoon_folder, new FolderClickListener(f.getParent())));
+			mButtonParentDir.setTag(f.getParent());			
 		}
-		
+
 		if (files != null && files.length > 0){
 			for (File file : files){
 				mFiles.add(new FileInfo(file.getName(), file.getPath(),
@@ -94,6 +101,7 @@ public class ExplorerActivity extends Activity {
 		public FolderClickListener(String nextDir){
 			mNextDirectory = nextDir;
 		}
+
 		public void onClick(View v) {
 			constructFileList(mNextDirectory);
 			((BaseAdapter)mExplorerView.getAdapter()).notifyDataSetChanged();
