@@ -1,5 +1,6 @@
 package com.king.cai;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,7 +111,12 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	}
 
 	private void startExplorerActivity(){
+		
 		String rootDir = Environment.getExternalStorageDirectory().getPath()+"/KingCAI"; //"/";// 
+		File destDir = new File(rootDir);
+		if (!destDir.exists()) {
+			destDir.mkdirs();
+		}
 		Intent openExplorerIntent = new Intent(WorkspaceActivity.this, ExplorerActivity.class);
 		openExplorerIntent.putExtra("RootDir", rootDir);
 		startActivity(openExplorerIntent);		
@@ -134,10 +141,30 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	}
 
 	private void onLogout(){
-		mLinearLayoutInfo.setVisibility(View.GONE);
-		mButtonLogin.setVisibility(View.VISIBLE);
+//		mLinearLayoutInfo.setVisibility(View.GONE);
+//		mButtonLogin.setVisibility(View.VISIBLE);
 		mServiceChannel.sendMessage(new RequestMessage_Logout(), 0);
+		startLoginActivity();		
 	}
+
+	@Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (event.getKeyCode()) {
+                case KeyEvent.KEYCODE_BACK:
+                case KeyEvent.KEYCODE_HOME:
+                    return true;
+            }
+        } else if (event.getAction() == KeyEvent.ACTION_UP) {
+            switch (event.getKeyCode()) {
+                case KeyEvent.KEYCODE_BACK:
+                case KeyEvent.KEYCODE_HOME:
+                    return true;
+            }
+        }
+
+        return super.dispatchKeyEvent(event);
+    }
 	
 	@Override
 	protected void doHandleInnerMessage(Message innerMessage) {		

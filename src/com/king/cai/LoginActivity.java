@@ -118,13 +118,13 @@ public class LoginActivity  extends ComunicableActivity  {
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             switch (event.getKeyCode()) {
-//                case KeyEvent.KEYCODE_BACK:
+                case KeyEvent.KEYCODE_BACK:
                 case KeyEvent.KEYCODE_HOME:
                     return true;
             }
         } else if (event.getAction() == KeyEvent.ACTION_UP) {
             switch (event.getKeyCode()) {
-  //              case KeyEvent.KEYCODE_BACK:
+                case KeyEvent.KEYCODE_BACK:
                 case KeyEvent.KEYCODE_HOME:
                     return true;
             }
