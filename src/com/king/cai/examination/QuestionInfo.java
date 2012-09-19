@@ -4,9 +4,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.graphics.Bitmap;
-import android.os.Parcel;
-
 public class QuestionInfo {
 	public static final int QUESTION_TYPE_TITLE = 0;
 	public static final int QUESTION_TYPE_OPTION = 1;

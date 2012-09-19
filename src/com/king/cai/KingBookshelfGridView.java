@@ -1,6 +1,5 @@
 package com.king.cai;
 
-import com.king.cai.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,15 +7,15 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.widget.GridView;
 
-public class KingGridView extends GridView{
+public class KingBookshelfGridView extends GridView{
 	private Bitmap background;
-
-	public KingGridView(Context context, AttributeSet attrs) {
+	
+	public KingBookshelfGridView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		background = BitmapFactory.decodeResource(getResources(),
 								R.drawable.bookshelf_layer_center);
 	}
-
+	
 	@Override
 	protected void dispatchDraw(Canvas canvas) {
 		int count = getChildCount();
@@ -31,7 +30,7 @@ public class KingGridView extends GridView{
 				canvas.drawBitmap(background, x, y, null);
 			}
 		}
-		setNumColumns(width / 140);
+
 		super.dispatchDraw(canvas);
-	}
+	}	
 }

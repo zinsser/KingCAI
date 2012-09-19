@@ -1,8 +1,5 @@
 package com.king.cai.examination;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 

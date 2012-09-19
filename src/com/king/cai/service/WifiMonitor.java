@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.king.cai.service.SSIDInfo;
-import com.king.cai.common.KingCAIUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +20,6 @@ import android.net.NetworkInfo.State;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.text.format.Formatter;
 import android.util.Log;
 import java.util.HashMap;

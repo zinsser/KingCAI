@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.os.CountDownTimer;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
@@ -39,7 +38,9 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	
 	@Override
 	public void LeaveStatus(){
-		mTickTimer.cancel();
+		if (mTickTimer != null){
+			mTickTimer.cancel();
+		}
 	}
 
 	public void onQuestionArrayChanged(ArrayList<Integer> ids) {

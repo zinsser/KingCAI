@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"	     
-    android:orientation="vertical"
-    android:background="@drawable/login_bg_blue">
+    android:layout_gravity="center_horizontal"
+    android:background="@drawable/login_bg_blue"
+    android:orientation="vertical" >
+
+	<Button
+	    android:id="@+id/buttonLoginOnWorkspace"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:background="@drawable/button_login"
+	    android:text="@string/Login"
+	    android:textColor="#FFFFFF"
+	    android:textSize="20pt" />
+    
     <LinearLayout 
+        android:id="@+id/linearLayoutInfo"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:orientation="horizontal" >
@@ -29,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:text="@string/BaseInfo"
-                android:textSize="20pt" />
+                android:textSize="24dp" />
 	
             <TextView
                 android:id="@+id/textViewStudentAdvancedInfo"
@@ -37,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="8"
                 android:text="@string/AdvancedInfo"
-                android:textSize="20pt" />
+                android:textSize="24dp" />
             	            
 			<LinearLayout
 				android:layout_width="match_parent"
@@ -73,17 +85,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/BuildInApps"
-        android:textSize="20pt" />
+        android:textColor="#FFFFFF"
+        android:textSize="24pt" />
 
     <GridView
-	    android:id="@+id/gridViewExplorer"
+	    android:id="@+id/gridViewAppmenu"
 	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
+	    android:layout_height="fill_parent"    
 	    android:cacheColorHint="#00000000"
-	    android:columnWidth="90.0dip"
+	    android:columnWidth="80dp"
+	    android:numColumns="auto_fit"
 	    android:fadingEdge="none"
-	    android:horizontalSpacing="5dp"
+	    android:verticalSpacing="10dp" 	    
 	    android:listSelector="#00000000"
-	    android:scrollbars="none"
-	    android:verticalSpacing="20dp" />    			
+	    android:scrollbars="none"/>    			
 </LinearLayout>

@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import android.os.Handler;
-import android.os.Message;
 
 import com.king.cai.KingCAIConfig;
 import com.king.cai.service.TCPSenderThread;

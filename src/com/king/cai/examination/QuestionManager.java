@@ -8,7 +8,6 @@ import java.util.HashMap;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 
 public class QuestionManager {
 	private final static String s_PaperTag_ID = "id";

@@ -4,19 +4,18 @@
     android:layout_height="fill_parent"
     android:gravity="center"
     android:orientation="vertical" >
-
-   <ImageView
+   <ImageView
 	    android:id="@+id/imageViewAppIcon"
 	    android:layout_width="64dp"
 	    android:layout_height="64dp"
 	    android:scaleType="fitCenter" />
-       
+
     <TextView
-	    android:id="@+id/textViewAppName"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_gravity="fill_vertical"
-	    android:padding="15dp"
-	    android:textColor="#FFFFFF"/>
+        android:id="@+id/textViewAppName"
+        android:layout_width="80dp"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="12dp" />
 
 </LinearLayout>

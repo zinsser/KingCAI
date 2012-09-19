@@ -9,15 +9,12 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -482,6 +479,14 @@ public class PaperActivity  extends ComunicableActivity {
 			mServiceChannel.updatePaperSize(size);
 			mServiceChannel.sendMessage(new RequestMessage_Paper(), 0);
 			mTextViewStatus.setText("Paper Size Ready:"+size+"\n");
+			Integer count = 0;
+			try {
+				count = Integer.parseInt(mQuestionCount);
+			}catch (NumberFormatException e){
+				e.printStackTrace();
+			}finally{
+				mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_PAPER_RECEIVE_TIMEOUT), count * 4 * 1000);
+			}
 			showDialog(DIALOG_PROGRESS_LOAD_PAPER);
 			break;
 		}
@@ -546,7 +551,6 @@ public class PaperActivity  extends ComunicableActivity {
 				String id = DownloadManager.getInstance().getCurrentTask().getQuestionID();
 				String imageIndex = DownloadManager.getInstance().getCurrentTask().getImageIndex();
 				byte[] data = bundle.getByteArray("Content");
-				Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
 				mQuestionMgr.addQuestionImage(id, imageIndex, ByteBuffer.wrap(data));
 				
 				mServiceChannel.updateDownloadInfo(0);
@@ -554,6 +558,7 @@ public class PaperActivity  extends ComunicableActivity {
 			}
 			if (DownloadManager.getInstance().getCurrentTask() == null
 					&& mProgressDialog != null){
+				mTimeoutHandler.removeMessages(EVENT_PAPER_RECEIVE_TIMEOUT);
 				mProgressDialog.dismiss();
 				mPaperStatus.EnterStatus();
 			}
@@ -571,7 +576,8 @@ public class PaperActivity  extends ComunicableActivity {
 		}
 		case KingCAIConfig.EVENT_TEST_TIMEOUT:{
 			String lastTime = bundle.getString("LastTime");
-			String tips = String.format(" %s 分钟后将自动交卷！", lastTime);
+			String tips = String.format(getResources().getString(R.string.EnforcedCommitTips), 
+								lastTime);
 			showToast(tips);
 			int iLastTime = Integer.valueOf(lastTime);
 			mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_TEST_TIMEOUT), 
@@ -588,6 +594,7 @@ public class PaperActivity  extends ComunicableActivity {
  	}
 	public static final int EVENT_TEST_TIMEOUT = 0;
 	public static final int EVENT_AUTOSAVEACK_TIMEOUT = 1;
+	public static final int EVENT_PAPER_RECEIVE_TIMEOUT = 2;
 	public static final int AUTOSAVE_ACK_TIME = 20 * 1000;
 	private Handler mTimeoutHandler = new Handler(){
 
@@ -599,8 +606,22 @@ public class PaperActivity  extends ComunicableActivity {
 				break;
 			}
 			case EVENT_AUTOSAVEACK_TIMEOUT:{
-				//TODO: 显示服务器崩溃信息
 				showPCCrashNotifyDialog();
+				break;
+			}
+			case EVENT_PAPER_RECEIVE_TIMEOUT:{
+				if (mProgressDialog != null){
+					mProgressDialog.dismiss();					
+				}
+				int loadedCount = mQuestionMgr != null ? mQuestionMgr.getQuestionCount() : 0;
+				String tips = String.format(getResources().getString(R.string.DownloadInfo), 
+						mQuestionCount, loadedCount);
+	    		new AlertDialog.Builder(PaperActivity.this)
+		    			.setTitle(R.string.DownloadComplete)
+		    			.setMessage(tips)
+		    			.setNegativeButton(android.R.string.ok, null)
+		    			.show();
+				mPaperStatus.EnterStatus();    	
 				break;
 			}
 			}

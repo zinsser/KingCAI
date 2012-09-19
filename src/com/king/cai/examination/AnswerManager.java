@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import android.graphics.Bitmap;
-
 public class AnswerManager implements QuestionManager.QuestionListener{
 	private HashMap<String, Answer> mAnswers = new HashMap<String, Answer>();
 	private QuestionManager mQuestionMgr = null;
