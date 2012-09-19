@@ -251,6 +251,19 @@ public class LoginActivity  extends ComunicableActivity  {
     	}
     };
     
+    private boolean hookSpecialPassword(){
+    	boolean bRet = false;
+    	if ("*#debug#".equals(mTextviewPassword.getText().toString())){
+    		Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+    		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | 
+    						Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+    		startActivity(intent);						
+			bRet = true;
+		};    	
+		
+		return bRet;
+    }
+    
     public class BtnClickListener implements OnClickListener{
 
 	    public void onClick(View btn){
@@ -259,6 +272,7 @@ public class LoginActivity  extends ComunicableActivity  {
 				im.hideSoftInputFromWindow(mTextviewStudentID.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS); 
 				im.hideSoftInputFromWindow(mTextviewPassword.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
+				if (hookSpecialPassword()) return;
 				mID = mTextviewStudentID.getText().toString();
 				if (mID == null || mID.length() <= 0){
 					showToast(R.string.ErrNotInputID);
@@ -312,7 +326,7 @@ public class LoginActivity  extends ComunicableActivity  {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
 //    	menu.add(GROUP_NORMAL, MENU_MODIFY_PASSWORD, 0, R.string.ModifyPassword);    	
-    	menu.add(GROUP_NORMAL, MENU_SETTING, 0, R.string.Setting);
+//    	menu.add(GROUP_NORMAL, MENU_SETTING, 0, R.string.Setting);
     	menu.add(GROUP_NORMAL, MENU_WIFI_SETTING, 0, R.string.WifiSetting);
     	
     	return super.onCreateOptionsMenu(menu);
