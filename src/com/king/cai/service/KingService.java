@@ -124,27 +124,31 @@ public class KingService extends Service{
 	}
 
 	private void startMulticastServer(){
-		if (mMulticastReceiverRoutine != null){
-			mMulticastReceiverRoutine.stopRunner();
-			mMulticastReceiverRoutine = null;
-		}
-		
+	
 		mMulticastReceiverRoutine = new MulticastReceiverRunner(mHandler, 
 											KingCAIConfig.mMulticastClientGroupIP, KingCAIConfig.mMulticastClientCommonPort);
 		new Thread(mMulticastReceiverRoutine).start();
 	}
 	
     public void updateServer(String addr, String ssid){
-    	if (mTcpClient != null){
-    		mTcpClient.onDestroy();
-    		mTcpClient = null;
-    	}
 
     	if (addr != null){
 	    	mServerAddr = addr;    	
 	   		mTcpClient = new TCPClient(mHandler, mServerAddr);
     	}
     	startMulticastServer();		
+    }
+    
+    private stopClientSocket(){
+    	if (mTcpClient != null){
+    		mTcpClient.onDestroy();
+    		mTcpClient = null;
+    	}
+    	
+		if (mMulticastReceiverRoutine != null){
+			mMulticastReceiverRoutine.stopRunner();
+			mMulticastReceiverRoutine = null;
+		}    	
     }
 	
     public static class LoginInfo{
