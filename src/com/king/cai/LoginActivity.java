@@ -440,7 +440,7 @@ public class LoginActivity  extends ComunicableActivity  {
 			mSSID = (String)mSpinnerSSID.getAdapter().getItem(mSpinnerSSID.getSelectedItemPosition());
 			mTextViewStatus.setText(R.string.FoundServerStatus);
 			mServiceChannel.updateServerInfo(mServerIP, mSSID);
-			mServiceChannel.connectServer(mTextviewStudentID.getText().toString(), 
+			mServiceChannel.loginToServer(mTextviewStudentID.getText().toString(), 
 										  mTextviewPassword.getText().toString());
 			mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_LOGIN_TIME_OUT), 
 										DELAY_LOGIN_TIME);

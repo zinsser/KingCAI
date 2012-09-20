@@ -237,9 +237,9 @@ public abstract class ComunicableActivity extends Activity{
         	}
         }
         
-        public void connectServer(String number, String password){
+        public void loginToServer(String number, String password){
         	if (mKingService != null){
-        		mKingService.connectServer(number, password);
+        		mKingService.loginToServer(number, password);
         	}
         }
         

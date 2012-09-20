@@ -6,6 +6,7 @@ import java.util.List;
 import com.king.cai.KingCAIConfig;
 import com.king.cai.message.RequestMessage;
 import com.king.cai.message.RequestMessage_Login;
+import com.king.cai.message.RequestMessage_Logout;
 import com.king.cai.message.RequestMessage_QueryServer;
 import com.king.cai.service.UDPServerRunner;
 
@@ -170,10 +171,14 @@ public class KingService extends Service{
     	return mLoginInfo;
     } 
     
-	public void connectServer(String number, String password){
+	public void loginToServer(String number, String password){
 		sendMessage(new RequestMessage_Login(number, password), 0);
 	}
 
+	public void logoutFromServer(){
+		sendMessage(new RequestMessage_Logout(), 0);
+	}
+	
 	public void updateDownloadSize(int size){
 		if (mTcpClient != null){
 			mTcpClient.updateDownloadImageSize(size);
