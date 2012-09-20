@@ -142,19 +142,13 @@ public class PaperActivity  extends ComunicableActivity {
     	setBacklightNoneOff();
    		GetConfig();
    		ResetAdapterFontSize(mFullAdapter);
-   		emitSimulatorEvent(KingCAIConfig.EVENT_SIMULATOR+1);
-   		emitSimulatorEventDelayed(KingCAIConfig.EVENT_SIMULATOR+2, 1000);
-   		emitSimulatorEventDelayed(KingCAIConfig.EVENT_SIMULATOR+3, 2000);
-   		emitSimulatorEventDelayed(KingCAIConfig.EVENT_SIMULATOR+4, 3000);
-   		emitSimulatorEventDelayed(KingCAIConfig.EVENT_SIMULATOR+5, 4000);
-   		emitSimulatorEventDelayed(KingCAIConfig.EVENT_SIMULATOR+6, 5000);
     }
 
-    private void emitSimulatorEvent(int event){
-    	mInnerMessageHandler.sendMessage(mInnerMessageHandler.obtainMessage(event));
+    protected void emitSimulatorEvent(int event){
+    	emitSimulatorEventDelayed(event, 0);
     }
     
-    private void emitSimulatorEventDelayed(int event, int delayMillis){
+    protected void emitSimulatorEventDelayed(int event, int delayMillis){
     	mInnerMessageHandler.sendMessageDelayed(mInnerMessageHandler.obtainMessage(event), delayMillis);
     }
     
@@ -426,42 +420,7 @@ public class PaperActivity  extends ComunicableActivity {
 	protected void doHandleInnerMessage(Message innerMessage){
 		Bundle bundle = innerMessage.getData();
 		switch (innerMessage.what){
-/*
-		case KingCAIConfig.EVENT_SIMULATOR+1:{
-			showDialog(DIALOG_PROGRESS_LOAD_PAPER);
-			break;
-		}
-		case KingCAIConfig.EVENT_SIMULATOR+2:{
-			if (mProgressDialog != null){
-				mProgressDialog.setMessage("共5题，正在下载第2题！");				
-			}
-			break;			
-		}
-		case KingCAIConfig.EVENT_SIMULATOR+3:{
-			if (mProgressDialog != null){
-				mProgressDialog.setMessage("共5题，正在下载第3题！");				
-			}
-			break;			
-		}
-		case KingCAIConfig.EVENT_SIMULATOR+4:{
-			if (mProgressDialog != null){
-				mProgressDialog.setMessage("共5题，正在下载第4题！");				
-			}
-			break;		
-		}
-		case KingCAIConfig.EVENT_SIMULATOR+5:{
-			if (mProgressDialog != null){
-				mProgressDialog.setMessage("共5题，正在下载第5题！");
-			}
-			break;
-		}
-		case KingCAIConfig.EVENT_SIMULATOR+6:{
-			if (mProgressDialog != null){
-				mProgressDialog.dismiss();
-			}
-			break;
-		}
-*/		
+	
 		case KingCAIConfig.EVENT_PAPER_READY:{
 			Integer size = bundle.getInt("Size");
 			mQuestionCount = bundle.getString("Count");
@@ -508,9 +467,13 @@ public class PaperActivity  extends ComunicableActivity {
 			if (mExceptionExit){
 				mServiceChannel.sendMessage(new RequestMessage_LastAnswer(), 0);
 			}else{
-				DownloadManager.getInstance().dispatchTask();				
+				DownloadManager.getInstance().dispatchTask();
+				
+				if (DownloadManager.getInstance().getCurrentTask() == null){
+					postReceivePaper();
+				}				
 			}
-
+			
 			break;
 		}
 		case KingCAIConfig.EVENT_LAST_ANSWER_COMPLETE:{
@@ -520,6 +483,9 @@ public class PaperActivity  extends ComunicableActivity {
 			}
 
 			DownloadManager.getInstance().dispatchTask();
+			if (DownloadManager.getInstance().getCurrentTask() == null){
+				postReceivePaper();
+			}			
 			break;
 		}
 		case KingCAIConfig.EVENT_REQUEST_IMAGE:{
@@ -546,11 +512,8 @@ public class PaperActivity  extends ComunicableActivity {
 				mServiceChannel.updateDownloadInfo(0);
 				DownloadManager.getInstance().finishCurrentTask();
 			}
-			if (DownloadManager.getInstance().getCurrentTask() == null
-					&& mProgressDialog != null){
-				mTimeoutHandler.removeMessages(EVENT_PAPER_RECEIVE_TIMEOUT);
-				mProgressDialog.dismiss();
-				mPaperStatus.EnterStatus();
+			if (DownloadManager.getInstance().getCurrentTask() == null){
+				postReceivePaper();
 			}
 			break;
 		}
@@ -582,6 +545,15 @@ public class PaperActivity  extends ComunicableActivity {
 			break;
 		}
  	}
+	
+	private void postReceivePaper(){
+		if (mProgressDialog != null){
+			mTimeoutHandler.removeMessages(EVENT_PAPER_RECEIVE_TIMEOUT);
+			mProgressDialog.dismiss();
+			mPaperStatus.EnterStatus();
+		}
+	}
+	
 	public static final int EVENT_TEST_TIMEOUT = 0;
 	public static final int EVENT_AUTOSAVEACK_TIMEOUT = 1;
 	public static final int EVENT_PAPER_RECEIVE_TIMEOUT = 2;

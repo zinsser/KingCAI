@@ -141,10 +141,8 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	}
 
 	private void onLogout(){
-//		mLinearLayoutInfo.setVisibility(View.GONE);
-//		mButtonLogin.setVisibility(View.VISIBLE);
 		mServiceChannel.sendMessage(new RequestMessage_Logout(), 0);
-		startLoginActivity();		
+		startLoginActivity();
 	}
 
 	@Override
@@ -228,7 +226,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		
 		public void onClick(View v) {
 			PackageInfo info = (PackageInfo)v.getTag();
-			if (info.activities.length > 0){
+			if (info != null && info.activities.length > 0){
 				Intent intent = new Intent(Intent.ACTION_MAIN, null);
 				intent.addCategory(Intent.CATEGORY_LAUNCHER);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -236,7 +234,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 				ComponentName cn = new ComponentName(info.applicationInfo.packageName, className);
 				intent.setComponent(cn);
 				startActivity(intent);
-			}else{
+			}else if (info != null){
 				Intent intent = new Intent(info.applicationInfo.packageName);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);				
 				startActivity(intent);
