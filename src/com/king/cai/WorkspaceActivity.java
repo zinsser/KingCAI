@@ -2,9 +2,9 @@ package com.king.cai;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -28,14 +28,11 @@ import android.widget.TextView;
 
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperActivity;
-import com.king.cai.message.ActiveMessage_NewQuestion.ProgressObject;
-import com.king.cai.message.ActiveMessage_NewQuestion.QuestionParseTask;
 import com.king.cai.message.RequestMessage_Logout;
 import com.king.cai.service.KingService.LoginInfo;
 
 public class WorkspaceActivity extends ComunicableActivity  {
-	private Button mButtonPaper = null;
-	private Button mButtonLogout = null;	
+	private Button mButtonPaper = null;	
 	private LinearLayout mLinearLayoutInfo = null;
 	private LoginInfo mLoginInfo = null;
 	
@@ -49,14 +46,13 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		setContentView(R.layout.workspace);
 
 		mPackageMgr = getPackageManager();
-		new AppEnumTask().execute(mPackageMgr);
+//		new AppEnumTask().execute(mPackageMgr);
 		
 		parseIntent();
 
 		mLinearLayoutInfo = (LinearLayout)findViewById(R.id.linearLayoutInfo);
 
-		mButtonLogout = (Button)findViewById(R.id.buttonLogoutOnWorkspace);
-		mButtonLogout.setOnClickListener(new View.OnClickListener() {
+		findViewById(R.id.buttonLogoutOnWorkspace).setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
 				onLogout();
@@ -223,9 +219,14 @@ public class WorkspaceActivity extends ComunicableActivity  {
 				intent.setComponent(cn);
 				startActivity(intent);
 			}else if (info != null){
-				Intent intent = new Intent(info.applicationInfo.packageName);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);				
-				startActivity(intent);
+				try{
+					Intent intent = new Intent(info.applicationInfo.packageName);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);				
+					startActivity(intent);
+				}catch (ActivityNotFoundException e){
+					e.printStackTrace();
+					showToast("该应用已被卸载，无法启动！");
+				}
 			}
 		}
 	};
