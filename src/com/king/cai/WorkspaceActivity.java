@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -28,7 +30,6 @@ import android.widget.TextView;
 
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperActivity;
-import com.king.cai.message.RequestMessage_Logout;
 import com.king.cai.service.KingService.LoginInfo;
 
 public class WorkspaceActivity extends ComunicableActivity  {
@@ -75,6 +76,13 @@ public class WorkspaceActivity extends ComunicableActivity  {
 			
 			public void onClick(View v) {
 				startPaperActivity();
+			}
+		});
+        
+        findViewById(R.id.buttonAppsmenu).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				onAppsmenuClick();
 			}
 		});
 	}
@@ -130,10 +138,20 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	}
 
 	private void onLogout(){
-		mServiceChannel.sendMessage(new RequestMessage_Logout(), 0);
+		mServiceChannel.logoutFromServer();
 		startLoginActivity();
 	}
 
+	private void onAppsmenuClick(){
+		AlertDialog dlg = new AlertDialog.Builder(this)
+		.setTitle(R.string.NoPrivilegeTitle)
+		.setMessage(R.string.NoPrivilege)
+		.setPositiveButton(android.R.string.ok, null)
+		.setCancelable(false)
+		.create();
+		dlg.show();		
+	}	
+	
 	@Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {

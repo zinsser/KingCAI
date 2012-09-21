@@ -44,7 +44,8 @@ public class CommitedStatus extends PaperStatus{
 	}
 
 	public boolean onBackkeyDown(){
-		showAlertDialog();		
+//		showAlertDialog();
+		mStatusOwner.finish();
 		return true;
 	}
 	

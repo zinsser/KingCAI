@@ -278,6 +278,7 @@ public class LoginActivity  extends ComunicableActivity  {
 					showToast(R.string.ErrNotInputID);
 					mTextviewStudentID.requestFocus();
 				}else if (mCheckBoxOffline.isChecked()){
+					mServiceChannel.loginToServer(mID, mID);
 					mServiceChannel.updateLoginInfo(mID, "初三一班  张三丰", mCheckBoxOffline.isChecked(), false);					
 					startWorkspaceActivity();
 //					StartPaperActivity(mID, "初三一班  张三丰", mCheckBoxOffline.isChecked(), false);

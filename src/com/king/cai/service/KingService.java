@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.king.cai.KingCAIConfig;
 import com.king.cai.message.RequestMessage;
+import com.king.cai.message.RequestMessage_Answer;
 import com.king.cai.message.RequestMessage_Login;
 import com.king.cai.message.RequestMessage_Logout;
+import com.king.cai.message.RequestMessage_PaperSize;
 import com.king.cai.message.RequestMessage_QueryServer;
 import com.king.cai.service.UDPServerRunner;
 
@@ -15,7 +17,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -26,8 +27,10 @@ public class KingService extends Service{
 
     private TCPClient mTcpClient = null;
     private WifiMonitor mWifiMonitor = null;
-    private TCPServerRunner mTcpServer = null;
     private MulticastReceiverRunner mMulticastReceiverRoutine = null;
+    private boolean mAnswerCommited = false;
+    private boolean mReferenceVisible = false;
+    
     //这里定义一个Binder类，用在onBind()有方法里，这样Activity那边可以获取到 
     private MyBinder mBinder = new MyBinder();      
 	public class MyBinder extends Binder{
@@ -68,7 +71,6 @@ public class KingService extends Service{
     private Handler mHandler = new Handler(){
     	@Override
     	public void handleMessage(Message msg){
-			Bundle bundle = msg.getData();
     		switch (msg.what){
     		case SOCKET_EVENT:
     			Intent intent = new Intent(KingCAIConfig.SOCKET_EVENT_ACTION);
@@ -118,13 +120,33 @@ public class KingService extends Service{
 		startUDPServer();
 	}
 	
+	public boolean requestPaperSize(){
+		if (!mAnswerCommited){
+			sendMessage(new RequestMessage_PaperSize(), 0);
+		}
+		
+		return !mAnswerCommited;
+	}
+	
+	public void commitAnswers(String answers){
+		sendMessage(new RequestMessage_Answer(RequestMessage_Answer.s_NormalCommitMsgTag, answers), 0);
+		mAnswerCommited = true;
+	}
+	
+	public void setReferenceVisible(boolean visible){
+		mReferenceVisible = visible;
+	}
+	
+	public boolean isReferenceVisible(){
+		return mReferenceVisible;
+	}
+	
 	private void startUDPServer(){
 		UDPServerRunner udpReceiverRoutine = new UDPServerRunner(mHandler, KingCAIConfig.mUdpPort);
 		new Thread(udpReceiverRoutine).start();
 	}
 
 	private void startMulticastServer(){
-	
 		mMulticastReceiverRoutine = new MulticastReceiverRunner(mHandler, 
 											KingCAIConfig.mMulticastClientGroupIP, KingCAIConfig.mMulticastClientCommonPort);
 		new Thread(mMulticastReceiverRoutine).start();
@@ -156,6 +178,8 @@ public class KingService extends Service{
     	public String mInfo = null;
     	public boolean mOffline = false;
     	public boolean mExceptionExit = false;
+    	public String mSSID = null;
+    	public String mServerAddr = null;
     	
     	public LoginInfo(String id, String studentInfo, boolean bOffline, boolean bExceptionExit){
     		mID = id;
@@ -177,6 +201,7 @@ public class KingService extends Service{
     
 	public void loginToServer(String number, String password){
 		sendMessage(new RequestMessage_Login(number, password), 0);
+		mAnswerCommited = false;
 	}
 
 	public void logoutFromServer(){
@@ -220,7 +245,7 @@ public class KingService extends Service{
     	return mWifiMonitor;
     }
     
-    private void disableOtherApps(){
+    protected void disableOtherApps(){
     	PackageManager packageMgr = getPackageManager();
         List<PackageInfo> pkgInfos = packageMgr.getInstalledPackages(0/*PackageManager.GET_ACTIVITIES*/);
         String packageName = getPackageName(); 

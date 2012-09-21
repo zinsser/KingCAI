@@ -45,9 +45,7 @@ import com.king.cai.message.RequestMessage_Answer;
 import com.king.cai.message.RequestMessage_Image;
 import com.king.cai.message.RequestMessage_ImageData;
 import com.king.cai.message.RequestMessage_LastAnswer;
-import com.king.cai.message.RequestMessage_Logout;
 import com.king.cai.message.RequestMessage_Paper;
-import com.king.cai.message.RequestMessage_PaperSize;
 import com.king.cai.message.RequestMessage_ResetPassword;
 
 public class PaperActivity  extends ComunicableActivity {
@@ -156,7 +154,6 @@ public class PaperActivity  extends ComunicableActivity {
     public void onStop(){
     	setScreenOffTime(mSysBacklightTimeout);
     	SaveConfig(true);
-    	mServiceChannel.sendMessage(new RequestMessage_Logout(), 0);
     	if (mPaperStatus != null){
     		mPaperStatus.LeaveStatus();
         	mPaperStatus = null;
@@ -185,7 +182,9 @@ public class PaperActivity  extends ComunicableActivity {
    
     @Override
 	protected void onServiceReady(){
-        mServiceChannel.sendMessage(new RequestMessage_PaperSize(), 0);		
+    	if (!mServiceChannel.requestPaperSize()){
+    		switch2CommitStatus(mServiceChannel.isReferenceVisible());
+    	}		
 	}
     
     
@@ -524,6 +523,7 @@ public class PaperActivity  extends ComunicableActivity {
 		}
 		case KingCAIConfig.EVENT_COMMIT_ACK:{
 			boolean ack = bundle.getBoolean("Result");
+			mServiceChannel.setReferenceVisible(ack);
 			switch2CommitStatus(ack);
 			break;
 		}
@@ -695,10 +695,13 @@ public class PaperActivity  extends ComunicableActivity {
 
 	public void CommitAnswers(String tag){
 		HiddenKeyBoard(findViewById(R.id.txtGoto));
-		mServiceChannel.sendMessage(new RequestMessage_Answer(tag, mAnswerMgr.toString()), 0);
-		if (tag == RequestMessage_Answer.s_ExceptionCommitMsgTag){
+		if (tag.equals(RequestMessage_Answer.s_ExceptionCommitMsgTag)){
+			mServiceChannel.sendMessage(new RequestMessage_Answer(tag, mAnswerMgr.toString()), 0);			
 			mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_AUTOSAVEACK_TIMEOUT), AUTOSAVE_ACK_TIME);
+		}else if (tag.equals(RequestMessage_Answer.s_NormalCommitMsgTag)){
+			mServiceChannel.commitAnswers(mAnswerMgr.toString());
 		}
+
 		//–¥»Î
 		SharedPreferences sp = getSharedPreferences(KingCAIConfig.s_ExtraInfoFileName, 0);
 		SharedPreferences.Editor editor = sp.edit();

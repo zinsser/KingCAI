@@ -75,7 +75,7 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 	}
 
 	public boolean onBackkeyDown(){
-//		showAlertDialog();		
+		mStatusOwner.showToast("需要先交卷才能返回！");
 		return true;
 	}	
 	

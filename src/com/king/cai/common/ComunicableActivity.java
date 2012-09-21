@@ -243,6 +243,50 @@ public abstract class ComunicableActivity extends Activity{
         	}
         }
         
+        public boolean requestPaperSize(){
+        	boolean bRet = false;
+        	if (mKingService != null){
+        		bRet = mKingService.requestPaperSize();
+        	}
+        	
+        	return bRet;
+        }
+
+        public void commitAnswers(String answers){
+        	if (mKingService != null){
+        		mKingService.commitAnswers(answers);
+        	}
+        }
+        
+        public boolean isAnswerCommited(){
+        	boolean bRet = false;
+        	if (mKingService != null){
+        		bRet = mKingService.isRestricted();
+        	}
+        	return bRet;
+        }
+        
+        public void setReferenceVisible(boolean visible){
+        	if (mKingService != null){
+        		mKingService.setReferenceVisible(visible);
+        	}
+        }
+        
+        public void logoutFromServer(){
+        	if (mKingService != null){
+        		mKingService.logoutFromServer();
+        	}
+        }
+        
+        public boolean isReferenceVisible(){
+        	boolean bRet = false;
+        	if (mKingService != null){
+        		bRet = mKingService.isReferenceVisible();
+        	}
+        	
+        	return bRet;
+        }
+        
         public void updateServerInfo(String serverip, String ssid){
         	if (mKingService != null){
         		mKingService.updateServer(serverip, ssid);
