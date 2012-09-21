@@ -4,7 +4,7 @@
 	<string name="permlab_write_settings">permlab_write_settings</string>
 	<string name="sharedUserLabel">sharedUserLabel</string>
     <string name="hello">Hello World, KingCAIActivity!</string>
-    <string name="app_name">KingCAI</string>
+    <string name="app_name">堂堂清</string>
     <string name="Title">Classroom Testing</string>
     <string name="StudentID">Please input student ID</string>
     <string name="Password">Please input Password</string>
@@ -88,11 +88,11 @@
 	<string name="ProgressTipImage">正在下载图片，请稍候...</string>	
 	<string name="PCCrash">  教师服务器发生严重错误，\n应用程序将退出！</string>
 	<string name="ReLogin">重新登录</string>
-	<string name="BuildInApps">内置应用列表</string>	
+	<string name="BuildInApps">应用列表</string>	
 	<string name="ServerTimeout">教师服务器响应超时</string>	
 	<string name="DownloadComplete">试题下载结束</string>		
 	<string name="DownloadInfo">共  %1$s 题， %2$s 已完成下载！</string>	
 	<string name="EnforcedCommitTips"> %s 分钟后将自动交卷！</string>
 	<string name="Logout">注销</string>	
-	
+	<string name="Settings">软件设置</string>		
 </resources>

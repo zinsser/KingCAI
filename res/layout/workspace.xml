@@ -5,99 +5,189 @@
     android:layout_gravity="center_horizontal"
     android:background="@drawable/login_bg_blue"
     android:orientation="vertical" >
-
-	<Button
-	    android:id="@+id/buttonLoginOnWorkspace"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_gravity="center"
-	    android:background="@drawable/button_login"
-	    android:text="@string/Login"
-	    android:textColor="#FFFFFF"
-	    android:textSize="20pt" />
-    
+
     <LinearLayout
         android:id="@+id/linearLayoutInfo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingRight="5dp" 
-        android:paddingLeft="5dp"         >
-
-        <ImageView
-	        android:id="@+id/imageViewHeaderIcon"
-	        android:layout_width="150dip"
-	        android:layout_height="200dip"
-	        android:scaleType="fitCenter"
-	        android:src="@drawable/def_head" />
-	
+        android:paddingLeft="5dp">
+		
         <LinearLayout 
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:paddingTop="10dp"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+			android:paddingTop="5dp"		    
 		    android:orientation="vertical" >
-	
-            <TextView
-                android:id="@+id/textViewStudentBaseInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="@string/BaseInfo"
-                android:textSize="24dp" />
-	
-            <TextView
-                android:id="@+id/textViewStudentAdvancedInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="8"
-                android:text="@string/AdvancedInfo"
-                android:textSize="24dp" />
-            	            
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="match_parent" 
-		        android:layout_marginBottom="5dp"			        		
-				android:orientation="horizontal">
-	
-				<Button
-				    android:id="@+id/buttonStudyOnWorkspace"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:layout_gravity="right"
-				    android:layout_weight="0.6"	
-				    android:background="@drawable/button_login"
-				    android:text="@string/Study"
-				    android:textColor="#FFFFFF"
-				    android:textSize="24dp" />	
-				<Button
-				    android:id="@+id/buttonTestOnWorkspace"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:layout_gravity="right"	
-				    android:layout_weight="0.6"
-				    android:background="@drawable/button_login"
-				    android:text="@string/Test"
-				    android:textColor="#FFFFFF"
-				    android:textSize="24dp" />
-				<Button
-				    android:id="@+id/buttonLogoutOnWorkspace"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:layout_gravity="right"
-				    android:layout_weight="0.6"	
-				    android:background="@drawable/button_login"
-				    android:text="@string/Exit"
-				    android:textColor="#FFFFFF"
-				    android:textSize="24dp" />										    
-			</LinearLayout>
+			
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"       
+				android:text="@string/app_name"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:textSize="40dp"
+				android:textColor="#FFFFFF"/>
+				
+			<ImageView
+				android:layout_width="108dip"
+				android:layout_height="144dip"
+				android:layout_gravity="center_horizontal"
+				android:scaleType="fitCenter"
+				android:background="#000000FF"
+				android:src="@drawable/logo_finger" />
 		</LinearLayout>
+		
+		<LinearLayout
+			android:id="@+id/linearLayoutInfo"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:paddingRight="5dp" 
+			android:paddingLeft="5dp">
+
+			<ImageView
+				android:id="@+id/imageViewHeaderIcon"
+				android:layout_width="150dip"
+				android:layout_height="200dip"
+				android:scaleType="fitCenter"
+				android:src="@drawable/def_head" />
+		
+			<LinearLayout 
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingTop="10dp"
+				android:paddingLeft="5dp"					
+				android:orientation="vertical" >
+		
+		        <LinearLayout 
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="0.6"						
+					android:background="@drawable/baseinfo_frame_bg"
+					android:orientation="vertical" >
+
+					<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"		    			    
+						android:paddingLeft="15dp"			    		    
+						android:text="@string/BaseInfo"
+						android:textColor="#FFFFFF"
+						android:textAppearance="?android:attr/textAppearanceLarge"/>					
+
+					<ScrollView
+						android:id="@+id/scrollViewBaseInfo"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:background="@drawable/baseinfo_bg"	    	     
+						android:paddingBottom="5dp"
+						android:paddingLeft="5dp"
+						android:paddingRight="5dp"
+						android:paddingTop="10dp">
+					
+						<TextView
+							android:id="@+id/textViewStudentBaseInfo"
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"
+							android:singleLine="true"
+							android:textSize="24dp" />
+					</ScrollView>
+				</LinearLayout>
+		        <LinearLayout 
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="0.4"	
+					android:background="@drawable/baseinfo_frame_bg"
+					android:orientation="vertical" >
+
+					<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"		    			    
+						android:paddingLeft="15dp"			    		    
+						android:text="@string/AdvancedInfo"
+						android:textColor="#FFFFFF"
+						android:textAppearance="?android:attr/textAppearanceLarge"/>					
+
+					<ScrollView
+						android:id="@+id/scrollViewBaseInfo"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:background="@drawable/baseinfo_bg"	    	     
+						android:paddingBottom="5dp"
+						android:paddingLeft="5dp"
+						android:paddingRight="5dp"
+						android:paddingTop="10dp">
+						
+						<TextView
+							android:id="@+id/textViewStudentAdvancedInfo"
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"
+							android:maxLines="3"
+							android:textColor="#FFFFFF"							
+							android:textSize="24dp" />
+					</ScrollView>
+				</LinearLayout>	
+				<Button
+					android:id="@+id/buttonLogoutOnWorkspace"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="right"
+					android:layout_weight="1"	
+					android:background="@drawable/button_login"
+					android:text="@string/Exit"
+					android:textColor="#FFFFFF"
+					android:textSize="24dp" />					
+			</LinearLayout>
+		</LinearLayout>  
+	</LinearLayout>            	            
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_marginLeft="5dp"			        		
+		android:layout_marginRight="5dp"		
+		android:orientation="horizontal">
+
+		<Button
+			android:id="@+id/buttonStudyOnWorkspace"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_weight="0.6"	
+			android:background="@drawable/button_login"
+			android:text="@string/Study"
+			android:textColor="#FFFFFF"
+			android:textSize="24dp" />	
+		<Button
+			android:id="@+id/buttonTestOnWorkspace"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"	
+			android:layout_weight="0.6"
+			android:background="@drawable/button_login"
+			android:text="@string/Test"
+			android:textColor="#FFFFFF"
+			android:textSize="24dp" />
+		<Button
+			android:id="@+id/buttonAppsmenu"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_weight="0.6"	
+			android:background="@drawable/button_login"
+			android:text="@string/BuildInApps"
+			android:textColor="#FFFFFF"
+			android:textSize="24dp" />	
+		<Button
+			android:id="@+id/buttonSettings"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_weight="0.6"	
+			android:background="@drawable/button_login"
+			android:text="@string/Settings"
+			android:textColor="#FFFFFF"
+			android:textSize="24dp" />	
 	</LinearLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/BuildInApps"
-        android:textColor="#FFFFFF"
-        android:textSize="24pt" />
 
     <GridView
 	    android:id="@+id/gridViewAppmenu"
@@ -107,6 +197,7 @@
 	    android:columnWidth="80dp"
 	    android:numColumns="auto_fit"
 	    android:fadingEdge="none"
+		android:visibility="gone"
 	    android:verticalSpacing="10dp" 	    
 	    android:listSelector="#00000000"
 	    android:scrollbars="none"/>    			

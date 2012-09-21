@@ -35,7 +35,6 @@ import com.king.cai.service.KingService.LoginInfo;
 
 public class WorkspaceActivity extends ComunicableActivity  {
 	private Button mButtonPaper = null;
-	private Button mButtonLogin = null;
 	private Button mButtonLogout = null;	
 	private LinearLayout mLinearLayoutInfo = null;
 	private LoginInfo mLoginInfo = null;
@@ -55,13 +54,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		parseIntent();
 
 		mLinearLayoutInfo = (LinearLayout)findViewById(R.id.linearLayoutInfo);
-		mButtonLogin = (Button)findViewById(R.id.buttonLoginOnWorkspace);
-		mButtonLogin.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				startLoginActivity();
-			}
-		});
+
 		mButtonLogout = (Button)findViewById(R.id.buttonLogoutOnWorkspace);
 		mButtonLogout.setOnClickListener(new View.OnClickListener() {
 			
@@ -171,15 +164,10 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	@Override
 	protected void onServiceReady() {
 		mLoginInfo = mServiceChannel.getLoginInfo();
-		if (mLoginInfo != null){
-			mLinearLayoutInfo.setVisibility(View.VISIBLE);
-			mButtonLogin.setVisibility(View.GONE);
-	        mButtonPaper.setTextColor(Color.rgb(255, 255, 255));
-	        mButtonPaper.setEnabled(true);			
-		}else {
-			mLinearLayoutInfo.setVisibility(View.GONE);
-			mButtonLogin.setVisibility(View.VISIBLE);			
-		}
+
+		mLinearLayoutInfo.setVisibility(View.VISIBLE);
+        mButtonPaper.setTextColor(Color.rgb(255, 255, 255));
+        mButtonPaper.setEnabled(true);
 	}
 
     public class AppEnumTask extends  AsyncTask<PackageManager, PackageInfo, String> {

@@ -131,7 +131,7 @@ public class KingService extends Service{
 	}
 	
     public void updateServer(String addr, String ssid){
-
+    	stopClientSocket();
     	if (addr != null){
 	    	mServerAddr = addr;    	
 	   		mTcpClient = new TCPClient(mHandler, mServerAddr);
@@ -139,7 +139,7 @@ public class KingService extends Service{
     	startMulticastServer();		
     }
     
-    private stopClientSocket(){
+    private void stopClientSocket(){
     	if (mTcpClient != null){
     		mTcpClient.onDestroy();
     		mTcpClient = null;

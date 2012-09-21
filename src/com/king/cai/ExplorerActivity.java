@@ -56,7 +56,7 @@ public class ExplorerActivity extends Activity {
     	}
     	constructFileList(mRootDir);
     	mTextViewTitle = (TextView)findViewById(R.id.textViewExplorerTitle);
-    	mTextViewTitle.setText(mRootDir);
+    	updateTitle(mRootDir);
         mExplorerView = (GridView)findViewById(R.id.gridViewExplorer);
         ExplorerAdapter adapter = new ExplorerAdapter();
         mExplorerView.setAdapter(adapter);
@@ -69,6 +69,10 @@ public class ExplorerActivity extends Activity {
 				if (parentPath != null){
 					constructFileList(parentPath);
 					((BaseAdapter)mExplorerView.getAdapter()).notifyDataSetChanged();
+					
+					updateTitle(parentPath);
+				}else{
+					updateTitle(mRootDir);
 				}
 			}
 		});
@@ -105,8 +109,20 @@ public class ExplorerActivity extends Activity {
 		public void onClick(View v) {
 			constructFileList(mNextDirectory);
 			((BaseAdapter)mExplorerView.getAdapter()).notifyDataSetChanged();
-			mTextViewTitle.setText(mNextDirectory);
+			updateTitle(mNextDirectory);
 		}		
+	}
+	
+	private void updateTitle(String path){
+		if (path != null){
+			int lastSeperatorPos = path.lastIndexOf("/");
+			if (lastSeperatorPos+1 < path.length()){
+				String title = path.substring(lastSeperatorPos+1, path.length());
+				mTextViewTitle.setText(title);
+			}else{
+				mTextViewTitle.setText(path);
+			}
+		}
 	}
 	
 	public class FileClickListener implements View.OnClickListener{

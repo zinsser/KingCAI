@@ -16,6 +16,6 @@
         android:layout_height="32dp"
         android:gravity="center"
         android:textColor="#FFFFFF"
-        android:textSize="12dp" />
+        android:textSize="16dp" />
 
 </LinearLayout>
