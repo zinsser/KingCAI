@@ -287,6 +287,15 @@ public abstract class ComunicableActivity extends Activity{
         	return bRet;
         }
         
+        public String getLastAnswerAtLocal(){
+        	String str = null;
+        	if (mKingService != null){
+        		str = mKingService.getLastAnswerAtLocal();
+        	}
+        	
+        	return str;
+        }
+        
         public void updateServerInfo(String serverip, String ssid){
         	if (mKingService != null){
         		mKingService.updateServer(serverip, ssid);

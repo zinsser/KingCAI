@@ -28,8 +28,8 @@ public class KingService extends Service{
     private TCPClient mTcpClient = null;
     private WifiMonitor mWifiMonitor = null;
     private MulticastReceiverRunner mMulticastReceiverRoutine = null;
-    private boolean mAnswerCommited = false;
     private boolean mReferenceVisible = false;
+    private String mAnswers = null;
     
     //这里定义一个Binder类，用在onBind()有方法里，这样Activity那边可以获取到 
     private MyBinder mBinder = new MyBinder();      
@@ -121,16 +121,20 @@ public class KingService extends Service{
 	}
 	
 	public boolean requestPaperSize(){
-		if (!mAnswerCommited){
+		if (mAnswers == null){
 			sendMessage(new RequestMessage_PaperSize(), 0);
 		}
 		
-		return !mAnswerCommited;
+		return mAnswers == null;
 	}
 	
 	public void commitAnswers(String answers){
 		sendMessage(new RequestMessage_Answer(RequestMessage_Answer.s_NormalCommitMsgTag, answers), 0);
-		mAnswerCommited = true;
+		mAnswers = answers;
+	}
+	
+	public String getLastAnswerAtLocal(){
+		return mAnswers;
 	}
 	
 	public void setReferenceVisible(boolean visible){
@@ -201,7 +205,7 @@ public class KingService extends Service{
     
 	public void loginToServer(String number, String password){
 		sendMessage(new RequestMessage_Login(number, password), 0);
-		mAnswerCommited = false;
+		mAnswers = null;
 	}
 
 	public void logoutFromServer(){

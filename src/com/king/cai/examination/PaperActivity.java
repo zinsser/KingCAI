@@ -57,7 +57,8 @@ public class PaperActivity  extends ComunicableActivity {
 	
 	private final static int SET_FONT_SIZE_DIALOG = 0;
 	private final static int DIALOG_ABOUT = 2;
-	private final static int DIALOG_PROGRESS_LOAD_PAPER = 3;
+	private final static int DIALOG_LOAD_PAPER = 3;
+	private final static int DIALOG_WAIT_COMMITING = 4;
 	
 	private int mCurrentFontSize = 1;//normal
 		
@@ -73,7 +74,8 @@ public class PaperActivity  extends ComunicableActivity {
 	private TextView mTextViewStatus = null;
 	private boolean mOffline = false;
 	private boolean mExceptionExit = false;
-	private ProgressDialog mProgressDialog = null;
+	private ProgressDialog mLoadingPaperDialog = null;
+	private ProgressDialog mWaitingCommitDialog = null;	
 	private String mStudentID = null;
 	private String mStudentInfo = null;
 	private String mServerIP = null;
@@ -183,6 +185,10 @@ public class PaperActivity  extends ComunicableActivity {
     @Override
 	protected void onServiceReady(){
     	if (!mServiceChannel.requestPaperSize()){
+    		String localAnswers = mServiceChannel.getLastAnswerAtLocal();
+			if (localAnswers != null && mAnswerMgr != null){
+				mAnswerMgr.fromString(localAnswers);
+			}
     		switch2CommitStatus(mServiceChannel.isReferenceVisible());
     	}		
 	}
@@ -374,13 +380,20 @@ public class PaperActivity  extends ComunicableActivity {
 				.setMessage(GenAboutString())
 				.setNegativeButton(android.R.string.ok, null);
     		return builder.create();
-    	}else if (id == DIALOG_PROGRESS_LOAD_PAPER){
-    		mProgressDialog = null;
-    		mProgressDialog  = new ProgressDialog(this);
-    		mProgressDialog.setMessage(getResources().getString(R.string.ProgressTipPaper));    		
-    		mProgressDialog.setIndeterminate(true);
-    		mProgressDialog.setCancelable(false);
-            return mProgressDialog;    		
+    	}else if (id == DIALOG_LOAD_PAPER){
+    		mLoadingPaperDialog = null;
+    		mLoadingPaperDialog  = new ProgressDialog(this);
+    		mLoadingPaperDialog.setMessage(getResources().getString(R.string.ProgressTipPaper));    		
+    		mLoadingPaperDialog.setIndeterminate(true);
+    		mLoadingPaperDialog.setCancelable(false);
+            return mLoadingPaperDialog;    		
+    	}else if (id == DIALOG_WAIT_COMMITING){
+    		mWaitingCommitDialog = null;
+    		mWaitingCommitDialog  = new ProgressDialog(this);
+    		mWaitingCommitDialog.setMessage(getResources().getString(R.string.Committing));    		
+    		mWaitingCommitDialog.setIndeterminate(true);
+    		mWaitingCommitDialog.setCancelable(false);
+            return mWaitingCommitDialog;    		
     	}
     	
     	return super.onCreateDialog(id);
@@ -435,7 +448,7 @@ public class PaperActivity  extends ComunicableActivity {
 			}finally{
 				mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_PAPER_RECEIVE_TIMEOUT), count * 4 * 1000);
 			}
-			showDialog(DIALOG_PROGRESS_LOAD_PAPER);
+			showDialog(DIALOG_LOAD_PAPER);
 			break;
 		}
 		case KingCAIConfig.EVENT_NEW_PAPER:{
@@ -455,10 +468,10 @@ public class PaperActivity  extends ComunicableActivity {
 			}
 			mServiceChannel.updatePaperSize(0);
 			
-			if (mProgressDialog != null && mQuestionCount != null){ 
+			if (mLoadingPaperDialog != null && mQuestionCount != null){ 
 				String tips = String.format(getResources().getString(R.string.ProgressTipQuestion),
 						mQuestionCount);
-				mProgressDialog.setMessage(tips);
+				mLoadingPaperDialog.setMessage(tips);
 			}
 			break;
 		}
@@ -547,9 +560,9 @@ public class PaperActivity  extends ComunicableActivity {
  	}
 	
 	private void postReceivePaper(){
-		if (mProgressDialog != null){
+		if (mLoadingPaperDialog != null){
 			mTimeoutHandler.removeMessages(EVENT_PAPER_RECEIVE_TIMEOUT);
-			mProgressDialog.dismiss();
+			mLoadingPaperDialog.dismiss();
 			mPaperStatus.EnterStatus();
 		}
 	}
@@ -557,7 +570,8 @@ public class PaperActivity  extends ComunicableActivity {
 	public static final int EVENT_TEST_TIMEOUT = 0;
 	public static final int EVENT_AUTOSAVEACK_TIMEOUT = 1;
 	public static final int EVENT_PAPER_RECEIVE_TIMEOUT = 2;
-	public static final int AUTOSAVE_ACK_TIME = 20 * 1000;
+	public static final int EVENT_COMMIT_TIMEOUT = 3;
+	public static final int REQUEST_TIMEOUT_VALUE = 20 * 1000;
 	private Handler mTimeoutHandler = new Handler(){
 
 		@Override
@@ -572,8 +586,8 @@ public class PaperActivity  extends ComunicableActivity {
 				break;
 			}
 			case EVENT_PAPER_RECEIVE_TIMEOUT:{
-				if (mProgressDialog != null){
-					mProgressDialog.dismiss();					
+				if (mLoadingPaperDialog != null){
+					mLoadingPaperDialog.dismiss();					
 				}
 				int loadedCount = mQuestionMgr != null ? mQuestionMgr.getQuestionCount() : 0;
 				String tips = String.format(getResources().getString(R.string.DownloadInfo), 
@@ -586,6 +600,14 @@ public class PaperActivity  extends ComunicableActivity {
 				mPaperStatus.EnterStatus();    	
 				break;
 			}
+			case EVENT_COMMIT_TIMEOUT:{
+				if (mWaitingCommitDialog != null){
+					mWaitingCommitDialog.dismiss();
+				}
+				switch2CommitStatus(false);
+				break;				
+			}
+
 			default:
 				break;
 			}
@@ -697,7 +719,7 @@ public class PaperActivity  extends ComunicableActivity {
 		HiddenKeyBoard(findViewById(R.id.txtGoto));
 		if (tag.equals(RequestMessage_Answer.s_ExceptionCommitMsgTag)){
 			mServiceChannel.sendMessage(new RequestMessage_Answer(tag, mAnswerMgr.toString()), 0);			
-			mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_AUTOSAVEACK_TIMEOUT), AUTOSAVE_ACK_TIME);
+			mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_AUTOSAVEACK_TIMEOUT), REQUEST_TIMEOUT_VALUE);
 		}else if (tag.equals(RequestMessage_Answer.s_NormalCommitMsgTag)){
 			mServiceChannel.commitAnswers(mAnswerMgr.toString());
 		}
@@ -713,15 +735,18 @@ public class PaperActivity  extends ComunicableActivity {
 	}
 	
 	public void switch2WaitingStatus(){
-		mPaperStatus.LeaveStatus();
+/*		mPaperStatus.LeaveStatus();
 		mPaperStatus = null;
 		mPaperStatus = new WaitingStatus(this);
 		mPaperStatus.EnterStatus();
 		PaperViewAdapter adapter = (PaperViewAdapter)mListView.getAdapter();
-		adapter.notifyDataSetChanged();
+		adapter.notifyDataSetChanged();*/
+		mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_COMMIT_TIMEOUT), REQUEST_TIMEOUT_VALUE);		
+		showDialog(DIALOG_WAIT_COMMITING);
 	}
 	
 	public void switch2CommitStatus(boolean showAnswer){
+		mTimeoutHandler.removeMessages(EVENT_COMMIT_TIMEOUT);
 		mPaperStatus.LeaveStatus();
 		mPaperStatus = null;
 		mPaperStatus = new CommitedStatus(this, showAnswer);
