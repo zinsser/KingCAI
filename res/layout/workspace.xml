@@ -37,14 +37,13 @@
 				android:background="#000000FF"
 				android:src="@drawable/logo_finger" />
 		</LinearLayout>
-		
+		
 		<LinearLayout
-			android:id="@+id/linearLayoutInfo"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			android:paddingRight="5dp" 
-			android:paddingLeft="5dp">
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal"
+		    android:paddingLeft="5dp"
+		    android:paddingRight="5dp" >
 
 			<ImageView
 				android:id="@+id/imageViewHeaderIcon"
@@ -52,12 +51,131 @@
 				android:layout_height="200dip"
 				android:scaleType="fitCenter"
 				android:src="@drawable/def_head" />
-		
+
 			<LinearLayout 
+				android:id="@+id/linearLayoutDisconnected"			    
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingTop="10dp"
 				android:paddingLeft="5dp"					
+				android:orientation="vertical" >
+		        <LinearLayout 
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="0.6"						
+					android:background="@drawable/baseinfo_frame_bg"
+					android:orientation="vertical" >
+
+					<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"		    			    
+						android:paddingLeft="15dp"			    		    
+						android:text="@string/StudentID"
+						android:textColor="#FFFFFF"
+						android:singleLine="true"
+						android:textAppearance="?android:attr/textAppearanceLarge"/>					
+
+					<EditText
+		                android:id="@+id/txtStudentIDOnWorkspace"
+		                android:layout_width="match_parent"
+		                android:layout_height="wrap_content"
+		                android:imeOptions="actionNext"
+		                android:numeric="integer"
+		                android:singleLine="true" />
+				</LinearLayout>
+		        <LinearLayout 
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="0.6"						
+					android:background="@drawable/baseinfo_frame_bg"
+					android:orientation="vertical" >
+
+					<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"		    			    
+						android:paddingLeft="15dp"			    		    
+						android:text="@string/Password"
+						android:textColor="#FFFFFF"
+						android:singleLine="true"
+						android:textAppearance="?android:attr/textAppearanceLarge"/>					
+
+		            <EditText
+		                android:id="@+id/textViewPasswordOnWorkspace"
+		                android:layout_width="match_parent"
+		                android:layout_height="wrap_content"
+		                android:imeOptions="actionDone"
+		                android:inputType="textVisiblePassword"
+		                android:singleLine="true" />
+
+				</LinearLayout>
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content" 
+			        android:background="@drawable/spinner_ssid_bg"
+			        android:layout_marginBottom="5dp"				        		
+					android:orientation="horizontal">
+			        <Spinner
+			            android:id="@+id/spinnerSSIDOnWorkspace"
+			            android:layout_width="match_parent"
+			            android:layout_height="match_parent"
+			            android:textColor="#000000"
+			        	android:background="#00000000"
+			            android:layout_weight="0.1"
+			            android:paddingLeft="15dp"
+						android:textSize="30dp">
+			
+			        </Spinner>
+			
+				    <ImageView
+				        android:id="@+id/imageViewSpinnerDownOnWorkspace"
+				        android:layout_width="match_parent"
+				        android:layout_height="match_parent"
+				        android:layout_gravity="center_horizontal"
+				        android:layout_weight="0.8"
+			        	android:paddingRight="10dp"				        
+				        android:scaleType="fitCenter"
+				        android:src="@drawable/spinner_ssid_down" />
+			
+				</LinearLayout>	
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content" 
+			        android:layout_marginBottom="5dp"			        		
+					android:orientation="horizontal">
+		
+
+					<CheckBox
+					    android:id="@+id/checkBoxOffline"
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_marginTop="3dp"
+					    android:layout_weight="0.5"
+					    android:text="@string/LoginOffline"
+					    android:textAppearance="?android:attr/textAppearanceLarge"
+					    android:textColor="#FFFFFF"
+					    android:textSize="24dp"/>					
+					<Button
+					    android:id="@+id/btnLogin"
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_gravity="right"	
+					    android:layout_weight="0.6"
+					    android:background="@drawable/button_login"
+					    android:text="@string/Login"
+					    android:textColor="#FFFFFF"
+					    android:textSize="24dp" />	
+						    
+				</LinearLayout>
+																			
+			</LinearLayout>			
+					
+			<LinearLayout 
+				android:id="@+id/linearLayoutConnected"			    
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingTop="10dp"
+				android:paddingLeft="5dp"
+				android:visibility="gone"
 				android:orientation="vertical" >
 		
 		        <LinearLayout 
@@ -89,6 +207,7 @@
 							android:id="@+id/textViewStudentBaseInfo"
 							android:layout_width="match_parent"
 							android:layout_height="match_parent"
+							android:textColor="#FFFFFF"
 							android:singleLine="true"
 							android:textSize="24dp" />
 					</ScrollView>
@@ -139,7 +258,28 @@
 					android:textSize="24dp" />					
 			</LinearLayout>
 		</LinearLayout>  
-	</LinearLayout>            	            
+	</LinearLayout>	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" 
+        android:layout_marginBottom="5dp"			        		
+		android:orientation="horizontal">
+
+	    <ProgressBar
+		    android:id="@+id/progressBarLogin"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center" />
+			
+		<TextView
+		    android:id="@+id/textViewStatusOnWorkspace"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"		
+	        android:layout_gravity="center"
+		    android:text="@string/AppInitStatus"
+		    android:textColor="#10007A"
+		    android:background="#00000000"
+		    android:textAppearance="?android:attr/textAppearanceLarge"/>
+	</LinearLayout>            	            
 	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content" 
@@ -147,6 +287,17 @@
 		android:layout_marginRight="5dp"		
 		android:orientation="horizontal">
 
+		<Button
+			android:id="@+id/buttonBookmark"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_weight="0.6"	
+			android:background="@drawable/button_login"
+			android:text="@string/Bookmark"
+			android:textColor="#FFFFFF"
+			android:textSize="24dp" />		    
+	    
 		<Button
 			android:id="@+id/buttonStudyOnWorkspace"
 			android:layout_width="match_parent"
@@ -165,6 +316,16 @@
 			android:layout_weight="0.6"
 			android:background="@drawable/button_login"
 			android:text="@string/Test"
+			android:textColor="#FFFFFF"
+			android:textSize="24dp" />
+		<Button
+			android:id="@+id/buttonWrongQuestions"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_weight="0.6"	
+			android:background="@drawable/button_login"
+			android:text="@string/WrongQuestions"
 			android:textColor="#FFFFFF"
 			android:textSize="24dp" />
 		<Button

@@ -374,7 +374,7 @@ public class PaperActivity  extends ComunicableActivity {
 					}
 				});
     		return builder.create();
-    	}else if (id == DIALOG_ABOUT){
+    	}else if (id == DIALOG_ABOUT){	
     		AlertDialog.Builder builder = new AlertDialog.Builder(this)
 				.setTitle(R.string.About)
 				.setMessage(GenAboutString())
@@ -616,6 +616,7 @@ public class PaperActivity  extends ComunicableActivity {
 	};
 
     private void showPCCrashNotifyDialog(){
+    	mServiceChannel.logoutFromServer();
 		LayoutInflater inflater = LayoutInflater.from(getApplication());
 		final View crashView = inflater.inflate(R.layout.crash, null);
 		final Dialog dlg = new Dialog(this, R.style.NoTitleDialog);
@@ -624,12 +625,15 @@ public class PaperActivity  extends ComunicableActivity {
 		buttonOK.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+				
 				CheckBox ckbLogin = (CheckBox)crashView.findViewById(R.id.checkBoxRelogin);
 				if (ckbLogin != null && ckbLogin.isChecked()){
+					
 					startWorkspaceActivity(CAUSE_RELOGIN);
 				}
 				
 				dlg.dismiss();
+				finish();
 			}
 		});
 		
@@ -678,6 +682,7 @@ public class PaperActivity  extends ComunicableActivity {
 
 		public void onClick(View v) {
     		HiddenKeyBoard(findViewById(R.id.txtGoto));
+    		showPCCrashNotifyDialog();
     		mPaperStatus.onFilterClick(mListView, mFullAdapter);
 		}
     }

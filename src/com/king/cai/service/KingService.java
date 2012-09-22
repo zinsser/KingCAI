@@ -209,6 +209,7 @@ public class KingService extends Service{
 	}
 
 	public void logoutFromServer(){
+		mLoginInfo = null;
 		sendMessage(new RequestMessage_Logout(), 0);
 	}
 	

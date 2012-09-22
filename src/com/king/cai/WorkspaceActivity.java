@@ -34,25 +34,25 @@ import com.king.cai.service.KingService.LoginInfo;
 
 public class WorkspaceActivity extends ComunicableActivity  {
 	private Button mButtonPaper = null;	
-	private LinearLayout mLinearLayoutInfo = null;
 	private LoginInfo mLoginInfo = null;
 	
 	private List<PackageInfo> mInstalledApks = new ArrayList<PackageInfo>(); 
 	private PackageManager mPackageMgr = null;
 	private GridView mAppmenuView = null;
-
+	private LinearLayout mLinearLayoutConnectedPanel = null;
+	private LinearLayout mLinearLayoutDisconnectedPanel = null;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.workspace);
 
+		mLinearLayoutConnectedPanel = (LinearLayout)findViewById(R.id.linearLayoutConnected);
+		mLinearLayoutDisconnectedPanel = (LinearLayout)findViewById(R.id.linearLayoutDisconnected);
+
 		mPackageMgr = getPackageManager();
 //		new AppEnumTask().execute(mPackageMgr);
 		
-		parseIntent();
-
-		mLinearLayoutInfo = (LinearLayout)findViewById(R.id.linearLayoutInfo);
-
 		findViewById(R.id.buttonLogoutOnWorkspace).setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
@@ -68,7 +68,8 @@ public class WorkspaceActivity extends ComunicableActivity  {
     		public void onClick(View v) {
     			startExplorerActivity();
     		}
-    	});	
+    	});
+        
         mButtonPaper = (Button)findViewById(R.id.buttonTestOnWorkspace);
         mButtonPaper.setTextColor(Color.rgb(128, 128, 128));
         mButtonPaper.setEnabled(false);
@@ -82,9 +83,24 @@ public class WorkspaceActivity extends ComunicableActivity  {
         findViewById(R.id.buttonAppsmenu).setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				onAppsmenuClick();
+				showNoPrivDialog();
 			}
 		});
+        findViewById(R.id.buttonBookmark).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				showNoPrivDialog();
+			}
+		});
+        findViewById(R.id.buttonWrongQuestions).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				showNoPrivDialog();
+			}
+		});        
+        
+        
+		parseIntent();        
 	}
 	
 	private boolean isHiddenApp(String packagename){
@@ -122,19 +138,22 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	private void startLoginActivity(){
 		Intent openLoginActivity = new Intent(WorkspaceActivity.this, LoginActivity.class);
 		startActivity(openLoginActivity);
+//		showDisconnectedPanel();
 	}
 	
 	private void startPaperActivity(){
-		Intent openPaperActivity = new Intent(WorkspaceActivity.this, PaperActivity.class);
-		if (mLoginInfo != null){
+		if (mServiceChannel.getLoginInfo() != null){
+			Intent openPaperActivity = new Intent(WorkspaceActivity.this, PaperActivity.class);			
 			openPaperActivity.putExtra(KingCAIConfig.StudentID, mLoginInfo.mID);
 			openPaperActivity.putExtra(KingCAIConfig.StudentInfo, mLoginInfo.mInfo);
 			openPaperActivity.putExtra(KingCAIConfig.ServerIP, "127.0.0.1");
 			openPaperActivity.putExtra(KingCAIConfig.SSID, "h3c");
 			openPaperActivity.putExtra(KingCAIConfig.Offline, mLoginInfo.mOffline);
 			openPaperActivity.putExtra(KingCAIConfig.ExceptionExit, mLoginInfo.mExceptionExit);		
-		}
-		startActivity(openPaperActivity);		
+			startActivity(openPaperActivity);	
+		}else{
+			showToast("请先登录，再进入在线测试！");
+		}	
 	}
 
 	private void onLogout(){
@@ -142,7 +161,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		startLoginActivity();
 	}
 
-	private void onAppsmenuClick(){
+	private void showNoPrivDialog(){
 		AlertDialog dlg = new AlertDialog.Builder(this)
 		.setTitle(R.string.NoPrivilegeTitle)
 		.setMessage(R.string.NoPrivilege)
@@ -178,12 +197,36 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	@Override
 	protected void onServiceReady() {
 		mLoginInfo = mServiceChannel.getLoginInfo();
-
-		mLinearLayoutInfo.setVisibility(View.VISIBLE);
-        mButtonPaper.setTextColor(Color.rgb(255, 255, 255));
-        mButtonPaper.setEnabled(true);
+		if (mLoginInfo == null){
+			showDisconnectedPanel();
+		}else{
+			showConnectedPanel();
+			mButtonPaper.setTextColor(Color.rgb(255, 255, 255));
+	        mButtonPaper.setEnabled(true);
+	        
+	        ((TextView)findViewById(R.id.textViewStudentBaseInfo)).setText(mLoginInfo.mInfo);
+	        ((TextView)findViewById(R.id.textViewStudentAdvancedInfo)).setText(R.string.ExtraStudentInfo);
+		}
 	}
 
+	private void showConnectedPanel(){
+		if (mLinearLayoutConnectedPanel != null){		
+			mLinearLayoutConnectedPanel.setVisibility(View.VISIBLE);
+		}
+		if (mLinearLayoutDisconnectedPanel != null){
+			mLinearLayoutDisconnectedPanel.setVisibility(View.GONE);
+		}
+	}
+	
+	private void showDisconnectedPanel(){
+		if (mLinearLayoutConnectedPanel != null){
+			mLinearLayoutConnectedPanel.setVisibility(View.GONE);
+		}
+		if (mLinearLayoutDisconnectedPanel != null){
+			mLinearLayoutDisconnectedPanel.setVisibility(View.VISIBLE);
+		}
+	}
+	
     public class AppEnumTask extends  AsyncTask<PackageManager, PackageInfo, String> {
     	@Override
     	protected String doInBackground(PackageManager... params) {
