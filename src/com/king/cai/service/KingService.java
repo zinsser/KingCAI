@@ -4,6 +4,8 @@ package com.king.cai.service;
 import java.util.List;
 
 import com.king.cai.KingCAIConfig;
+import com.king.cai.message.ActiveMessage_LoginComplete;
+import com.king.cai.message.ActiveMessage_QueryComplete;
 import com.king.cai.message.RequestMessage;
 import com.king.cai.message.RequestMessage_Answer;
 import com.king.cai.message.RequestMessage_Login;
@@ -17,6 +19,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -110,14 +113,30 @@ public class KingService extends Service{
     	}
     }
         
-	public void queryServer(){
-		//0，学生终端和教师服务器连接到同一个SSID，组成无线局域网		
-		//1，学生终端向局域网广播发送教师服务器查询消息，同时启动UDP服务器
-		//2，教师服务器收到该消息后，将ip地址作为响应通过UDP消息返回
-		//3，学生终端通过UDP接收到该响应后，更新本地的服务器IP地址
-		//4，并启动TCPClient，通过TCP和教师服务器保持通信
-		sendMessage(new RequestMessage_QueryServer(getLocalIPAddress()));
-		startUDPServer();
+	public void queryServer(boolean bLocal){
+		mLoginInfo.mOffline = bLocal;
+		if (!bLocal){
+			//0，学生终端和教师服务器连接到同一个SSID，组成无线局域网		
+			//1，学生终端向局域网广播发送教师服务器查询消息，同时启动UDP服务器
+			//2，教师服务器收到该消息后，将ip地址作为响应通过UDP消息返回
+			//3，学生终端通过UDP接收到该响应后，更新本地的服务器IP地址
+			//4，并启动TCPClient，通过TCP和教师服务器保持通信
+			sendMessage(new RequestMessage_QueryServer(getLocalIPAddress()));
+			startUDPServer();
+		}else{
+			broadcastSimulatorEvent(ActiveMessage_QueryComplete.s_MsgTag);
+		}
+	}
+	
+	private void broadcastSimulatorEvent(String msgData){
+		Bundle bundle = new Bundle();
+		bundle.putBoolean("Type", true);
+		bundle.putString("Peer", "localhost");
+		bundle.putByteArray("Content", msgData.getBytes());
+		
+		Message innerMessage = mHandler.obtainMessage(KingService.SOCKET_EVENT);
+		innerMessage.setData(bundle);
+		innerMessage.sendToTarget();
 	}
 	
 	public boolean requestPaperSize(){
@@ -157,12 +176,16 @@ public class KingService extends Service{
 	}
 	
     public void updateServer(String addr, String ssid){
+    	
     	stopClientSocket();
     	if (addr != null){
-	    	mServerAddr = addr;    	
-	   		mTcpClient = new TCPClient(mHandler, mServerAddr);
+	    	mServerAddr = addr;  
+	    	if (!mServerAddr.equals("localhost")){
+		   		mTcpClient = new TCPClient(mHandler, mServerAddr);
+		   		startMulticastServer();
+	    	}
     	}
-    	startMulticastServer();		
+    			
     }
     
     private void stopClientSocket(){
@@ -178,39 +201,46 @@ public class KingService extends Service{
     }
 	
     public static class LoginInfo{
+    	public boolean mIsValid = false;
+    	
     	public String mID = null;
     	public String mInfo = null;
     	public boolean mOffline = false;
     	public boolean mExceptionExit = false;
     	public String mSSID = null;
     	public String mServerAddr = null;
-    	
-    	public LoginInfo(String id, String studentInfo, boolean bOffline, boolean bExceptionExit){
-    		mID = id;
-    		mInfo = studentInfo;
-    		mOffline = bOffline;
-    		mExceptionExit = bExceptionExit;
-    	}
+    	public String mPassword = null;
     }
 
-    private LoginInfo mLoginInfo = null;
+    private LoginInfo mLoginInfo = new LoginInfo();
     
-    public void updateLoginInfo(String id, String studentInfo, boolean bOffline, boolean bExceptionExit){
-    	mLoginInfo = new LoginInfo(id, studentInfo, bOffline, bExceptionExit);
+    public void updateLoginInfo(String studentInfo, boolean bExceptionExit){
+		mLoginInfo.mIsValid = true;
+		mLoginInfo.mInfo = studentInfo;
+		mLoginInfo.mExceptionExit = bExceptionExit;
     }
     
     public LoginInfo getLoginInfo(){
-    	return mLoginInfo;
+    	return mLoginInfo.mIsValid ? mLoginInfo : null;
     } 
     
 	public void loginToServer(String number, String password){
-		sendMessage(new RequestMessage_Login(number, password), 0);
+		mLoginInfo.mID = number;
+		mLoginInfo.mPassword = password;
+		if (mLoginInfo.mOffline){
+			mLoginInfo.mIsValid = true;
+			broadcastSimulatorEvent(ActiveMessage_LoginComplete.s_MsgTag+"[pass]zhou.jincai[grade]class 3 grade 7");
+		}else{
+			sendMessage(new RequestMessage_Login(number, password), 0);
+		}
 		mAnswers = null;
 	}
 
 	public void logoutFromServer(){
-		mLoginInfo = null;
-		sendMessage(new RequestMessage_Logout(), 0);
+		mLoginInfo.mIsValid = false;
+		if (!mLoginInfo.mOffline){
+			sendMessage(new RequestMessage_Logout(), 0);
+		}
 	}
 	
 	public void updateDownloadSize(int size){

@@ -231,9 +231,9 @@ public abstract class ComunicableActivity extends Activity{
         	}        	
         }
         
-        public void queryServer(){
+        public void queryServer(boolean bLocal){
         	if (mKingService != null){
-        		mKingService.queryServer();
+        		mKingService.queryServer(bLocal);
         	}
         }
         
@@ -314,9 +314,9 @@ public abstract class ComunicableActivity extends Activity{
         	}
         }
         
-        public void updateLoginInfo(String id, String studentInfo, boolean bOffline, boolean bExceptionExit){
+        public void updateLoginInfo(String studentInfo, boolean bExceptionExit){
         	if (mKingService != null){
-        		mKingService.updateLoginInfo(id, studentInfo, bOffline, bExceptionExit);
+        		mKingService.updateLoginInfo(studentInfo, bExceptionExit);
         	}
         }
         

@@ -1,175 +1,123 @@
 package com.king.cai;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.king.cai.common.ComunicableActivity;
-import com.king.cai.examination.PaperActivity;
 import com.king.cai.service.KingService.LoginInfo;
 
-public class WorkspaceActivity extends ComunicableActivity  {
-	private Button mButtonPaper = null;	
-	private LoginInfo mLoginInfo = null;
+public class WorkspaceActivity extends ComunicableActivity  {	
+	public static final int DIALOG_LOGIN_PROGRESS = 0;
+	
+	private ProgressDialog mWaitingDialog = null;
 	
 	private List<PackageInfo> mInstalledApks = new ArrayList<PackageInfo>(); 
 	private PackageManager mPackageMgr = null;
 	private GridView mAppmenuView = null;
-	private LinearLayout mLinearLayoutConnectedPanel = null;
-	private LinearLayout mLinearLayoutDisconnectedPanel = null;
+	
+	private WorkspaceStatus mWorkspaceStatus = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.workspace);
 
-		mLinearLayoutConnectedPanel = (LinearLayout)findViewById(R.id.linearLayoutConnected);
-		mLinearLayoutDisconnectedPanel = (LinearLayout)findViewById(R.id.linearLayoutDisconnected);
-
 		mPackageMgr = getPackageManager();
 //		new AppEnumTask().execute(mPackageMgr);
 		
-		findViewById(R.id.buttonLogoutOnWorkspace).setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				onLogout();
-			}
-		});
 		mAppmenuView = (GridView)findViewById(R.id.gridViewAppmenu);
         AppmenuAdapter adapter = new AppmenuAdapter();
         mAppmenuView.setAdapter(adapter);	
 
-        findViewById(R.id.buttonStudyOnWorkspace).setOnClickListener(new View.OnClickListener() {
-    		
-    		public void onClick(View v) {
-    			startExplorerActivity();
-    		}
-    	});
+        ButtonClickListener listener = new ButtonClickListener();
+        findViewById(R.id.buttonStudyOnWorkspace).setOnClickListener(listener);
+        findViewById(R.id.buttonTestOnWorkspace).setOnClickListener(listener);
+        findViewById(R.id.buttonAppsmenu).setOnClickListener(listener);
+        findViewById(R.id.buttonBookmark).setOnClickListener(listener);        
+        findViewById(R.id.buttonWrongQuestions).setOnClickListener(listener);
         
-        mButtonPaper = (Button)findViewById(R.id.buttonTestOnWorkspace);
-        mButtonPaper.setTextColor(Color.rgb(128, 128, 128));
-        mButtonPaper.setEnabled(false);
-        mButtonPaper.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				startPaperActivity();
-			}
-		});
-        
-        findViewById(R.id.buttonAppsmenu).setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				showNoPrivDialog();
-			}
-		});
-        findViewById(R.id.buttonBookmark).setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				showNoPrivDialog();
-			}
-		});
-        findViewById(R.id.buttonWrongQuestions).setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				showNoPrivDialog();
-			}
-		});        
-        
-        
-		parseIntent();        
+        parseIntent();        
 	}
-	
-	private boolean isHiddenApp(String packagename){
-		boolean bRet = false;
-		if (packagename.equals(getPackageName())){
-			bRet = true;
+
+	private class ButtonClickListener implements View.OnClickListener{
+
+		public void onClick(View v) {
+			switch (v.getId()){
+			case R.id.buttonBookmark:
+				mWorkspaceStatus.onBookmarkClick();
+				break;
+			case R.id.buttonStudyOnWorkspace:
+				mWorkspaceStatus.onStudyClick();
+				break;
+			case R.id.buttonTestOnWorkspace:
+				mWorkspaceStatus.onPaperClick();
+				break;
+			case R.id.buttonWrongQuestions:
+				mWorkspaceStatus.onWrongQuestionsClick();
+				break;
+			case R.id.buttonAppsmenu:
+				mWorkspaceStatus.onAppmenuClick();
+				break;
+			}
 		}
-		return bRet;
-	}
+	};
 	
 	private void parseIntent(){
 		Bundle bundle = getIntent().getExtras();
 		if (getIntent().hasExtra("Cause") && bundle != null){
 			String cause = bundle.getString("Cause");
-			if (cause.equals("Paper")){
-
-			}else if (cause.equals("Relogin")){
-				startLoginActivity();
+			if (cause.equals("Relogin")){
+				switch2DisconnectedStatus();//TODO:
 			}
 		}
 	}
 
-	private void startExplorerActivity(){
+	public LoginInfo getLoginInfo(){
+		return mServiceChannel.getLoginInfo();
+	}
+	
+	public void queryServer(boolean bLocal){
+		mServiceChannel.queryServer(bLocal);
+	}
+	
+	public void updateServerInfo(String serverAddr, String activeSSID){
+		mServiceChannel.updateServerInfo(serverAddr, activeSSID);
+	}
+	
+	public void onLoginSuccess(String studentInfo, boolean bExceptionExit){
+		mServiceChannel.updateLoginInfo(studentInfo, bExceptionExit);
+		switch2ConnectedStatus();
 		
-		String rootDir = Environment.getExternalStorageDirectory().getPath()+"/KingCAI"; //"/";// 
-		File destDir = new File(rootDir);
-		if (!destDir.exists()) {
-			destDir.mkdirs();
-		}
-		Intent openExplorerIntent = new Intent(WorkspaceActivity.this, ExplorerActivity.class);
-		openExplorerIntent.putExtra("RootDir", rootDir);
-		startActivity(openExplorerIntent);		
 	}
 	
-	private void startLoginActivity(){
-		Intent openLoginActivity = new Intent(WorkspaceActivity.this, LoginActivity.class);
-		startActivity(openLoginActivity);
-//		showDisconnectedPanel();
+	public void loginToServer(String number, String password){
+		mServiceChannel.loginToServer(number, password);
 	}
 	
-	private void startPaperActivity(){
-		if (mServiceChannel.getLoginInfo() != null){
-			Intent openPaperActivity = new Intent(WorkspaceActivity.this, PaperActivity.class);			
-			openPaperActivity.putExtra(KingCAIConfig.StudentID, mLoginInfo.mID);
-			openPaperActivity.putExtra(KingCAIConfig.StudentInfo, mLoginInfo.mInfo);
-			openPaperActivity.putExtra(KingCAIConfig.ServerIP, "127.0.0.1");
-			openPaperActivity.putExtra(KingCAIConfig.SSID, "h3c");
-			openPaperActivity.putExtra(KingCAIConfig.Offline, mLoginInfo.mOffline);
-			openPaperActivity.putExtra(KingCAIConfig.ExceptionExit, mLoginInfo.mExceptionExit);		
-			startActivity(openPaperActivity);	
-		}else{
-			showToast("请先登录，再进入在线测试！");
-		}	
-	}
-
-	private void onLogout(){
+	public void logoutFromServer(){
 		mServiceChannel.logoutFromServer();
-		startLoginActivity();
+		switch2DisconnectedStatus();
 	}
-
-	private void showNoPrivDialog(){
-		AlertDialog dlg = new AlertDialog.Builder(this)
-		.setTitle(R.string.NoPrivilegeTitle)
-		.setMessage(R.string.NoPrivilege)
-		.setPositiveButton(android.R.string.ok, null)
-		.setCancelable(false)
-		.create();
-		dlg.show();		
-	}	
 	
 	@Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -191,43 +139,81 @@ public class WorkspaceActivity extends ComunicableActivity  {
     }
 	
 	@Override
-	protected void doHandleInnerMessage(Message innerMessage) {		
+	protected void doHandleInnerMessage(Message innerMessage) {
+		if (mWorkspaceStatus != null){
+			mWorkspaceStatus.doHandleInnerMessage(innerMessage);
+		}
 	}
+    
+	public void showWaitingDialog(){
+		showDialog(DIALOG_LOGIN_PROGRESS);
+	}
+	
+    public void updateWaitingDialogTips(int resId){
+    	if (mWaitingDialog != null){
+    		mWaitingDialog.setMessage(getResources().getString(resId));
+    	}
+    }	
+    
+	public void dimissWaitingDialog(){
+		if (mWaitingDialog != null){
+			mWaitingDialog.dismiss();
+		}
+	}
+	
+    @Override
+    protected Dialog onCreateDialog(int id){
+    	switch (id){
+    	case DIALOG_LOGIN_PROGRESS:{
+    		dimissWaitingDialog();
+    		mWaitingDialog  = new ProgressDialog(this);
+    		updateWaitingDialogTips(R.string.QueryServerStatus);    		
+    		mWaitingDialog.setIndeterminate(true);
+    		mWaitingDialog.setCancelable(false);
+            return mWaitingDialog;
+    	}
+    	}
+    	return super.onCreateDialog(id);    	
+    }
     
 	@Override
 	protected void onServiceReady() {
-		mLoginInfo = mServiceChannel.getLoginInfo();
-		if (mLoginInfo == null){
-			showDisconnectedPanel();
+		if (mServiceChannel.getLoginInfo() == null){
+			switch2DisconnectedStatus();
 		}else{
-			showConnectedPanel();
-			mButtonPaper.setTextColor(Color.rgb(255, 255, 255));
-	        mButtonPaper.setEnabled(true);
-	        
-	        ((TextView)findViewById(R.id.textViewStudentBaseInfo)).setText(mLoginInfo.mInfo);
-	        ((TextView)findViewById(R.id.textViewStudentAdvancedInfo)).setText(R.string.ExtraStudentInfo);
-		}
-	}
-
-	private void showConnectedPanel(){
-		if (mLinearLayoutConnectedPanel != null){		
-			mLinearLayoutConnectedPanel.setVisibility(View.VISIBLE);
-		}
-		if (mLinearLayoutDisconnectedPanel != null){
-			mLinearLayoutDisconnectedPanel.setVisibility(View.GONE);
+			switch2ConnectedStatus();
 		}
 	}
 	
-	private void showDisconnectedPanel(){
-		if (mLinearLayoutConnectedPanel != null){
-			mLinearLayoutConnectedPanel.setVisibility(View.GONE);
+	public void switch2DisconnectedStatus(){
+		if (mWorkspaceStatus != null){
+			mWorkspaceStatus.leaveStatus();
+			mWorkspaceStatus = null;
 		}
-		if (mLinearLayoutDisconnectedPanel != null){
-			mLinearLayoutDisconnectedPanel.setVisibility(View.VISIBLE);
+		
+		mWorkspaceStatus = new DisconnectedStatus(this);
+		mWorkspaceStatus.enterStatus();		
+	}
+	
+	public void switch2ConnectedStatus(){
+		if (mWorkspaceStatus != null){
+			mWorkspaceStatus.leaveStatus();
+			mWorkspaceStatus = null;
 		}
+		
+		mWorkspaceStatus = new ConnectedStatus(this, getLoginInfo());
+		mWorkspaceStatus.enterStatus();		
 	}
 	
     public class AppEnumTask extends  AsyncTask<PackageManager, PackageInfo, String> {
+    	private boolean isHiddenApp(String packagename){
+    		boolean bRet = false;
+    		if (packagename.equals(getPackageName())){
+    			bRet = true;
+    		}
+    		return bRet;
+    	}
+    	
     	@Override
     	protected String doInBackground(PackageManager... params) {
     		PackageManager pm = params[0];
@@ -266,7 +252,6 @@ public class WorkspaceActivity extends ComunicableActivity  {
 			}
 		}
     };	
-	
 	public View.OnClickListener mAppItemClickListener = new View.OnClickListener() {
 		
 		public void onClick(View v) {
@@ -291,7 +276,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 			}
 		}
 	};
-	
+
     public class AppmenuAdapter extends BaseAdapter{    	
 		public int getCount() {
 			return mInstalledApks.size();

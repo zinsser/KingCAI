@@ -47,8 +47,8 @@
 
 			<ImageView
 				android:id="@+id/imageViewHeaderIcon"
-				android:layout_width="150dip"
-				android:layout_height="200dip"
+				android:layout_width="15dip"
+				android:layout_height="20dip"
 				android:scaleType="fitCenter"
 				android:src="@drawable/def_head" />
 
@@ -76,7 +76,7 @@
 						android:textAppearance="?android:attr/textAppearanceLarge"/>					
 
 					<EditText
-		                android:id="@+id/txtStudentIDOnWorkspace"
+		                android:id="@+id/textViewIDOnWorkspace"
 		                android:layout_width="match_parent"
 		                android:layout_height="wrap_content"
 		                android:imeOptions="actionNext"
@@ -145,7 +145,7 @@
 		
 
 					<CheckBox
-					    android:id="@+id/checkBoxOffline"
+					    android:id="@+id/checkBoxOfflineOnWorkspace"
 					    android:layout_width="match_parent"
 					    android:layout_height="wrap_content"
 					    android:layout_marginTop="3dp"
@@ -155,7 +155,7 @@
 					    android:textColor="#FFFFFF"
 					    android:textSize="24dp"/>					
 					<Button
-					    android:id="@+id/btnLogin"
+					    android:id="@+id/buttonLoginOnWorkspace"
 					    android:layout_width="match_parent"
 					    android:layout_height="wrap_content"
 					    android:layout_gravity="right"	
@@ -261,7 +261,8 @@
 	</LinearLayout>	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" 
-        android:layout_marginBottom="5dp"			        		
+        android:layout_marginBottom="5dp"		
+        android:visibility="gone"	        		
 		android:orientation="horizontal">
 
 	    <ProgressBar
@@ -361,5 +362,5 @@
 		android:visibility="gone"
 	    android:verticalSpacing="10dp" 	    
 	    android:listSelector="#00000000"
-	    android:scrollbars="none"/>    			
+	    android:scrollbars="none"/>
 </LinearLayout>

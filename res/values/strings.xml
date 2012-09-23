@@ -98,5 +98,6 @@
 	<string name="Logout">注销</string>	
 	<string name="Settings">软件设置</string>
 	<string name="NoPrivilegeTitle">权限错误</string>
-	<string name="NoPrivilege">您没有获得老师的授权，无法执行此项操作！</string>				
+	<string name="NoPrivilege">您没有获得老师的授权，无法执行此项操作！</string>	
+	<string name="NotLogin">尚未登录，无法执行此项操作！</string>			
 </resources>
