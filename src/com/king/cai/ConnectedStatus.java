@@ -31,11 +31,6 @@ public class ConnectedStatus extends WorkspaceStatus {
 
 	@Override
 	public void leaveStatus() {        
-        findViewById(R.id.buttonTestOnWorkspace).setOnClickListener(null);
-        findViewById(R.id.buttonAppsmenu).setOnClickListener(null);
-        findViewById(R.id.buttonBookmark).setOnClickListener(null);
-        findViewById(R.id.buttonWrongQuestions).setOnClickListener(null);
-        findViewById(R.id.buttonLogoutOnWorkspace).setOnClickListener(null);
 	}
 
 	private void showStatusPanel(){		
