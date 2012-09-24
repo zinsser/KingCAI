@@ -125,6 +125,7 @@
 					    android:layout_height="wrap_content"
 					    android:layout_marginTop="3dp"
 					    android:layout_weight="0.5"
+					    android:visibility="gone"
 					    android:text="@string/LoginOffline"
 					    android:textAppearance="?android:attr/textAppearanceLarge"
 					    android:textColor="#FFFFFF"
