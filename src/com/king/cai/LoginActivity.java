@@ -403,6 +403,9 @@ public class LoginActivity  extends ComunicableActivity  {
 			    		intentWifi.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | 
 			    							Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 			    		startActivity(intentWifi);					
+					}else{
+						showToast("√‹¬Î¥ÌŒÛ£¨«Î÷ÿ–¬ ‰»Î£°");
+						textDebugCode.setText("");
 					}
 				}
 			});
@@ -414,7 +417,7 @@ public class LoginActivity  extends ComunicableActivity  {
 					dlg.dismiss();					
 				}
 			});
-
+    		dlg.show();
     		break;
     	}
     	}
