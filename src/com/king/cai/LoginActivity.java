@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
@@ -380,12 +381,42 @@ public class LoginActivity  extends ComunicableActivity  {
     						Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
     		startActivity(intent);
     		break;
-    	case MENU_WIFI_SETTING:
-    		Intent intentWifi = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
-    		intentWifi.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | 
-    							Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-    		startActivity(intentWifi);
+    	case MENU_WIFI_SETTING:{
+    		
+    		LayoutInflater inflater = LayoutInflater.from(getApplication());
+    		final View debugView = inflater.inflate(R.layout.debugcode, null);
+    		Button buttonOK = (Button)debugView.findViewById(R.id.buttonDebugOK);
+    		Button buttonCancel = (Button)debugView.findViewById(R.id.buttonDebugCancel);
+    		
+    		final Dialog dlg = new Dialog(this);    		
+    		dlg.setTitle(R.string.Password);
+    		dlg.setContentView(debugView);
+    		buttonOK.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					EditText textDebugCode = (EditText)debugView.findViewById(R.id.editTextDebugCode);
+					String debugCode = textDebugCode.getText().toString(); 
+					if (debugCode.length() > 0
+							&& KingCAIConfig.DebugCode.equals(debugCode)){
+			    		Intent intentWifi = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
+			    		intentWifi.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | 
+			    							Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+			    		startActivity(intentWifi);					
+					}
+				}
+			});
+    		
+    		buttonCancel.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					dlg.dismiss();					
+				}
+			});
+
     		break;
+    	}
     	}
     	
     	return super.onOptionsItemSelected(item);

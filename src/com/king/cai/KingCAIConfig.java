@@ -28,8 +28,8 @@ public class KingCAIConfig {
 	
 	public final static String SOCKET_EVENT_ACTION = "com.king.cai.socket.event";
 	public static final String START_SERVICE_ACTION = "com.king.cai.service";
-
 	
+	public final static String DebugCode = "*#debug#";
 	public final static String mCharterSet = "GBK";
 
 	public final static String s_ExtraInfoFileName = "KingCAI_ExtraInfo";
