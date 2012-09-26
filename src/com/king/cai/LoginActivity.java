@@ -399,10 +399,13 @@ public class LoginActivity  extends ComunicableActivity  {
 					String debugCode = textDebugCode.getText().toString(); 
 					if (debugCode.length() > 0
 							&& KingCAIConfig.DebugCode.equals(debugCode)){
+						textDebugCode.setText("");
+						hiddenKeyboard(textDebugCode);
 			    		Intent intentWifi = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
 			    		intentWifi.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | 
 			    							Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-			    		startActivity(intentWifi);					
+			    		startActivity(intentWifi);
+			    		dlg.dismiss();
 					}else{
 						showToast("√‹¬Î¥ÌŒÛ£¨«Î÷ÿ–¬ ‰»Î£°");
 						textDebugCode.setText("");
