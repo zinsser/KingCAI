@@ -231,6 +231,7 @@ public class KingService extends Service{
 		mLoginInfo.mIsValid = true;
 		mLoginInfo.mInfo = studentInfo;
 		mLoginInfo.mExceptionExit = bExceptionExit;
+		mLastLoginInfo = null;
     }
     
     public LoginInfo getLoginInfo(){
