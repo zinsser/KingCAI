@@ -536,8 +536,8 @@ public class PaperActivity  extends ComunicableActivity {
 				
 				CheckBox ckbLogin = (CheckBox)crashView.findViewById(R.id.checkBoxRelogin);
 				if (ckbLogin != null && ckbLogin.isChecked()){
-					
-					startWorkspaceActivity(CAUSE_RELOGIN);
+					mServiceChannel.updateLastLoginInfo();
+					startWorkspaceActivity(CAUSE_AUTOLOGIN);
 				}
 				
 				dlg.dismiss();
@@ -549,7 +549,7 @@ public class PaperActivity  extends ComunicableActivity {
 	}
 	
     public static final String CAUSE_NORMAL = "Normal";
-    public static final String CAUSE_RELOGIN = "Relogin";
+    public static final String CAUSE_AUTOLOGIN = "Autologin";
     private void startWorkspaceActivity(String cause){
     	Intent intent = new Intent(this, WorkspaceActivity.class);
     	intent.putExtra("Cause", cause);
@@ -590,7 +590,6 @@ public class PaperActivity  extends ComunicableActivity {
 
 		public void onClick(View v) {
     		HiddenKeyBoard(findViewById(R.id.txtGoto));
-    		showPCCrashNotifyDialog();
     		mPaperStatus.onFilterClick(mListView, mFullAdapter);
 		}
     }

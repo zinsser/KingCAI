@@ -48,7 +48,6 @@ public class DisconnectedStatus extends WorkspaceStatus{
 						boolean bOffline = ((CheckBox)findViewById(R.id.checkBoxOfflineOnWorkspace)).isChecked();						
 						InputMethodManager im =(InputMethodManager)(v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE)); 
 						im.hideSoftInputFromWindow(mTextviewStudentID.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-						mStatusOwner.showWaitingDialog();
 						mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_QUERY_TIME_OUT), DELAY_QUERY_TIME);
 						mStatusOwner.queryServer(bOffline);
 					}
@@ -139,8 +138,12 @@ public class DisconnectedStatus extends WorkspaceStatus{
 			String mSSID = "һ�꼶";//(String)mSpinnerSSID.getAdapter().getItem(mSpinnerSSID.getSelectedItemPosition());
 			mStatusOwner.updateWaitingDialogTips(R.string.FoundServerStatus);
 			mStatusOwner.updateServerInfo(mServerIP, mSSID);
-			mStatusOwner.loginToServer(mTextviewStudentID.getText().toString(), 
+			if (!mStatusOwner.isAutoLogin()){
+				mStatusOwner.loginToServer(mTextviewStudentID.getText().toString(), 
  									   mTextviewPassword.getText().toString());
+			}else{
+				mStatusOwner.loginToServer();
+			}
 			mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_LOGIN_TIME_OUT), DELAY_LOGIN_TIME);
 			break;
 		case KingCAIConfig.EVENT_LOGIN_COMPLETE:

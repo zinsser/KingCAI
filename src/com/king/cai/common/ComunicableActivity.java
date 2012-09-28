@@ -314,6 +314,21 @@ public abstract class ComunicableActivity extends Activity{
         	}
         }
         
+        public void updateLastLoginInfo(){
+        	if (mKingService != null){
+        		mKingService.updateLastLoginInfo();
+        	}
+        }
+        
+        public LoginInfo getLastLoginInfo(){
+        	LoginInfo ret = null;
+        	if (mKingService != null){
+        		ret = mKingService.getLastLoginInfo();
+        	}
+        	
+        	return ret;
+        }
+        
         public void updateLoginInfo(String studentInfo, boolean bExceptionExit){
         	if (mKingService != null){
         		mKingService.updateLoginInfo(studentInfo, bExceptionExit);

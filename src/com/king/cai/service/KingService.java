@@ -213,6 +213,19 @@ public class KingService extends Service{
     }
 
     private LoginInfo mLoginInfo = new LoginInfo();
+    private LoginInfo mLastLoginInfo = null;
+    
+    public void updateLastLoginInfo(){
+    	mLastLoginInfo = new LoginInfo();
+    	mLastLoginInfo.mID = mLoginInfo.mID;
+    	mLastLoginInfo.mPassword = mLoginInfo.mPassword;
+    	mLastLoginInfo.mOffline = mLoginInfo.mOffline;
+    	mLastLoginInfo.mSSID = mLoginInfo.mSSID;
+    }
+    
+    public LoginInfo getLastLoginInfo(){
+    	return mLastLoginInfo;
+    }
     
     public void updateLoginInfo(String studentInfo, boolean bExceptionExit){
 		mLoginInfo.mIsValid = true;

@@ -34,7 +34,6 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	public static final int DIALOG_LOGIN_PROGRESS = 0;
 	
 	private ProgressDialog mWaitingDialog = null;
-	
 	private List<PackageInfo> mInstalledApks = new ArrayList<PackageInfo>(); 
 	private PackageManager mPackageMgr = null;
 	private GridView mAppmenuView = null;
@@ -93,8 +92,8 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		Bundle bundle = getIntent().getExtras();
 		if (getIntent().hasExtra("Cause") && bundle != null){
 			String cause = bundle.getString("Cause");
-			if (cause.equals("Relogin")){
-				switch2DisconnectedStatus();//TODO:
+			if (cause.equals("Autologin")){
+				switch2DisconnectedStatus();
 			}
 		}
 	}
@@ -104,6 +103,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	}
 	
 	public void queryServer(boolean bLocal){
+		showWaitingDialog();		
 		mServiceChannel.queryServer(bLocal);
 	}
 	
@@ -121,11 +121,22 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		mServiceChannel.loginToServer(number, password);
 	}
 	
+	public void loginToServer(){
+		if (mServiceChannel.getLastLoginInfo() != null){
+			mServiceChannel.loginToServer(mServiceChannel.getLastLoginInfo().mID,
+										  mServiceChannel.getLastLoginInfo().mPassword);
+		}
+	}
+	
 	public void logoutFromServer(){
 		mServiceChannel.logoutFromServer();
 		switch2DisconnectedStatus();
 	}
 
+	public boolean isAutoLogin(){
+		return mServiceChannel.getLastLoginInfo() != null;
+	}
+	
 	public void resetPassword(String pwdOld, String pwdNew){
 		if (getLoginInfo() != null){
 			mServiceChannel.sendMessage(new RequestMessage_ResetPassword(getLoginInfo().mID, pwdOld, pwdNew), 0);
@@ -160,7 +171,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		}
 	}
     
-	public void showWaitingDialog(){
+	private void showWaitingDialog(){
 		showDialog(DIALOG_LOGIN_PROGRESS);
 	}
 	
@@ -194,7 +205,11 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	@Override
 	protected void onServiceReady() {
 		if (mServiceChannel.getLoginInfo() == null){
-			switch2DisconnectedStatus();
+			if (mServiceChannel.getLastLoginInfo() == null){
+				switch2DisconnectedStatus();
+			}else{
+				queryServer(mServiceChannel.getLastLoginInfo().mOffline);
+			}
 		}else{
 			switch2ConnectedStatus();
 		}

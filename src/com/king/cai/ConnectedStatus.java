@@ -2,7 +2,6 @@ package com.king.cai;
 
 
 import com.king.cai.examination.PaperActivity;
-import com.king.cai.message.RequestMessage_ResetPassword;
 import com.king.cai.service.KingService.LoginInfo;
 
 import android.app.AlertDialog;
