@@ -9,7 +9,7 @@
     <string name="StudentID">Please input student ID</string>
     <string name="Password">Please input Password</string>
     <string name="Login">Login</string>
-    <string name="Test">Enter Test</string>	
+    <string name="Test">在线测试</string>	
     <string name="Exit">Exit</string>
     <string name="Commit">Commit</string>   
     <string name="Filter">Filter</string>
@@ -48,7 +48,7 @@
 	<string name="InputSecondPasswd">Please input NEW password again</string>		    
 	<string name="BaseInfo">Base Information</string>
 	<string name="AdvancedInfo">评测信息</string>			
-	<string name="About">About</string>		
+	<string name="About">软件信息</string>		
 	<string name="AboutDetail">Software Name:\n %1$s \nVersion:\n %2$s \nAndroid Version:\n %3$s \nDistribute Date:\n %4$s \n</string>	
 	<string name="CompanyName">Company Name</string>
 	<string name="NoInfo">您尚未登录系统进行学习！</string>			
@@ -81,8 +81,8 @@
 	<string name="ExtraStudentInfo">继续加油，上次考试完成得很出色！</string>		
 	<string name="Committing">正在交卷，请稍候...</string>
 	<string name="CommittingFilter">正在交卷，无法使用该项功能</string>	
-	<string name="Study">Study</string>
-	<string name="Bookmark">Bookmark</string>	
+	<string name="Study">学习资料</string>
+	<string name="Bookmark">常用书签</string>	
 	<string name="ProgressTipPaper">"正在下载试卷信息，请稍候..."</string>
 	<string name="ProgressTipQuestion">正在下载试卷，共 %s 题，请稍候...</string>	
 	<string name="ProgressTipAnswer">正在下载已答试题答案，请稍候...</string>	

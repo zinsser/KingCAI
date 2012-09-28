@@ -1,6 +1,8 @@
 package com.king.cai;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Dialog;
@@ -19,11 +21,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.king.cai.common.ComunicableActivity;
+import com.king.cai.message.RequestMessage_ResetPassword;
 import com.king.cai.service.KingService.LoginInfo;
 
 public class WorkspaceActivity extends ComunicableActivity  {	
@@ -55,7 +59,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
         findViewById(R.id.buttonAppsmenu).setOnClickListener(listener);
         findViewById(R.id.buttonBookmark).setOnClickListener(listener);        
         findViewById(R.id.buttonWrongQuestions).setOnClickListener(listener);
-        
+        findViewById(R.id.buttonSettings).setOnClickListener(listener);
         parseIntent();        
 	}
 
@@ -77,6 +81,9 @@ public class WorkspaceActivity extends ComunicableActivity  {
 				break;
 			case R.id.buttonAppsmenu:
 				mWorkspaceStatus.onAppmenuClick();
+				break;
+			case R.id.buttonSettings:
+				mWorkspaceStatus.onSettingsClick();
 				break;
 			}
 		}
@@ -118,6 +125,14 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		mServiceChannel.logoutFromServer();
 		switch2DisconnectedStatus();
 	}
+
+	public void resetPassword(String pwdOld, String pwdNew){
+		if (getLoginInfo() != null){
+			mServiceChannel.sendMessage(new RequestMessage_ResetPassword(getLoginInfo().mID, pwdOld, pwdNew), 0);
+			hiddenKeyboard((EditText)findViewById(R.id.editTextFirstPasswordOnWorkspace));
+		}
+	}
+	
 	
 	@Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -204,6 +219,37 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		mWorkspaceStatus = new ConnectedStatus(this, getLoginInfo());
 		mWorkspaceStatus.enterStatus();		
 	}
+	
+    public String genAboutString(){
+        List<PackageInfo> pkgInfos = getPackageManager().getInstalledPackages(0/*PackageManager.GET_ACTIVITIES*/);
+        PackageInfo kingPackage = null;
+        String packageName =getPackageName(); 
+        for(PackageInfo info : pkgInfos) {
+        	if (packageName.equals(info.packageName)){
+        		kingPackage = info;
+        		break;
+        	}
+        }
+        
+        
+    	String about = "";
+        if (kingPackage == null){
+        	about = "Èí¼þÃû³Æ£º\n" + getResources().getString(R.string.app_name);
+        }else{
+        	about = String.format(getResources().getString(R.string.AboutDetail), 
+	    				kingPackage.applicationInfo.loadLabel(getPackageManager()), 
+	    				kingPackage.versionName + "." + kingPackage.versionCode,
+	    				kingPackage.applicationInfo.targetSdkVersion == 8 ? "2.2" : 
+							kingPackage.applicationInfo.targetSdkVersion == 10 ? "2.3" :
+							   kingPackage.applicationInfo.targetSdkVersion == 11 ? "4.0" : "unknown",
+						new Date(new File(kingPackage.applicationInfo.sourceDir).lastModified()).toLocaleString());
+        				//new Date(new File("PaperActivity.java").lastModified()).toLocaleString());
+        }
+
+    	return about;
+    }
+
+	
 	
     public class AppEnumTask extends  AsyncTask<PackageManager, PackageInfo, String> {
     	private boolean isHiddenApp(String packagename){

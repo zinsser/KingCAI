@@ -1,7 +1,5 @@
 package com.king.cai;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +8,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 
 public class DisconnectedStatus extends WorkspaceStatus{
@@ -33,6 +32,7 @@ public class DisconnectedStatus extends WorkspaceStatus{
 		showStatusPanel();
 		mTextviewStudentID = (EditText)findViewById(R.id.textViewIDOnWorkspace);
 		mTextviewPassword = (EditText)findViewById(R.id.textViewPasswordOnWorkspace);
+
 		findViewById(R.id.buttonLoginOnWorkspace).setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
@@ -60,11 +60,46 @@ public class DisconnectedStatus extends WorkspaceStatus{
 	@Override
 	public void leaveStatus() {
 		mStatusOwner.dimissWaitingDialog();
+		disableClickListener();
+	}
+
+	private void disableClickListener(){
+		findViewById(R.id.textViewAbout).setOnClickListener(null);		
+		findViewById(R.id.buttonAboutOK).setOnClickListener(null);				
+	}
+	
+	private void showInitPanel(){
+		findViewById(R.id.scrollViewSettings).setVisibility(View.GONE);
+	}
+	
+	private void showSettingPanel(){
+		findViewById(R.id.scrollViewSettings).setVisibility(View.VISIBLE);
+
+		findViewById(R.id.linearLayoutResetPassword).setVisibility(View.GONE);
+		findViewById(R.id.linearLayoutAbout).setVisibility(View.VISIBLE);
+		findViewById(R.id.linearLayoutAboutDetail).setVisibility(View.GONE);
 	}
 	
 	public void showStatusPanel(){
 		findViewById(R.id.linearLayoutConnected).setVisibility(View.GONE);
 		findViewById(R.id.linearLayoutDisconnected).setVisibility(View.VISIBLE);
+		((TextView)findViewById(R.id.textViewAboutDetail)).setText(mStatusOwner.genAboutString());
+		findViewById(R.id.textViewAbout).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				if (!findViewById(R.id.linearLayoutAboutDetail).isShown()){
+					findViewById(R.id.linearLayoutAboutDetail).setVisibility(View.VISIBLE);
+				}
+			}
+		});
+		findViewById(R.id.buttonAboutOK).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				findViewById(R.id.linearLayoutAboutDetail).setVisibility(View.GONE);
+			}
+		});
+		
+		showInitPanel();
 	}	
 	
 	private boolean isDebugPassword(String password){
@@ -162,6 +197,7 @@ public class DisconnectedStatus extends WorkspaceStatus{
 	}
 
 	@Override
-	public void onSettingsClick() {		
+	public void onSettingsClick() {
+		showSettingPanel();
 	}
 }

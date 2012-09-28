@@ -79,8 +79,8 @@
 		                android:id="@+id/textViewIDOnWorkspace"
 		                android:layout_width="match_parent"
 		                android:layout_height="wrap_content"
+		                android:inputType="numberDecimal"
 		                android:imeOptions="actionNext"
-		                android:numeric="integer"
 		                android:singleLine="true" />
 				</LinearLayout>
 		        <LinearLayout 
@@ -206,7 +206,7 @@
 						<TextView
 							android:id="@+id/textViewStudentBaseInfo"
 							android:layout_width="match_parent"
-							android:layout_height="match_parent"
+							android:layout_height="wrap_content"
 							android:textColor="#FFFFFF"
 							android:singleLine="true"
 							android:textSize="24dp" />
@@ -228,7 +228,7 @@
 						android:textAppearance="?android:attr/textAppearanceLarge"/>					
 
 					<ScrollView
-						android:id="@+id/scrollViewBaseInfo"
+						android:id="@+id/scrollViewAdvancedInfo"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
 						android:background="@drawable/baseinfo_bg"	    	     
@@ -240,7 +240,7 @@
 						<TextView
 							android:id="@+id/textViewStudentAdvancedInfo"
 							android:layout_width="match_parent"
-							android:layout_height="match_parent"
+							android:layout_height="wrap_content"
 							android:maxLines="3"
 							android:textColor="#FFFFFF"							
 							android:textSize="24dp" />
@@ -351,6 +351,144 @@
 			android:textSize="24dp" />	
 	</LinearLayout>
 
+
+	<ScrollView
+		android:id="@+id/scrollViewSettings"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_marginBottom="3dp">
+	    <LinearLayout 
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"	
+			android:orientation="vertical" >
+					
+		    <LinearLayout 
+		        android:id="@+id/linearLayoutResetPassword"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"	
+				android:background="@drawable/baseinfo_frame_bg"
+				android:orientation="vertical" >
+	
+		        <TextView
+				    android:id="@+id/textViewResetPasword"
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"		
+			        android:layout_gravity="center"
+			        android:layout_marginLeft="5dp"
+				    android:text="@string/PasswordTitle"
+				    android:textColor="#10007A"
+				    android:textAppearance="?android:attr/textAppearanceLarge"/>
+	
+		        <LinearLayout 
+			        android:id="@+id/linearLayoutResetPasswordDialog"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"	
+					android:background="@drawable/baseinfo_bg"
+					android:layout_marginLeft="5dp"
+					android:layout_marginRight="5dp"
+					android:orientation="vertical" >
+				    <EditText
+				        android:id="@+id/editTextOldPasswordOnWorkspace"
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_marginTop="8dp"
+				        android:hint="@string/InputOldPasswd" 
+				        android:singleLine="true" >
+				
+				        <requestFocus />
+				    </EditText>
+				
+				    <EditText
+				        android:id="@+id/editTextFirstPasswordOnWorkspace"
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:hint="@string/InputFirstNewPasswd" 
+						android:singleLine="true" />
+				
+				    <EditText
+				        android:id="@+id/editTextSecondOnWorkspace"
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:hint="@string/InputSecondPasswd" 
+				        android:singleLine="true" />
+				
+					<LinearLayout 
+					    android:layout_width="match_parent"
+					    android:layout_height="match_parent"
+					    android:layout_gravity="center_horizontal"	     
+					    android:orientation="horizontal">
+					    <Button
+					        android:id="@+id/buttonResetOK"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:layout_weight="1"
+							android:background="@drawable/button_login"
+							android:textSize="24dp"
+							android:textColor="#FFFFFF"					        
+					        android:text="@string/Sure" />
+					
+					    <Button
+					        android:id="@+id/buttonResetCancel"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:layout_weight="1"
+					        android:background="@drawable/button_login"
+					        android:textSize="24dp"
+					        android:textColor="#FFFFFF"
+					        android:text="@string/Cancel" />					    
+				    </LinearLayout>					
+				</LinearLayout>
+			</LinearLayout>    
+
+		    <LinearLayout 
+		        android:id="@+id/linearLayoutAbout"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"	
+				android:background="@drawable/baseinfo_frame_bg"
+				android:orientation="vertical" >
+		        <TextView
+				    android:id="@+id/textViewAbout"
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"		
+			        android:layout_gravity="center"
+				    android:text="@string/About"
+				    android:layout_marginLeft="5dp"
+				    android:textColor="#10007A"
+				    android:textAppearance="?android:attr/textAppearanceLarge"/>
+	
+		        <LinearLayout 
+			        android:id="@+id/linearLayoutAboutDetail"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginLeft="5dp"
+					android:layout_marginRight="5dp"	
+					android:background="@drawable/baseinfo_bg"
+					android:visibility="gone"
+					android:orientation="vertical" >
+			        <TextView
+					    android:id="@+id/textViewAboutDetail"
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"		
+				        android:layout_gravity="center"
+					    android:text="@string/AboutDetail"
+					    android:textColor="#10007A"
+					    android:background="#00000000"
+					    android:textAppearance="?android:attr/textAppearanceLarge"/>				
+				    <Button
+				        android:id="@+id/buttonAboutOK"
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_weight="1"
+						android:background="@drawable/button_login"
+						android:textSize="24dp"
+						android:textColor="#FFFFFF"					        
+				        android:text="@string/Sure" />
+			        
+   				</LinearLayout>	        	        	
+			</LinearLayout>    
+	    </LinearLayout>	
+	</ScrollView>
+			
     <GridView
 	    android:id="@+id/gridViewAppmenu"
 	    android:layout_width="fill_parent"

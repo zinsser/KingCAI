@@ -1,10 +1,7 @@
 package com.king.cai.examination;
 
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,17 +42,12 @@ import com.king.cai.message.RequestMessage_Image;
 import com.king.cai.message.RequestMessage_ImageData;
 import com.king.cai.message.RequestMessage_LastAnswer;
 import com.king.cai.message.RequestMessage_Paper;
-import com.king.cai.message.RequestMessage_ResetPassword;
 
 public class PaperActivity  extends ComunicableActivity {
 	private final static int GROUP_NORMAL = 0;
 	private final static int MENU_FONT_SIZE = 0;
-	private final static int MENU_MODIFY_PASSWORD = 1;	
-	private final static int MENU_WIFI_MANAGER = 2;
-	private final static int MENU_ABOUT = 3;
 	
 	private final static int SET_FONT_SIZE_DIALOG = 0;
-	private final static int DIALOG_ABOUT = 2;
 	private final static int DIALOG_LOAD_PAPER = 3;
 	private final static int DIALOG_WAIT_COMMITING = 4;
 	
@@ -292,9 +283,6 @@ public class PaperActivity  extends ComunicableActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
     	menu.add(GROUP_NORMAL, MENU_FONT_SIZE, 0, R.string.FontSize);
-//    	menu.add(GROUP_NORMAL, MENU_WIFI_MANAGER, 0, R.string.ManagerWifi);
-    	menu.add(GROUP_NORMAL, MENU_MODIFY_PASSWORD, 0, R.string.ModifyPassword);
-    	menu.add(GROUP_NORMAL, MENU_ABOUT, 0, R.string.About);
     	
     	return super.onCreateOptionsMenu(menu);
     }
@@ -305,56 +293,10 @@ public class PaperActivity  extends ComunicableActivity {
     	case MENU_FONT_SIZE:
     		showDialog(SET_FONT_SIZE_DIALOG);
     		break;
-    	case MENU_MODIFY_PASSWORD:
-    		showChangePasswordDialog();
-    		break;
-    	case MENU_WIFI_MANAGER:
-    		break;
-    	case MENU_ABOUT:
-    		showDialog(DIALOG_ABOUT);
-    		break;
     	}
     	
     	return super.onOptionsItemSelected(item);
     }
-
-    private void showChangePasswordDialog(){
-		LayoutInflater inflater = LayoutInflater.from(getApplication());
-		final View modifyView = inflater.inflate(R.layout.modifypassword, null);
-		final Dialog dlg = new Dialog(this, R.style.NoTitleDialog);
-		dlg.setContentView(modifyView);
-		((TextView)modifyView.findViewById(R.id.textViewTitle)).setText(R.string.PasswordTitle);
-		Button buttonOK = (Button)modifyView.findViewById(R.id.buttonOK);
-		buttonOK.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				String pwdFirst = ((EditText)modifyView.findViewById(R.id.editTextFirstPassword)).getText().toString();
-				String pwdSecond = ((EditText)modifyView.findViewById(R.id.editTextSecond)).getText().toString();
-				String pwdOld = ((EditText)modifyView.findViewById(R.id.editTextOldPassword)).getText().toString();
-
-				if (pwdFirst != null && pwdFirst.equals(pwdSecond)){
-					if (!pwdFirst.equals(pwdOld)){
-						mServiceChannel.sendMessage(new RequestMessage_ResetPassword(mStudentID, pwdOld, pwdFirst), 0);
-						hiddenKeyboard((EditText)modifyView.findViewById(R.id.editTextFirstPassword));
-						dlg.dismiss();
-					}else{
-						showToast(R.string.ErrOldNewSame);
-					}
-				}else{
-					showToast(R.string.ErrNotSame);
-				}
-			}
-		});
-		Button buttonCancel = (Button)modifyView.findViewById(R.id.buttonCancel);    		
-		buttonCancel.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				dlg.dismiss();
-			}
-		});
-		
-		dlg.show();
-	}
     
     @Override
     protected Dialog onCreateDialog(int id){
@@ -373,12 +315,6 @@ public class PaperActivity  extends ComunicableActivity {
 						dismissDialog(SET_FONT_SIZE_DIALOG);
 					}
 				});
-    		return builder.create();
-    	}else if (id == DIALOG_ABOUT){	
-    		AlertDialog.Builder builder = new AlertDialog.Builder(this)
-				.setTitle(R.string.About)
-				.setMessage(GenAboutString())
-				.setNegativeButton(android.R.string.ok, null);
     		return builder.create();
     	}else if (id == DIALOG_LOAD_PAPER){
     		mLoadingPaperDialog = null;
@@ -399,34 +335,6 @@ public class PaperActivity  extends ComunicableActivity {
     	return super.onCreateDialog(id);
     } 
     
-    private String GenAboutString(){
-        List<PackageInfo> pkgInfos = getPackageManager().getInstalledPackages(0/*PackageManager.GET_ACTIVITIES*/);
-        PackageInfo kingPackage = null;
-        String packageName =getPackageName(); 
-        for(PackageInfo info : pkgInfos) {
-        	if (packageName.equals(info.packageName)){
-        		kingPackage = info;
-        		break;
-        	}
-        }
-        
-        
-    	String about = "";
-        if (kingPackage == null){
-        	about = "Software Name£º\n" + getResources().getString(R.string.app_name);
-        }else{
-        	about = String.format(getResources().getString(R.string.AboutDetail), 
-	    				kingPackage.applicationInfo.loadLabel(getPackageManager()), 
-	    				kingPackage.versionName + "." + kingPackage.versionCode,
-	    				kingPackage.applicationInfo.targetSdkVersion == 8 ? "2.2" : 
-							kingPackage.applicationInfo.targetSdkVersion == 10 ? "2.3" :
-							   kingPackage.applicationInfo.targetSdkVersion == 11 ? "4.0" : "unknown",
-						new Date(new File(kingPackage.applicationInfo.sourceDir).lastModified()).toLocaleString());
-        				//new Date(new File("PaperActivity.java").lastModified()).toLocaleString());
-        }
-
-    	return about;
-    }
 
 	@Override
 	protected void doHandleInnerMessage(Message innerMessage){

@@ -85,7 +85,7 @@ public abstract class ComunicableActivity extends Activity{
     	toast.show();
     }    
     
-    protected void hiddenKeyboard(EditText destCtrl){
+    public void hiddenKeyboard(EditText destCtrl){
 		InputMethodManager im =(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE); 
 		im.hideSoftInputFromWindow(destCtrl.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS); 
     }
