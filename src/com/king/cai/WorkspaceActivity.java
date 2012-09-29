@@ -46,7 +46,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		setContentView(R.layout.workspace);
 
 		mPackageMgr = getPackageManager();
-//		new AppEnumTask().execute(mPackageMgr);
+		new AppEnumTask().execute(mPackageMgr);
 		
 		mAppmenuView = (GridView)findViewById(R.id.gridViewAppmenu);
         AppmenuAdapter adapter = new AppmenuAdapter();

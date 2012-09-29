@@ -47,9 +47,15 @@ public class ConnectedStatus extends WorkspaceStatus {
 		findViewById(R.id.scrollViewSettings).setVisibility(View.GONE);
 	}
 	
+	private void showAppmenuPanel(){
+		findViewById(R.id.scrollViewSettings).setVisibility(View.GONE);
+		findViewById(R.id.gridViewAppmenu).setVisibility(View.VISIBLE);
+	}
+	
 	private void showSettingPanel(){
+		findViewById(R.id.gridViewAppmenu).setVisibility(View.GONE);
 		findViewById(R.id.scrollViewSettings).setVisibility(View.VISIBLE);
-
+		
 		findViewById(R.id.linearLayoutResetPassword).setVisibility(View.VISIBLE);
 		findViewById(R.id.linearLayoutAbout).setVisibility(View.VISIBLE);
 		findViewById(R.id.linearLayoutResetPasswordDialog).setVisibility(View.GONE);
@@ -177,7 +183,7 @@ public class ConnectedStatus extends WorkspaceStatus {
 
 	@Override
 	public void onAppmenuClick() {
-		showNoPrivDialog();		
+		showAppmenuPanel();		
 	}
 
 	@Override
