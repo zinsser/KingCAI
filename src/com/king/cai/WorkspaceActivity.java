@@ -37,6 +37,8 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	private List<PackageInfo> mInstalledApks = new ArrayList<PackageInfo>(); 
 	private PackageManager mPackageMgr = null;
 	private GridView mAppmenuView = null;
+	private final ComponentName mAppDetailInfoComponent = new  ComponentName("com.android.settings", "com.android.settings.SubSettings");
+	private final String mBuiltinLauncherPackage = "com.android.launcher";
 	
 	private WorkspaceStatus mWorkspaceStatus = null;
 	
@@ -47,7 +49,14 @@ public class WorkspaceActivity extends ComunicableActivity  {
 
 		mPackageMgr = getPackageManager();
 		new AppEnumTask().execute(mPackageMgr);
-		
+/*		
+		mPackageMgr.setComponentEnabledSetting(mAppDetailInfoComponent, 
+										PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 
+										PackageManager.DONT_KILL_APP);
+		mPackageMgr.setApplicationEnabledSetting(mBuiltinLauncherPackage, 
+										PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 
+										PackageManager.DONT_KILL_APP);
+	*/	
 		mAppmenuView = (GridView)findViewById(R.id.gridViewAppmenu);
         AppmenuAdapter adapter = new AppmenuAdapter();
         mAppmenuView.setAdapter(adapter);	

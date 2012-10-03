@@ -141,6 +141,7 @@ public class DisconnectedStatus extends WorkspaceStatus{
 			if (!mStatusOwner.isAutoLogin()){
 				mStatusOwner.loginToServer(mTextviewStudentID.getText().toString(), 
  									   mTextviewPassword.getText().toString());
+				clearPanel();
 			}else{
 				mStatusOwner.loginToServer();
 			}
