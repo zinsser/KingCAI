@@ -322,7 +322,7 @@ public class PaperActivity  extends ComunicableActivity {
     		mLoadingPaperDialog.setMessage(getResources().getString(R.string.ProgressTipPaper));    		
     		mLoadingPaperDialog.setIndeterminate(true);
     		mLoadingPaperDialog.setCancelable(false);
-    		mLoadingPaperDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
+ //   		mLoadingPaperDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
             return mLoadingPaperDialog;    		
     	}else if (id == DIALOG_WAIT_COMMITING){
     		mWaitingCommitDialog = null;
@@ -330,7 +330,7 @@ public class PaperActivity  extends ComunicableActivity {
     		mWaitingCommitDialog.setMessage(getResources().getString(R.string.Committing));    		
     		mWaitingCommitDialog.setIndeterminate(true);
     		mWaitingCommitDialog.setCancelable(false);
-    		mWaitingCommitDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
+ //   		mWaitingCommitDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
             return mWaitingCommitDialog;    		
     	}
     	

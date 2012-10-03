@@ -32,9 +32,8 @@ public class KingDrawView extends View {
 		mCanvas = new Canvas();        //建立画布    
 		mCanvas.setBitmap(mBitmap);        //设置位图       
         
-        if (mPaint != null){
-        	mPaint  = null;
-        }
+
+        mPaint  = null;
         mPaint = new Paint(Paint.DITHER_FLAG);        //设置图层    
         mPaint.setAntiAlias(true);        //可以更平滑                    
         mPaint.setColor(Color.RED);    
@@ -51,17 +50,16 @@ public class KingDrawView extends View {
             invalidate();  
         }  
  
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//            mOldx = event.getX();                 
-//            mOldy = event.getY();  
+        /*       if (event.getAction() == MotionEvent.ACTION_DOWN) {
             //画一个点  
-
             mCanvas.drawPoint(mOldx, mOldy, mPaint);
             invalidate();  
         }  
-        if (event.getAction() == MotionEvent.ACTION_UP) {      
-          
-        }  
+              if (event.getAction() == MotionEvent.ACTION_UP) {      
+            //画一个点  
+            mCanvas.drawPoint(mOldx, mOldy, mPaint);
+            invalidate();
+        }*/
         //记录当前的鼠标坐标  
         mOldx = event.getX();    
         mOldy = event.getY();  
