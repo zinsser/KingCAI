@@ -96,10 +96,11 @@
         android:background="#DCDCDC" />
 	<com.king.cai.examination.KingDrawView
 	    android:layout_width="match_parent"
-	    android:layout_height="300dp"
+	    android:layout_height="400dp"
 	    android:focusableInTouchMode="true"
 		android:focusable="true"
-		android:layout_gravity="center" />    
+		android:layout_gravity="center" /> 
+		   
 	    <TextView
 	        android:id="@+id/textViewPaperStatus"
 	        android:layout_width="match_parent"

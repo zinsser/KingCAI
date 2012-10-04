@@ -49,18 +49,7 @@ public class KingDrawView extends View {
             mCanvas.drawLine(mOldx, mOldy, event.getX(), event.getY(), mPaint);     
             invalidate();  
         }  
- 
-        /*       if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            //画一个点  
-            mCanvas.drawPoint(mOldx, mOldy, mPaint);
-            invalidate();  
-        }  
-              if (event.getAction() == MotionEvent.ACTION_UP) {      
-            //画一个点  
-            mCanvas.drawPoint(mOldx, mOldy, mPaint);
-            invalidate();
-        }*/
-        //记录当前的鼠标坐标  
+
         mOldx = event.getX();    
         mOldy = event.getY();  
         return true;  
