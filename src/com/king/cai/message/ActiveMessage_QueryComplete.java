@@ -26,10 +26,21 @@ public class ActiveMessage_QueryComplete extends ActiveMessage{
 
 	@Override
 	public void Execute() {
-		Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_QUERY_COMPLETE);
-		Bundle bundle = new Bundle();
-		bundle.putString("Peer", mPeerIP);
-		innerMessage.setData(bundle);
-		innerMessage.sendToTarget();
+		//ipaddr[versionError]xxx[size]xx
+		String subMessage = super.FromPack(mSocketMessage);
+		if (subMessage.contains("[versionerror]") 
+				&& subMessage.contains("[size]")){
+			int versionPos = subMessage.indexOf("[versionerror]");
+			int sizePos = subMessage.indexOf("[size]");
+			String version = subMessage.substring(versionPos+"[versionerror]".length(), sizePos);
+			String size = subMessage.substring(sizePos + "[size]".length(), subMessage.length());
+			Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_QUERY_COMPLETE);
+			Bundle bundle = new Bundle();
+			bundle.putString("Peer", mPeerIP);
+			bundle.putString("Version", version);
+			bundle.putString("Size", size);
+			innerMessage.setData(bundle);
+			innerMessage.sendToTarget();			
+		}
 	}
 }

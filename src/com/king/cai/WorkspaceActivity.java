@@ -1,6 +1,11 @@
 package com.king.cai;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +20,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,7 +33,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.king.cai.common.ComunicableActivity;
+import com.king.cai.examination.DownloadManager;
+import com.king.cai.message.RequestMessage;
+import com.king.cai.message.RequestMessage_ExplorerDirectory;
+import com.king.cai.message.RequestMessage_ExplorerFile;
 import com.king.cai.message.RequestMessage_ResetPassword;
+import com.king.cai.message.RequestMessage_UpdateApk;
 import com.king.cai.service.KingService.LoginInfo;
 
 public class WorkspaceActivity extends ComunicableActivity  {	
@@ -50,14 +61,14 @@ public class WorkspaceActivity extends ComunicableActivity  {
 
 		mPackageMgr = getPackageManager();
 		new AppEnumTask().execute(mPackageMgr);
-		
+/*		
 		mPackageMgr.setComponentEnabledSetting(mAppDetailInfoComponent, 
 										PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 
 										PackageManager.DONT_KILL_APP);
 		mPackageMgr.setApplicationEnabledSetting(mBuiltinLauncherPackage, 
 										PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 
 										PackageManager.DONT_KILL_APP);
-		
+	*/	
 		mAppmenuView = (GridView)findViewById(R.id.gridViewAppmenu);
         AppmenuAdapter adapter = new AppmenuAdapter();
         mAppmenuView.setAdapter(adapter);	
@@ -80,7 +91,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 				mWorkspaceStatus.onBookmarkClick();
 				break;
 			case R.id.buttonStudyOnWorkspace:
-				mWorkspaceStatus.onStudyClick();
+				mServiceChannel.sendMessage(new RequestMessage_ExplorerDirectory(), 0);
 				break;
 			case R.id.buttonTestOnWorkspace:
 				mWorkspaceStatus.onPaperClick();
@@ -154,6 +165,17 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		}
 	}
 	
+	public void requestUpdateApk(String strSize){
+		Integer size = Integer.valueOf(strSize);
+		mServiceChannel.updateDownloadInfo(size);
+		mServiceChannel.sendMessage(new RequestMessage_UpdateApk(), 0);		
+	}
+	
+	public void sendMessage(RequestMessage msg){
+		if (mServiceChannel != null){
+			mServiceChannel.sendMessage(msg, 0);
+		}
+	}
 	
 	@Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -174,10 +196,73 @@ public class WorkspaceActivity extends ComunicableActivity  {
         return super.dispatchKeyEvent(event);
     }
 	
+	private File mRootDir ;	
+	private void startExplorerActivity(){
+		Intent openExplorerIntent = new Intent(this, ExplorerActivity.class);
+		openExplorerIntent.putExtra("RootDir", mRootDir.getPath());
+		startActivity(openExplorerIntent);		
+	}
+
+	public File constructVirtualDirectory(){
+		String rootDir = Environment.getExternalStorageDirectory().getPath()+"/KingCAI"; //"/";// 
+		mRootDir = new File(rootDir);
+		if (!mRootDir.exists()) {
+			mRootDir.mkdirs();
+		}		
+		
+		return mRootDir;
+	}
+		
 	@Override
 	protected void doHandleInnerMessage(Message innerMessage) {
-		if (mWorkspaceStatus != null){
-			mWorkspaceStatus.doHandleInnerMessage(innerMessage);
+		switch (innerMessage.what){
+		case KingCAIConfig.EVENT_EXPLORER_FILE_READY:{
+			Bundle bundle = innerMessage.getData();
+			String name = bundle.getString("Name");
+			String id = bundle.getString("Id");
+			String size = bundle.getString("Size");
+			DownloadManager.getInstance().addTask(mInnerMessageHandler, name, size, id);
+			break;
+		}
+		case KingCAIConfig.EVENT_EXPLORER_DIRECTORY_READY:{
+			DownloadManager.getInstance().dispatchTask();
+			constructVirtualDirectory();
+			break;
+		}
+		case KingCAIConfig.EVENT_REQUEST_FILE:{
+			Bundle bundle = innerMessage.getData();
+			String name = bundle.getString("Name");
+			String id = bundle.getString("Id");
+			String strSize = bundle.getString("Size");
+			Integer size = Integer.valueOf(strSize);
+			mServiceChannel.updateDownloadInfo(size);
+			mServiceChannel.sendMessage(new RequestMessage_ExplorerFile(id), 0);
+			break;
+		}
+		case KingCAIConfig.EVENT_NEW_FILE:{
+			Bundle bundle = innerMessage.getData();
+			byte[] datas = bundle.getByteArray("Content");
+			String filePath = ((DownloadFileTask)DownloadManager.getInstance().getCurrentTask()).getFileName();
+			int namePos = filePath.lastIndexOf("\\");
+			String fullName = filePath.substring(namePos+1, filePath.length());
+			try {
+				File file = new File(mRootDir.getPath(), fullName);
+				FileOutputStream outStream = new FileOutputStream(file);
+				outStream.write(datas);
+				outStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			showToast("成功接收"+fullName);
+			mServiceChannel.updateDownloadInfo(0);
+			DownloadManager.getInstance().finishCurrentTask();
+			break;
+		}
+		default:
+			if (mWorkspaceStatus != null){
+				mWorkspaceStatus.doHandleInnerMessage(innerMessage);
+			}
+			break;
 		}
 	}
     
@@ -244,19 +329,23 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		mWorkspaceStatus = new ConnectedStatus(this, getLoginInfo());
 		mWorkspaceStatus.enterStatus();		
 	}
-	
-    public String genAboutString(){
+
+	public PackageInfo getKingPackageInfo(){
         List<PackageInfo> pkgInfos = getPackageManager().getInstalledPackages(0/*PackageManager.GET_ACTIVITIES*/);
         PackageInfo kingPackage = null;
-        String packageName =getPackageName(); 
+        String packageName =getPackageName();
+
         for(PackageInfo info : pkgInfos) {
         	if (packageName.equals(info.packageName)){
         		kingPackage = info;
         		break;
         	}
-        }
-        
-        
+        }		
+        return kingPackage;
+	}
+	
+    public String genAboutString(){
+        PackageInfo kingPackage = getKingPackageInfo();
     	String about = "";
         if (kingPackage == null){
         	about = "软件名称：\n" + getResources().getString(R.string.app_name);

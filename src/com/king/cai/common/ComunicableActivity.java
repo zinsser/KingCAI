@@ -4,7 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 
+import com.king.cai.DownloadFileTask;
 import com.king.cai.KingCAIConfig;
+import com.king.cai.examination.DownloadImageTask;
+import com.king.cai.examination.DownloadManager;
 import com.king.cai.message.ActiveMessage;
 import com.king.cai.message.ActiveMessageManager;
 import com.king.cai.message.RequestMessage;
@@ -178,9 +181,21 @@ public abstract class ComunicableActivity extends Activity{
 	    				&& msgData.length > 10){
 	    			Bundle bundle = new Bundle();
 	    			bundle.putByteArray("Content", msgData);   //二进制数据采用byte[]原始数据
-	    			Message newImageMessage = mInnerMessageHandler.obtainMessage(KingCAIConfig.EVENT_NEW_IMAGE);
-					newImageMessage.setData(bundle);
-					newImageMessage.sendToTarget();
+	    			if (DownloadManager.getInstance().getCurrentTask() != null){
+		    			if (DownloadManager.getInstance().getCurrentTask().mTaskType.equals(DownloadImageTask.TaskType)){
+			    			Message newImageMessage = mInnerMessageHandler.obtainMessage(KingCAIConfig.EVENT_NEW_IMAGE);
+							newImageMessage.setData(bundle);
+							newImageMessage.sendToTarget();
+		    			}else if (DownloadManager.getInstance().getCurrentTask().mTaskType.equals(DownloadFileTask.TaskType)){
+			    			Message newImageMessage = mInnerMessageHandler.obtainMessage(KingCAIConfig.EVENT_NEW_FILE);
+							newImageMessage.setData(bundle);
+							newImageMessage.sendToTarget();	    				
+		    			}
+	    			}else{
+		    			Message newImageMessage = mInnerMessageHandler.obtainMessage(KingCAIConfig.EVENT_NEW_APK);
+						newImageMessage.setData(bundle);
+						newImageMessage.sendToTarget();	    				
+	    			}
 	    		}	
 			}
     	}    	

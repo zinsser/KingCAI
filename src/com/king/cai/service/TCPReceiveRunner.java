@@ -65,7 +65,7 @@ public class TCPReceiveRunner extends FirableRunner{
 	protected void onStart() {		
 	}
 	
-	public void updateExpectSize(Integer size){
+	public void updateExpectSize(int size){
 		mExpectSize = size;
 		mLeftSize = mExpectSize;
 		mTotalSize = 0;

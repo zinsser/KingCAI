@@ -3,6 +3,9 @@ package com.king.cai.examination;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.king.cai.DownloadFileTask;
+import com.king.cai.common.DownloadTask;
+
 import android.os.Handler;
 
 public class DownloadManager {
@@ -40,8 +43,12 @@ public class DownloadManager {
 	}
 	
 	public void addTask(String qid, String imageIndex, Handler innerHandler){
-		addTask(new DownloadTask(qid, imageIndex, innerHandler));
+		addTask(new DownloadImageTask(qid, imageIndex, innerHandler));
 	}	
+
+	public void addTask(Handler innerHandler, String name, String size, String id){
+		addTask(new DownloadFileTask(innerHandler, name, size, id));
+	}		
 	
 	public void addTask(DownloadTask newTask){
 		if (newTask != null && !mTasks.contains(newTask)){

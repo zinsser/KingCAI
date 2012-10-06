@@ -426,8 +426,8 @@ public class PaperActivity  extends ComunicableActivity {
 		}	
 		case KingCAIConfig.EVENT_NEW_IMAGE:{
 			if (DownloadManager.getInstance().getCurrentTask() != null){
-				String id = DownloadManager.getInstance().getCurrentTask().getQuestionID();
-				String imageIndex = DownloadManager.getInstance().getCurrentTask().getImageIndex();
+				String id = ((DownloadImageTask)DownloadManager.getInstance().getCurrentTask()).getQuestionID();
+				String imageIndex = ((DownloadImageTask)DownloadManager.getInstance().getCurrentTask()).getImageIndex();
 				byte[] data = bundle.getByteArray("Content");
 				mQuestionMgr.addQuestionImage(id, imageIndex, ByteBuffer.wrap(data));
 				

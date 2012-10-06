@@ -23,6 +23,11 @@ public class KingCAIConfig {
 	public final static int EVENT_LAST_ANSWER_COMPLETE = 18;
 	public final static int EVENT_TEST_TIMEOUT = 19;
 	public final static int EVENT_AUTOSAVE_ACK = 20;
+	public final static int EVENT_EXPLORER_FILE_READY = 21;
+	public final static int EVENT_EXPLORER_DIRECTORY_READY = 22;
+	public final static int EVENT_REQUEST_FILE = 23;
+	public final static int EVENT_NEW_FILE = 24;	
+	public final static int EVENT_NEW_APK = 25;
 	
 	public final static int EVENT_SIMULATOR = 100;
 	

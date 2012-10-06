@@ -121,7 +121,7 @@ public class KingService extends Service{
 			//2，教师服务器收到该消息后，将ip地址作为响应通过UDP消息返回
 			//3，学生终端通过UDP接收到该响应后，更新本地的服务器IP地址
 			//4，并启动TCPClient，通过TCP和教师服务器保持通信
-			sendMessage(new RequestMessage_QueryServer(getLocalIPAddress()));
+			sendMessage(new RequestMessage_QueryServer(getLocalIPAddress(), "1.1.5", mActiveSSID));
 			startUDPServer();
 		}else{
 			broadcastSimulatorEvent(ActiveMessage_QueryComplete.s_MsgTag);
@@ -263,7 +263,7 @@ public class KingService extends Service{
 		}
 	}
 	
-    public void updateExpectSize(Integer size){
+    public void updateExpectSize(int size){
     	if (mTcpClient != null){
     		mTcpClient.updateExpectSize(size);
     	}

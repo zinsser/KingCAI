@@ -1,6 +1,17 @@
 package com.king.cai;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import com.king.cai.examination.DownloadManager;
+import com.king.cai.message.RequestMessage_UpdateApk;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -115,11 +126,11 @@ public class DisconnectedStatus extends WorkspaceStatus{
     		switch (msg.what){
     		case EVENT_QUERY_TIME_OUT:
     			mStatusOwner.updateWaitingDialogTips(R.string.FailQueryServerStatus);
-    			mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(), DELAY_REMOVE_DIALOG);
+    			mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_REMOVE_WAITING_DIALOG), DELAY_REMOVE_DIALOG);
     			break;
     		case EVENT_LOGIN_TIME_OUT:
     			mStatusOwner.updateWaitingDialogTips(R.string.LoginTimeOut);
-    			mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(), DELAY_REMOVE_DIALOG);	
+    			mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_REMOVE_WAITING_DIALOG), DELAY_REMOVE_DIALOG);	
     			break;
     		case EVENT_REMOVE_WAITING_DIALOG:
     			mStatusOwner.dimissWaitingDialog();
@@ -128,26 +139,63 @@ public class DisconnectedStatus extends WorkspaceStatus{
     	}
     };	
 	
+    private boolean isNeedUpdataApp(String serverVersion){
+    	PackageInfo kingPackage = mStatusOwner.getKingPackageInfo();
+    	boolean needUpdate = false;
+    	
+    	if (!serverVersion.equals(kingPackage.versionName+kingPackage.versionCode)){
+    		needUpdate = true;
+    	}
+    	
+    	return needUpdate;
+    } 
+    
+    private void login2Server(String serverAddr){
+		String mSSID = "一年级";//(String)mSpinnerSSID.getAdapter().getItem(mSpinnerSSID.getSelectedItemPosition());
+		mStatusOwner.updateWaitingDialogTips(R.string.FoundServerStatus);
+		mStatusOwner.updateServerInfo(serverAddr, mSSID);
+		if (!mStatusOwner.isAutoLogin()){
+			mStatusOwner.loginToServer(mTextviewStudentID.getText().toString(), 
+									   mTextviewPassword.getText().toString());
+			clearPanel();
+		}else{
+			mStatusOwner.loginToServer();
+		}
+		mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_LOGIN_TIME_OUT), DELAY_LOGIN_TIME);    	
+    }
+    
+    
+    private void promptUpdateApp(final String size){
+    	new AlertDialog.Builder(mStatusOwner)
+    		.setTitle("软件更新")
+    		.setMessage("终端软件和教师服务器软件版本不匹配，需要更新软件，确定现在更新吗？")
+    		.setNegativeButton(android.R.string.ok, new OnClickListener(){
+
+				public void onClick(DialogInterface arg0, int arg1) {
+					mStatusOwner.requestUpdateApk(size);
+				}
+    		})
+    		.setPositiveButton(android.R.string.cancel, null)
+    		.create()
+    		.show();
+    }
+    
 	@Override
 	public void doHandleInnerMessage(Message innerMessage) {
 		Bundle bundle = innerMessage.getData();    	
     	switch (innerMessage.what){
 		case KingCAIConfig.EVENT_QUERY_COMPLETE:
 			mTimeoutHandler.removeMessages(EVENT_QUERY_TIME_OUT);
-			String mServerIP = bundle.getString("Peer");
-			String mSSID = "一年级";//(String)mSpinnerSSID.getAdapter().getItem(mSpinnerSSID.getSelectedItemPosition());
-			mStatusOwner.updateWaitingDialogTips(R.string.FoundServerStatus);
-			mStatusOwner.updateServerInfo(mServerIP, mSSID);
-			if (!mStatusOwner.isAutoLogin()){
-				mStatusOwner.loginToServer(mTextviewStudentID.getText().toString(), 
- 									   mTextviewPassword.getText().toString());
-				clearPanel();
+			String serverAddr = bundle.getString("Peer");
+			String version = bundle.getString("Version");
+			String size = bundle.getString("Size");
+			if (!isNeedUpdataApp(version)){
+				login2Server(serverAddr);
 			}else{
-				mStatusOwner.loginToServer();
+				promptUpdateApp(size);
 			}
-			mTimeoutHandler.sendMessageDelayed(mTimeoutHandler.obtainMessage(EVENT_LOGIN_TIME_OUT), DELAY_LOGIN_TIME);
 			break;
-		case KingCAIConfig.EVENT_LOGIN_COMPLETE:
+		case KingCAIConfig.EVENT_LOGIN_COMPLETE:{
 			mTimeoutHandler.removeMessages(EVENT_LOGIN_TIME_OUT);
 			Boolean bResult = bundle.getBoolean("Result");
 			mStatusOwner.dimissWaitingDialog();
@@ -172,7 +220,23 @@ public class DisconnectedStatus extends WorkspaceStatus{
 				clearPanel();
 			}			
 			break;
-    	}		
+		}
+		case KingCAIConfig.EVENT_NEW_APK:{
+			byte[] datas = bundle.getByteArray("Content");
+			String apkName = "KingCAI_updated.apk";
+			File rootDir = mStatusOwner.constructVirtualDirectory();
+			try {
+				File file = new File(rootDir.getPath(), apkName);
+				FileOutputStream outStream = new FileOutputStream(file);
+				outStream.write(datas);
+				outStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			mStatusOwner.showToast("成功接收 " + apkName);
+			break;
+		}
+    	}    	
 	}
 
 	private void clearPanel(){
