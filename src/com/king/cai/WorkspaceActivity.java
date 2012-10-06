@@ -18,6 +18,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,6 +39,7 @@ import com.king.cai.examination.DownloadManager;
 import com.king.cai.message.RequestMessage;
 import com.king.cai.message.RequestMessage_ExplorerDirectory;
 import com.king.cai.message.RequestMessage_ExplorerFile;
+import com.king.cai.message.RequestMessage_HeadPhoto;
 import com.king.cai.message.RequestMessage_ResetPassword;
 import com.king.cai.message.RequestMessage_UpdateApk;
 import com.king.cai.service.KingService.LoginInfo;
@@ -132,10 +135,15 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		mServiceChannel.updateServerInfo(serverAddr, activeSSID);
 	}
 	
-	public void onLoginSuccess(String studentInfo, boolean bExceptionExit){
+	public void onLoginSuccess(String studentInfo, String strPhotosize, boolean bExceptionExit){
 		mServiceChannel.updateLoginInfo(studentInfo, bExceptionExit);
 		switch2ConnectedStatus();
-		
+		Integer photoSize = Integer.valueOf(strPhotosize); 
+		mServiceChannel.updateDownloadInfo(photoSize);
+		LoginInfo loginInfo = mServiceChannel.getLoginInfo();
+		if (loginInfo != null){
+			mServiceChannel.sendMessage(new RequestMessage_HeadPhoto(loginInfo.mID), 0);
+		}
 	}
 	
 	public void loginToServer(String number, String password){
@@ -256,6 +264,16 @@ public class WorkspaceActivity extends ComunicableActivity  {
 			showToast("成功接收"+fullName);
 			mServiceChannel.updateDownloadInfo(0);
 			DownloadManager.getInstance().finishCurrentTask();
+			break;
+		}
+		case KingCAIConfig.EVENT_HEAD_PHOTO:{
+			Bundle bundle = innerMessage.getData();
+			byte[] bmpBytes = bundle.getByteArray("Content");
+			Bitmap headPhoto = BitmapFactory.decodeByteArray(bmpBytes, 0, bmpBytes.length);
+			ImageView headerIcon = (ImageView)findViewById(R.id.imageViewHeaderIcon);
+			headerIcon.setImageBitmap(headPhoto);
+			
+			mServiceChannel.updateDownloadInfo(0);			
 			break;
 		}
 		default:

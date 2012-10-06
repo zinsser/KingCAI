@@ -26,12 +26,15 @@ public class ActiveMessage_CommitACK extends ActiveMessage{
 	@Override
 	public void Execute() {
 		String subMsg = FromPack(mSocketMessage);
-		int lastPos = subMsg.indexOf('\\');
-		String retFromPC = subMsg.substring(0, lastPos);
-		
+		//OK[ask]xxxx[id]xx@xxxx[id]xx
+		int askPos = subMsg.indexOf("[ask]");
+		int lastPos = subMsg.indexOf("\\");
+		String retFromPC = subMsg.substring(0, askPos);
+		String asks = subMsg.substring(askPos+"[ask]".length(), lastPos);
 		Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_COMMIT_ACK);
 		Bundle bundle = new Bundle();
 		bundle.putBoolean("Result", retFromPC.equals("OK") ? true : false);
+		bundle.putString("Ask", asks);
 		innerMessage.setData(bundle);
 		innerMessage.sendToTarget();
 	}

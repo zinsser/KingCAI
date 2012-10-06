@@ -192,9 +192,15 @@ public abstract class ComunicableActivity extends Activity{
 							newImageMessage.sendToTarget();	    				
 		    			}
 	    			}else{
-		    			Message newImageMessage = mInnerMessageHandler.obtainMessage(KingCAIConfig.EVENT_NEW_APK);
-						newImageMessage.setData(bundle);
-						newImageMessage.sendToTarget();	    				
+	    				if (mServiceChannel.isLoginSuccess()){
+			    			Message newImageMessage = mInnerMessageHandler.obtainMessage(KingCAIConfig.EVENT_HEAD_PHOTO);
+							newImageMessage.setData(bundle);
+							newImageMessage.sendToTarget();	    				
+	    				}else{
+			    			Message newImageMessage = mInnerMessageHandler.obtainMessage(KingCAIConfig.EVENT_NEW_APK);
+							newImageMessage.setData(bundle);
+							newImageMessage.sendToTarget();	    					
+	    				}
 	    			}
 	    		}	
 			}
@@ -214,6 +220,13 @@ public abstract class ComunicableActivity extends Activity{
         	mKingService = null;
         }
               
+        public boolean isLoginSuccess(){
+        	boolean bLoginSuccess = false;
+        	if (mKingService != null){
+        		bLoginSuccess = mKingService.isLoginSuccess();
+        	}
+        	return bLoginSuccess;
+        } 
         public boolean isNetworkConnected(){
         	boolean bConnected = false;
         	if (mKingService != null){

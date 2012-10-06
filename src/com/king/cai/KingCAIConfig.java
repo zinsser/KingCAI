@@ -28,6 +28,7 @@ public class KingCAIConfig {
 	public final static int EVENT_REQUEST_FILE = 23;
 	public final static int EVENT_NEW_FILE = 24;	
 	public final static int EVENT_NEW_APK = 25;
+	public final static int EVENT_HEAD_PHOTO = 26;
 	
 	public final static int EVENT_SIMULATOR = 100;
 	

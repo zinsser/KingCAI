@@ -143,7 +143,7 @@ public class DisconnectedStatus extends WorkspaceStatus{
     	PackageInfo kingPackage = mStatusOwner.getKingPackageInfo();
     	boolean needUpdate = false;
     	
-    	if (!serverVersion.equals(kingPackage.versionName+kingPackage.versionCode)){
+    	if (!serverVersion.equals(kingPackage.versionName+"."+kingPackage.versionCode)){
     		needUpdate = true;
     	}
     	
@@ -151,9 +151,6 @@ public class DisconnectedStatus extends WorkspaceStatus{
     } 
     
     private void login2Server(String serverAddr){
-		String mSSID = "一年级";//(String)mSpinnerSSID.getAdapter().getItem(mSpinnerSSID.getSelectedItemPosition());
-		mStatusOwner.updateWaitingDialogTips(R.string.FoundServerStatus);
-		mStatusOwner.updateServerInfo(serverAddr, mSSID);
 		if (!mStatusOwner.isAutoLogin()){
 			mStatusOwner.loginToServer(mTextviewStudentID.getText().toString(), 
 									   mTextviewPassword.getText().toString());
@@ -166,6 +163,7 @@ public class DisconnectedStatus extends WorkspaceStatus{
     
     
     private void promptUpdateApp(final String size){
+    	mStatusOwner.dimissWaitingDialog();
     	new AlertDialog.Builder(mStatusOwner)
     		.setTitle("软件更新")
     		.setMessage("终端软件和教师服务器软件版本不匹配，需要更新软件，确定现在更新吗？")
@@ -189,6 +187,9 @@ public class DisconnectedStatus extends WorkspaceStatus{
 			String serverAddr = bundle.getString("Peer");
 			String version = bundle.getString("Version");
 			String size = bundle.getString("Size");
+			String mSSID = "一年级";//(String)mSpinnerSSID.getAdapter().getItem(mSpinnerSSID.getSelectedItemPosition());
+			mStatusOwner.updateWaitingDialogTips(R.string.FoundServerStatus);
+			mStatusOwner.updateServerInfo(serverAddr, mSSID);			
 			if (!isNeedUpdataApp(version)){
 				login2Server(serverAddr);
 			}else{
@@ -202,8 +203,8 @@ public class DisconnectedStatus extends WorkspaceStatus{
 			if (bResult){
 				String errCause = bundle.getString("ErrCause");
 				String studentInfo = bundle.getString("Info");
-
-				mStatusOwner.onLoginSuccess(studentInfo, errCause.equals("[autocommit]"));
+				String photoSize = bundle.getString("PhotoSize");
+				mStatusOwner.onLoginSuccess(studentInfo, photoSize, errCause.equals("[autocommit]"));
 			}else{
 				String errCause = bundle.getString("ErrCause");
 				if (errCause != null){

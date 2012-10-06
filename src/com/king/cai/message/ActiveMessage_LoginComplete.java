@@ -26,17 +26,21 @@ public class ActiveMessage_LoginComplete extends ActiveMessage{
 	public void Execute() {
 		String pack = super.FromPack(mSocketMessage);
 		Bundle bundle = new Bundle();
-		//[pass]xxxx
+		//[pass]xxxx[photosize]xxx
 		//[id_error]
 		//[password_error]
 		//[answer_commit]
 		//[auto_commit]xxxx
 		//[id_exist]
+		//[error_commit]xxx[photosize]xxx
 		Message innerMessage = mCompleteHandler.obtainMessage(KingCAIConfig.EVENT_LOGIN_COMPLETE);
 		if (pack.contains("[pass]")){
-			String studentInfo = pack.substring("[pass]".length(), pack.length());
+			int photoSizePos = pack.indexOf("[photosize]");
+			String studentInfo = pack.substring("[pass]".length(), photoSizePos);
+			String photoSize = pack.substring(photoSizePos + "[photosize]".length(), pack.length());
 			bundle.putBoolean("Result", true);
 			bundle.putString("Info", studentInfo);
+			bundle.putString("PhotoSize", photoSize);
 			bundle.putString("ErrCause", "[pass]");
 		}else if (pack.contains("[error_commit]")){
 			String studentInfo = pack.substring("[auto_commit]".length(), pack.length());

@@ -234,6 +234,10 @@ public class KingService extends Service{
 		mLastLoginInfo = null;
     }
     
+    public boolean isLoginSuccess(){
+    	return mLoginInfo.mIsValid;
+    }
+    
     public LoginInfo getLoginInfo(){
     	return mLoginInfo.mIsValid ? mLoginInfo : null;
     } 

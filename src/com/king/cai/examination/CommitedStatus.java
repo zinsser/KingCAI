@@ -51,7 +51,8 @@ public class CommitedStatus extends PaperStatus{
 	
 	@Override
 	public void onCommitClick() {
-		mStatusOwner.showToast(R.string.CommitTips);		
+//		mStatusOwner.showToast(R.string.CommitTips);
+		mStatusOwner.commitAskAnswer();
 	}
 
 	@Override

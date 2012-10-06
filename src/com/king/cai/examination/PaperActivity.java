@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,6 +40,7 @@ import com.king.cai.WorkspaceActivity;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.examination.PaperViewAdapter;
 import com.king.cai.message.RequestMessage_Answer;
+import com.king.cai.message.RequestMessage_AskAnswer;
 import com.king.cai.message.RequestMessage_Image;
 import com.king.cai.message.RequestMessage_ImageData;
 import com.king.cai.message.RequestMessage_LastAnswer;
@@ -446,6 +449,7 @@ public class PaperActivity  extends ComunicableActivity {
 		}
 		case KingCAIConfig.EVENT_COMMIT_ACK:{
 			boolean ack = bundle.getBoolean("Result");
+			String ask = bundle.getString("Ask");
 			mServiceChannel.setReferenceVisible(ack);
 			switch2CommitStatus(ack);
 			break;
@@ -511,9 +515,6 @@ public class PaperActivity  extends ComunicableActivity {
 				break;
 			}
 			case EVENT_COMMIT_TIMEOUT:{
-				if (mWaitingCommitDialog != null){
-					mWaitingCommitDialog.dismiss();
-				}
 				switch2CommitStatus(false);
 				break;				
 			}
@@ -648,6 +649,10 @@ public class PaperActivity  extends ComunicableActivity {
 		editor.commit();
 	}
 	
+	public void commitAskAnswer(){
+		mServiceChannel.sendMessage(new RequestMessage_AskAnswer("#T1#1@#T3#2@"), 0);
+	}
+	
 	public void switch2WaitingStatus(){
 /*		mPaperStatus.LeaveStatus();
 		mPaperStatus = null;
@@ -660,6 +665,9 @@ public class PaperActivity  extends ComunicableActivity {
 	}
 	
 	public void switch2CommitStatus(boolean showAnswer){
+		if (mWaitingCommitDialog != null){
+			mWaitingCommitDialog.dismiss();
+		}		
 		mTimeoutHandler.removeMessages(EVENT_COMMIT_TIMEOUT);
 		mPaperStatus.LeaveStatus();
 		mPaperStatus = null;
