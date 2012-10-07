@@ -166,14 +166,14 @@ public class DisconnectedStatus extends WorkspaceStatus{
     	mStatusOwner.dimissWaitingDialog();
     	new AlertDialog.Builder(mStatusOwner)
     		.setTitle("软件更新")
-    		.setMessage("终端软件和教师服务器软件版本不匹配，需要更新软件，确定现在更新吗？")
-    		.setNegativeButton(android.R.string.ok, new OnClickListener(){
+    		.setMessage("终端软件和教师服务器软件版本不匹配，需要更新软件，确定现在下载更新软件吗？")
+    		.setNegativeButton("现在下载", new OnClickListener(){
 
 				public void onClick(DialogInterface arg0, int arg1) {
 					mStatusOwner.requestUpdateApk(size);
 				}
     		})
-    		.setPositiveButton(android.R.string.cancel, null)
+    		.setPositiveButton("以后再说", null)
     		.create()
     		.show();
     }
@@ -240,6 +240,21 @@ public class DisconnectedStatus extends WorkspaceStatus{
     	}    	
 	}
 
+	/**
+	 *  
+     * 安装apk
+     * @param url
+		private void installApk(){
+			File apkfile = new File(saveFileName);
+			if (!apkfile.exists()) {
+			    return;
+			}    
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive"); 
+			mContext.startActivity(i);
+		}
+	 * */
+	
 	private void clearPanel(){
 		mTextviewPassword.setText("");
 		mTextviewStudentID.setText("");
