@@ -11,7 +11,6 @@ import com.king.cai.examination.DownloadManager;
 import com.king.cai.message.RequestMessage_ExplorerDirectory;
 import com.king.cai.message.RequestMessage_ExplorerFile;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -101,15 +100,13 @@ public class ExplorerActivity extends ComunicableActivity  {
 		}
 	}	
 	
-	private void touchFileByPath(String filePath){
-		String[] dirs = filePath.split("\\");
-		for (String dir : dirs){
-			if (dir != null && dir.length() > 0){
-				File tempFile = new File(dir);
-
-			}
+	private void constructVirtualDirectory(String dirPath){
+		String targetPath = mRootPath + dirPath;
+		File tempFile = new File(targetPath);
+		if (!tempFile.exists()){
+			tempFile.mkdirs();
 		}
-	}
+	} 
 	
 	@Override
 	protected void doHandleInnerMessage(Message innerMessage) {
@@ -120,7 +117,7 @@ public class ExplorerActivity extends ComunicableActivity  {
 			String id = bundle.getString("Id");
 			String size = bundle.getString("Size");
 			DownloadManager.getInstance().addTask(mInnerMessageHandler, name, size, id);
-			touchFileByPath(name);
+			constructVirtualDirectory(name);
 			break;
 		}
 		case KingCAIConfig.EVENT_EXPLORER_DIRECTORY_READY:{
@@ -142,9 +139,10 @@ public class ExplorerActivity extends ComunicableActivity  {
 			byte[] datas = bundle.getByteArray("Content");
 			String filePath = ((DownloadFileTask)DownloadManager.getInstance().getCurrentTask()).getFileName();
 			int namePos = filePath.lastIndexOf("\\");
+			String parentPath = filePath.substring(0, namePos);
 			String fullName = filePath.substring(namePos+1, filePath.length());
 			try {
-				File file = new File(mRootDir.getPath(), fullName);
+				File file = new File(parentPath, fullName);
 				FileOutputStream outStream = new FileOutputStream(file);
 				outStream.write(datas);
 				outStream.close();
