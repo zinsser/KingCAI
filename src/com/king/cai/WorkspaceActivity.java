@@ -94,7 +94,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 				mWorkspaceStatus.onBookmarkClick();
 				break;
 			case R.id.buttonStudyOnWorkspace:
-				mServiceChannel.sendMessage(new RequestMessage_ExplorerDirectory(), 0);
+				startExplorerActivity();
 				break;
 			case R.id.buttonTestOnWorkspace:
 				mWorkspaceStatus.onPaperClick();
@@ -185,6 +185,11 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		}
 	}
 	
+	private void startExplorerActivity(){
+		Intent openExplorerIntent = new Intent(this, ExplorerActivity.class);
+		startActivity(openExplorerIntent);		
+	}
+	
 	@Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
@@ -203,69 +208,10 @@ public class WorkspaceActivity extends ComunicableActivity  {
 
         return super.dispatchKeyEvent(event);
     }
-	
-	private File mRootDir ;	
-	private void startExplorerActivity(){
-		Intent openExplorerIntent = new Intent(this, ExplorerActivity.class);
-		openExplorerIntent.putExtra("RootDir", mRootDir.getPath());
-		startActivity(openExplorerIntent);		
-	}
-
-	public File constructVirtualDirectory(){
-		String rootDir = Environment.getExternalStorageDirectory().getPath()+"/KingCAI"; //"/";// 
-		mRootDir = new File(rootDir);
-		if (!mRootDir.exists()) {
-			mRootDir.mkdirs();
-		}		
-		
-		return mRootDir;
-	}
 		
 	@Override
 	protected void doHandleInnerMessage(Message innerMessage) {
 		switch (innerMessage.what){
-		case KingCAIConfig.EVENT_EXPLORER_FILE_READY:{
-			Bundle bundle = innerMessage.getData();
-			String name = bundle.getString("Name");
-			String id = bundle.getString("Id");
-			String size = bundle.getString("Size");
-			DownloadManager.getInstance().addTask(mInnerMessageHandler, name, size, id);
-			break;
-		}
-		case KingCAIConfig.EVENT_EXPLORER_DIRECTORY_READY:{
-			DownloadManager.getInstance().dispatchTask();
-			constructVirtualDirectory();
-			break;
-		}
-		case KingCAIConfig.EVENT_REQUEST_FILE:{
-			Bundle bundle = innerMessage.getData();
-			String name = bundle.getString("Name");
-			String id = bundle.getString("Id");
-			String strSize = bundle.getString("Size");
-			Integer size = Integer.valueOf(strSize);
-			mServiceChannel.updateDownloadInfo(size);
-			mServiceChannel.sendMessage(new RequestMessage_ExplorerFile(id), 0);
-			break;
-		}
-		case KingCAIConfig.EVENT_NEW_FILE:{
-			Bundle bundle = innerMessage.getData();
-			byte[] datas = bundle.getByteArray("Content");
-			String filePath = ((DownloadFileTask)DownloadManager.getInstance().getCurrentTask()).getFileName();
-			int namePos = filePath.lastIndexOf("\\");
-			String fullName = filePath.substring(namePos+1, filePath.length());
-			try {
-				File file = new File(mRootDir.getPath(), fullName);
-				FileOutputStream outStream = new FileOutputStream(file);
-				outStream.write(datas);
-				outStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			showToast("成功接收"+fullName);
-			mServiceChannel.updateDownloadInfo(0);
-			DownloadManager.getInstance().finishCurrentTask();
-			break;
-		}
 		case KingCAIConfig.EVENT_HEAD_PHOTO:{
 			Bundle bundle = innerMessage.getData();
 			byte[] bmpBytes = bundle.getByteArray("Content");
