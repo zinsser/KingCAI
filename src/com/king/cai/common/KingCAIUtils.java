@@ -1,6 +1,7 @@
 package com.king.cai.common;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
 import android.os.Handler;
 
@@ -41,5 +42,11 @@ public class KingCAIUtils {
 		handler.sendMessage(msg);
 	}
 	
-		
+	public static String getRootPath(){
+		return Environment.getExternalStorageDirectory().getPath() + "/KingCAI";		
+	}
+	
+	public static boolean isSimulatorDebug(){
+		return true;
+	}
 }

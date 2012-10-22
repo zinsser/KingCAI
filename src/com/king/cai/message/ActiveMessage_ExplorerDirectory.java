@@ -26,7 +26,7 @@ public class ActiveMessage_ExplorerDirectory extends ActiveMessage{
 	@Override
 	public void Execute() {
 		String subMsg = FromPack(mSocketMessage);
-		//¡¾tag¡¿<File>xxxx<id>xxx<size>xxx<File>xxxx<id>xxx<size>xxx
+		//¡¾tag¡¿<file>xxxx<id>xxx<size>xxx<file>xxxx<id>xxx<size>xxx
 		String[] files = subMsg.split("<file>");
 		for (String file : files){
 			if (file.contains("<size>") && file.contains("<id>")){

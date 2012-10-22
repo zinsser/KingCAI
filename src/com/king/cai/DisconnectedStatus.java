@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import com.king.cai.common.KingCAIUtils;
 import com.king.cai.examination.DownloadManager;
 import com.king.cai.message.RequestMessage_UpdateApk;
 
@@ -225,16 +226,15 @@ public class DisconnectedStatus extends WorkspaceStatus{
 		case KingCAIConfig.EVENT_NEW_APK:{
 			byte[] datas = bundle.getByteArray("Content");
 			String apkName = "KingCAI_updated.apk";
-			File rootDir = mStatusOwner.constructVirtualDirectory();
 			try {
-				File file = new File(rootDir.getPath(), apkName);
+				File file = new File(KingCAIUtils.getRootPath(), apkName);
 				FileOutputStream outStream = new FileOutputStream(file);
 				outStream.write(datas);
 				outStream.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			mStatusOwner.showToast("成功接收 " + apkName);
+			mStatusOwner.showToast("成功接收:" + apkName);
 			break;
 		}
     	}    	

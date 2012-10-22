@@ -279,7 +279,17 @@ public abstract class ComunicableActivity extends Activity{
         	
         	return bRet;
         }
-
+        
+        public void getExplorerDirectory(){
+        	if (mKingService != null){
+        		mKingService.getExplorerDirectory();
+        	}
+        }
+        public void getExplorerFile(String id){
+        	if (mKingService != null){
+        		mKingService.getExplorerFile(id);
+        	}        	
+        }
         public void commitAnswers(String answers){
         	if (mKingService != null){
         		mKingService.commitAnswers(answers);

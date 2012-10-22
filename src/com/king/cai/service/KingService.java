@@ -4,10 +4,14 @@ package com.king.cai.service;
 import java.util.List;
 
 import com.king.cai.KingCAIConfig;
+import com.king.cai.common.KingCAIUtils;
+import com.king.cai.message.ActiveMessage_ExplorerDirectory;
 import com.king.cai.message.ActiveMessage_LoginComplete;
 import com.king.cai.message.ActiveMessage_QueryComplete;
 import com.king.cai.message.RequestMessage;
 import com.king.cai.message.RequestMessage_Answer;
+import com.king.cai.message.RequestMessage_ExplorerDirectory;
+import com.king.cai.message.RequestMessage_ExplorerFile;
 import com.king.cai.message.RequestMessage_Login;
 import com.king.cai.message.RequestMessage_Logout;
 import com.king.cai.message.RequestMessage_PaperSize;
@@ -18,8 +22,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -198,6 +205,31 @@ public class KingService extends Service{
 			mMulticastReceiverRoutine.stopRunner();
 			mMulticastReceiverRoutine = null;
 		}    	
+    }
+    
+    public void getExplorerDirectory(){
+    	if (!KingCAIUtils.isSimulatorDebug()){
+    		sendMessage(new RequestMessage_ExplorerDirectory(), 0);
+    	}else{
+    		String activeMessage = ActiveMessage_ExplorerDirectory.s_MsgTag;
+    		//<File>xxxx<id>xxx<size>xxx<File>xxxx<id>xxx<size>xxx
+    		activeMessage += "<file>xxx\\xx.bmp<id>0<size>2000";
+    		activeMessage += "<file>yyy\\zzz\\kk.bmp<id>1<size>2000";
+    		activeMessage += "<file>yyy\\zzz\\ww\\mm.bmp<id>2<size>2000";
+			broadcastSimulatorEvent(activeMessage);
+    	}
+    }
+    
+    public void getExplorerFile(String id){
+    	if (!KingCAIUtils.isSimulatorDebug()){
+    		sendMessage(new RequestMessage_ExplorerFile(id), 0);
+    	}else{
+    		Bitmap image = BitmapFactory.decodeFile(
+    				Environment.getExternalStorageDirectory().getPath() +"/test.jpg");
+    		if (image != null){
+    			broadcastSimulatorEvent(image.toString());
+    		}
+    	}
     }
 	
     public static class LoginInfo{

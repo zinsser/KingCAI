@@ -7,10 +7,12 @@ import java.util.ArrayList;
 
 import com.king.cai.R;
 import com.king.cai.common.ComunicableActivity;
+import com.king.cai.common.KingCAIUtils;
 import com.king.cai.examination.DownloadManager;
 import com.king.cai.message.RequestMessage_ExplorerDirectory;
 import com.king.cai.message.RequestMessage_ExplorerFile;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -54,11 +56,10 @@ public class ExplorerActivity extends ComunicableActivity  {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);		
         setContentView(R.layout.explorerlist);
 
-    	Bundle extra = getIntent().getExtras();
-    	if (extra.containsKey("RootDir")){
-    		mRootPath = extra.getString("RootDir");
+    	if (getIntent().hasExtra("RootDir")){
+    		mRootPath = getIntent().getExtras().getString("RootDir");
     	}else{
-    		mRootPath = Environment.getExternalStorageDirectory().getPath()+"/KingCAI";
+    		mRootPath = KingCAIUtils.getRootPath();
     	}
     	createRootDirectory(mRootPath);
     	constructFileList(mRootPath);
@@ -88,25 +89,41 @@ public class ExplorerActivity extends ComunicableActivity  {
 
 	@Override
 	protected void onServiceReady() {
-		mServiceChannel.sendMessage(new RequestMessage_ExplorerDirectory(), 0);
+		mServiceChannel.getExplorerDirectory();
 	};	
 	
-	private File mRootDir ;	
+	
+	
+	private File mRootDir = null;	
 	private void createRootDirectory(String rootDir){
-//		String rootDir = Environment.getExternalStorageDirectory().getPath()+"/KingCAI"; //"/";// 
-		mRootDir = new File(rootDir);
+		if (mRootDir == null){
+			mRootDir = new File(rootDir);
+		}
 		if (!mRootDir.exists()) {
 			mRootDir.mkdirs();
 		}
 	}	
 	
-	private void constructVirtualDirectory(String dirPath){
-		String targetPath = mRootPath + dirPath;
-		File tempFile = new File(targetPath);
+	private void touchFileByPath(String filePath){
+		String rootPath = KingCAIUtils.getRootPath();
+		if (mRootDir != null){
+			rootPath = mRootDir.getPath(); 
+		}
+		rootPath += "/";
+		String localPath = rootPath + filePath.replace('\\', '/');
+		File tempFile = new File(localPath);
 		if (!tempFile.exists()){
 			tempFile.mkdirs();
 		}
-	} 
+	}
+	
+	private boolean isFileExist(String filePath){
+		int namePos = filePath.lastIndexOf("\\");
+		String pathName = filePath.substring(0, namePos).replace('\\', '/');
+		String fileName = filePath.substring(namePos+1, filePath.length());
+		File file = new File(mRootDir.getPath()+ '/'+ pathName, fileName);
+		return file.exists();
+	}
 	
 	@Override
 	protected void doHandleInnerMessage(Message innerMessage) {
@@ -117,7 +134,7 @@ public class ExplorerActivity extends ComunicableActivity  {
 			String id = bundle.getString("Id");
 			String size = bundle.getString("Size");
 			DownloadManager.getInstance().addTask(mInnerMessageHandler, name, size, id);
-			constructVirtualDirectory(name);
+			touchFileByPath(name.substring(0, name.lastIndexOf('\\')));
 			break;
 		}
 		case KingCAIConfig.EVENT_EXPLORER_DIRECTORY_READY:{
@@ -130,8 +147,13 @@ public class ExplorerActivity extends ComunicableActivity  {
 			String id = bundle.getString("Id");
 			String strSize = bundle.getString("Size");
 			Integer size = Integer.valueOf(strSize);
-			mServiceChannel.updateDownloadInfo(size);
-			mServiceChannel.sendMessage(new RequestMessage_ExplorerFile(id), 0);
+			if (!isFileExist(name)){
+				mServiceChannel.updateDownloadInfo(size);
+				mServiceChannel.getExplorerFile(id);
+			}else{
+				mServiceChannel.updateDownloadInfo(0);
+				DownloadManager.getInstance().finishCurrentTask();				
+			}
 			break;
 		}
 		case KingCAIConfig.EVENT_NEW_FILE:{
@@ -139,17 +161,17 @@ public class ExplorerActivity extends ComunicableActivity  {
 			byte[] datas = bundle.getByteArray("Content");
 			String filePath = ((DownloadFileTask)DownloadManager.getInstance().getCurrentTask()).getFileName();
 			int namePos = filePath.lastIndexOf("\\");
-			String parentPath = filePath.substring(0, namePos);
-			String fullName = filePath.substring(namePos+1, filePath.length());
+			String pathName = filePath.substring(0, namePos).replace('\\', '/');
+			String fileName = filePath.substring(namePos+1, filePath.length());
 			try {
-				File file = new File(parentPath, fullName);
+				File file = new File(mRootDir.getPath()+ '/'+ pathName, fileName);
 				FileOutputStream outStream = new FileOutputStream(file);
 				outStream.write(datas);
 				outStream.close();
+				showToast("成功接收:"+file.getPath());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			showToast("成功接收"+fullName);
 			mServiceChannel.updateDownloadInfo(0);
 			DownloadManager.getInstance().finishCurrentTask();
 			break;
@@ -159,7 +181,7 @@ public class ExplorerActivity extends ComunicableActivity  {
 		}
 	}
 	
-	//initpath = file:///sdcard/kingcai
+	//initpath = file:       ///sdcard/kingcai
 	private void constructFileList(String path){
 		File f = new File(path);
 		File[] files = f.listFiles();
