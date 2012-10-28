@@ -9,15 +9,11 @@ import com.king.cai.R;
 import com.king.cai.common.ComunicableActivity;
 import com.king.cai.common.KingCAIUtils;
 import com.king.cai.examination.DownloadManager;
-import com.king.cai.message.RequestMessage_ExplorerDirectory;
-import com.king.cai.message.RequestMessage_ExplorerFile;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;

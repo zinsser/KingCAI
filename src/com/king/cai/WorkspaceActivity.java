@@ -1,11 +1,6 @@
 package com.king.cai;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +17,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -35,10 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.king.cai.common.ComunicableActivity;
-import com.king.cai.examination.DownloadManager;
 import com.king.cai.message.RequestMessage;
-import com.king.cai.message.RequestMessage_ExplorerDirectory;
-import com.king.cai.message.RequestMessage_ExplorerFile;
 import com.king.cai.message.RequestMessage_HeadPhoto;
 import com.king.cai.message.RequestMessage_ResetPassword;
 import com.king.cai.message.RequestMessage_UpdateApk;

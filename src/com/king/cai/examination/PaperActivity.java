@@ -85,7 +85,7 @@ public class PaperActivity  extends ComunicableActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);  
+        setContentView(R.layout.paper);  
         
 		mTextViewTitle = (TextView)findViewById(R.id.textViewTitle);        
 		ParseIntentExtraParam();
@@ -667,9 +667,13 @@ public class PaperActivity  extends ComunicableActivity {
 	public void switch2CommitStatus(boolean showAnswer){
 		if (mWaitingCommitDialog != null){
 			mWaitingCommitDialog.dismiss();
-		}		
-		mTimeoutHandler.removeMessages(EVENT_COMMIT_TIMEOUT);
-		mPaperStatus.LeaveStatus();
+		}
+		if (mTimeoutHandler != null){
+			mTimeoutHandler.removeMessages(EVENT_COMMIT_TIMEOUT);
+		}
+		if (mPaperStatus != null){
+			mPaperStatus.LeaveStatus();
+		}
 		mPaperStatus = null;
 		mPaperStatus = new CommitedStatus(this, showAnswer);
 		mPaperStatus.EnterStatus();		

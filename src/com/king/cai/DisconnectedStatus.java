@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.king.cai.common.KingCAIUtils;
-import com.king.cai.examination.DownloadManager;
-import com.king.cai.message.RequestMessage_UpdateApk;
 
 import android.app.AlertDialog;
 import android.content.Context;

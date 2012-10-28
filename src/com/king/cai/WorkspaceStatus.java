@@ -1,13 +1,6 @@
 package com.king.cai;
 
-import java.io.File;
-
-import com.king.cai.message.RequestMessage_ExplorerDirectory;
-
-import android.app.Dialog;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Environment;
 import android.os.Message;
 import android.view.View;
 
