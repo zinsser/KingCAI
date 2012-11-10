@@ -11,6 +11,11 @@ import android.widget.ToggleButton;
 public class KingDrawableActivity extends Activity{
 	private KingDrawView mDrawView = null; 
 	private ToggleButton mToggleButtonErase = null;
+	private ToggleButton mToggleButtonWrite = null;
+	private ToggleButton mToggleButtonLine = null;
+	private ToggleButton mToggleButtonCircle = null;
+	private ToggleButton mToggleButtonRect = null;
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +28,42 @@ public class KingDrawableActivity extends Activity{
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				mToggleButtonErase.setBackgroundResource(isChecked ? R.drawable.ic_menu_eraser_active
 														: R.drawable.ic_menu_eraser);
+				mDrawView.switchStatusByMode(isChecked);
+			}
+		});
+        
+        mToggleButtonWrite = (ToggleButton)findViewById(R.id.toggleButtonWrite);        
+        mToggleButtonWrite.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				mDrawView.switchStatusByMode(isChecked);
+			}
+		});
+        mToggleButtonWrite = (ToggleButton)findViewById(R.id.toggleButtonWrite);        
+        mToggleButtonWrite.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				mDrawView.switchStatusByMode(isChecked);
+			}
+		});
+        mToggleButtonLine = (ToggleButton)findViewById(R.id.toggleButtonLine);        
+        mToggleButtonLine.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				mDrawView.switchStatusByMode(isChecked);
+			}
+		});        
+        mToggleButtonCircle = (ToggleButton)findViewById(R.id.toggleButtonCircle);        
+        mToggleButtonCircle.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				mDrawView.switchStatusByMode(isChecked);
+			}
+		});
+        mToggleButtonRect = (ToggleButton)findViewById(R.id.toggleButtonRect);        
+        mToggleButtonRect.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				mDrawView.switchStatusByMode(isChecked);
 			}
 		});

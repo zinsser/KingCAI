@@ -15,27 +15,33 @@ import android.view.MotionEvent;
 import android.view.View;  
 
 public class KingDrawView extends View {  
+				
+	private Path mPath;
+	private Paint mPaint;
+	private List<Path> mPaths = new ArrayList<Path>();
+	private float mDownX, mDownY;
 	
-	public class PathInfo {
-		Path path;  
-	    Rect rect;  
-	    int color;  
-	    float press;  
-	      
-	    public PathInfo(Path pth, Rect rc, float prss){  
-	        path = pth;  
-	        rect = new Rect(rc);  
-	        color = Color.RED;  
-	        press = prss;  
-	    }  
-	      
-	    public PathInfo(Path pth, int left, int top, int right, int bottom){  
-	        path = pth;  
-	        //rect = new Rect(left, top, right, bottom);  
-	       // path.computeBounds(rect, true);
-	    }  
+	public abstract class Shape{
+		public abstract void draw(Canvas canvas);
 	}
+	
+	public class Word extends Shape{
 
+		@Override
+		public void draw(Canvas canvas) {
+			
+		}
+	}
+	
+	public class Line extends Shape{
+
+		@Override
+		public void draw(Canvas canvas) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
 	private EraseStatus mEraseStatus = new EraseStatus();
 	private PrintStatus mPrintStatus = new PrintStatus();
 	private DrawStatus mCurrentStatus = null;
@@ -45,136 +51,82 @@ public class KingDrawView extends View {
 	}
 	
 	public abstract class DrawStatus{
-		public abstract boolean onTouchEvent(MotionEvent event);
+		public abstract boolean onTouchEvent(MotionEvent event);		
 	}
 	
 	public class PrintStatus extends DrawStatus{
 		@Override
 		public boolean onTouchEvent(MotionEvent event) {
-			PathInfo pathInfoH;
-			float width;
-
 			switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
-				mCurX = (int) event.getX();
-				mCurY = (int) event.getY();
-				mPrevX = mCurX;
-				mPrevY = mCurY;
-				// press
-				float pressD = event.getPressure();
-				width = getEventPress(pressD);
-				mPaint.setStrokeWidth(width);
+				mDownX =  event.getX();
+				mDownY =  event.getY();
 				mPath = new Path();
-				mPath.moveTo(mCurX, mCurY);
-				mPath.computeBounds(mRectF, true);
-				mRect.set(((int) mRectF.left - (int) width),
-						((int) mRectF.top - (int) width),
-						((int) mRectF.right + (int) width),
-						((int) mRectF.bottom + (int) width));
-				pathInfoH = new PathInfo(mPath, mRect, width);
-				mPathInfo.add(pathInfoH);
-				mPrePress = width;
-				invalidate(mRect);
+				mPaths.add(mPath);
+				mPath.moveTo(mDownX, mDownY);
 				break;
 
 			case MotionEvent.ACTION_MOVE:
-				int N = event.getHistorySize();
-				int x = 0;
-				int y = 0;
-				float pressH = 0;
-				int i = 0;
-				for (i = 0; i < N; i++) {
-					x = (int) event.getHistoricalX(i);
-					y = (int) event.getHistoricalY(i);
-					// press
-					pressH = event.getHistoricalPressure(i);
-					width = getEventPress(pressH);
-					mPath = new Path();
-					mPaint.setStrokeWidth(width);
-					drawPoint(mCurX, mCurY, x, y);
-					mPath.computeBounds(mRectF, true);
-					mRect.set(((int) mRectF.left - (int) width - i),
-							((int) mRectF.top - (int) width - i),
-							((int) mRectF.right + (int) width - i),
-							((int) mRectF.bottom + (int) width - i));
-					pathInfoH = new PathInfo(mPath, mRect, width);
-					mPathInfo.add(pathInfoH);
-					mCurX = x;
-					mCurY = y;
-					mPrePress = width;
-					/*Log.i("HandWriteEditor", "l:" + mRect.left + ",t:" + mRect.top
-							+ ",r:" + mRect.right + ",b:" + mRect.right);*/
-					invalidate(mRect);
-				}
-
-				x = (int) event.getX();
-				y = (int) event.getY();
-				pressH = event.getPressure();
-				width = getEventPress(pressH);
-				mPath = new Path();
-				mPaint.setStrokeWidth(width);
-				drawPoint(mCurX, mCurY, x, y);
-				mPath.computeBounds(mRectF, true);
-				mRect.set(((int) mRectF.left - (int) width - i), ((int) mRectF.top
-						- (int) width - i), ((int) mRectF.right + (int) width - i),
-						((int) mRectF.bottom + (int) width - i));
-				pathInfoH = new PathInfo(mPath, mRect, width);
-				mPathInfo.add(pathInfoH);
-				mCurX = x;
-				mCurY = y;
-				mPrePress = width;
-				invalidate(mRect);
-
+				mPath.lineTo(event.getX(), event.getY());
+				mPath.moveTo(event.getX(), event.getY());
+				invalidate();
 				break;
 
 			case MotionEvent.ACTION_UP:
-				mPath.computeBounds(mRectF, true);
-				float widthUp = getEventPress(event.getPressure());
-				if (widthUp > mPrePress + PRESS_OFFSET) {
-					widthUp = mPrePress + PRESS_OFFSET;
-				} else if (widthUp < mPrePress - PRESS_OFFSET) {
-					widthUp = mPrePress - PRESS_OFFSET;
+				if(mPath.isEmpty()){
+					mPaths.clear();
 				}
-				mRect.set((int) (mRectF.left - widthUp),
-						(int) (mRectF.top - widthUp),
-						(int) (mRectF.right + widthUp),
-						(int) (mRectF.bottom + widthUp));
-				mPrePress = widthUp;
-				PathInfo pathInfoUp = new PathInfo(mPath, mRect, widthUp);
-				mPathInfo.add(pathInfoUp);
-
-				//fadePoints();
-				
-				mCurX = -1;
-				mCurY = 0;
-				// invalidate(mRect);
-				invalidate();
 				break;
 			}
 			return true;
-		}			
+		}
 	}
 	
 	public class EraseStatus extends DrawStatus{
 
 		@Override
 		public boolean onTouchEvent(MotionEvent event) {
-			// TODO Auto-generated method stub
-			return false;
+			switch (event.getAction()){
+			case MotionEvent.ACTION_DOWN:
+				mDownX = event.getX();
+				mDownY = event.getY();
+				mPath = new Path();
+				mPath.moveTo(mDownX, mDownY);
+				break;
+			case MotionEvent.ACTION_UP:
+				mPath.lineTo(event.getX(), event.getY());
+				
+				RectF rectFBound = new RectF();
+				mPath.computeBounds(rectFBound, true);
+				Rect rectBound = new Rect();
+				rectBound.set((int)rectFBound.left, (int)rectFBound.top, 
+						      (int)rectFBound.right, (int)rectFBound.bottom);
+				for (int i = 0; i < mPaths.size();){
+					Path path = mPaths.get(i);
+					Rect pathBound = getPathBoundRect(path);
+					if (Rect.intersects(rectBound, pathBound)) {
+						mPaths.remove(path);
+					}else{
+						++i;
+					}
+				}
+				invalidate();
+				break;
+			}
+			
+			return true;
 		}
-		
+
+		private Rect getPathBoundRect(Path path){
+			RectF rectFBounds = new RectF();
+			if (path != null && !path.isEmpty()){
+				path.computeBounds(rectFBounds, true);
+			}
+			
+			return new Rect((int)rectFBounds.left, (int)rectFBounds.top,
+					        (int)rectFBounds.right, (int)rectFBounds.bottom);
+		}
 	}
-	
-	private Path mPath;
-	private Paint mPaint;
-	private List<PathInfo> mPathInfo;
-	// private float PRESS_LEVEL = 16.5f;
-	private float mPrevX, mPrevY;
-	private int mCurX, mCurY;
-	private float mPrePress;
-	private Rect mRect;
-	private RectF mRectF;
-	private final float PRESS_OFFSET = 5f;
 
 	public KingDrawView(Context context) {
 		super(context);
@@ -192,40 +144,24 @@ public class KingDrawView extends View {
 	}
 
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		return mCurrentStatus != null ? mCurrentStatus.onTouchEvent(event) : false;
+	public boolean onTouchEvent(MotionEvent event) {			
+		return mCurrentStatus != null ? mCurrentStatus.onTouchEvent(event) 
+									: super.onTouchEvent(event);
 	}
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
-		canvas.drawPath(mPath, mPaint);
-
-		Rect r = canvas.getClipBounds();
-
-		PathInfo pathInfo;
-		for (int i = 0; i < mPathInfo.size(); i++) {
-			pathInfo = mPathInfo.get(i);
-
-			if (Rect.intersects(r, pathInfo.rect)) {
-				mPaint.setColor(pathInfo.color);
-				// press
-				mPaint.setStrokeWidth(pathInfo.press);
-				// press over
+		
+		for (Path path : mPaths) {
+			if (path != null && !path.isEmpty()){
+				canvas.drawPath(path, mPaint);				
 			}
-			canvas.drawPath(pathInfo.path, mPaint);
 		}
-
-		mPaint.setColor(Color.RED);
-		canvas.drawPath(mPath, mPaint);
+			
 	}
 
-	private void init() {
-		mRect = new Rect();
-		// mBitmap = Bitmap.createBitmap(600, 800,Bitmap.Config.ARGB_8888);
-		mPathInfo = new ArrayList<PathInfo>();
-		mPath = new Path();
-		mPaint = new Paint();
-		mRectF = new RectF();
+	private void init() {		
+		mPaint = new Paint();		
 		mPaint.setAntiAlias(true);
 		mPaint.setDither(true);
 		mPaint.setStyle(Paint.Style.STROKE);
@@ -235,37 +171,4 @@ public class KingDrawView extends View {
 		mPaint.setColor(Color.RED);	
 		switchStatusByMode(false);
 	}
-
-	private void drawPoint(int x1, int y1, int x2, int y2) {
-		// mPath.moveTo(x1,y1);
-		// mPath.lineTo(x2, y2);
-
-		mPath.moveTo(mPrevX, mPrevY);
-		mPath.quadTo(x1, y1, (x1 + x2) / 2, (y1 + y2) / 2);
-
-		mPrevX = (x1 + x2) / 2;
-		mPrevY = (y1 + y2) / 2;
-	}
-
-	private float getEventPress(float press) {
-		// 0.05~0.25,normal 0.15
-		// float width = 10 + (press * 10 - (float) PRESS_LEVEL);
-		float width = 3 * press; //8*
-		//Log.i("HandWriteEditor", "press:" + press + ",width:" + width);
-		return width;
-	}
-	
-	/*private void fadePoints(){  
-	    int count = mPathInfo.size();  
-	    int start = count - 1;  
-	    int end = count - 16;  
-	    end = end < 0 ? 0 : end;   
-	    PathInfo pathInfo;  
-	    int index = 0;  
-	    for (int i = start; i >= end; i--, index++){  
-	        pathInfo = mPathInfo.get(i);  
-	        pathInfo.color = ( pathInfo.color | 0xff000000 ) & mFadeColor[index];  
-	        mRect.union(pathInfo.rect);  
-	    }  
-	}  */
  }

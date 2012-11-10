@@ -37,8 +37,38 @@
 	               android:textOff=""
 	               android:background="@drawable/ic_menu_eraser"/>
 	           
+	           <ToggleButton
+	               android:id="@+id/toggleButtonWrite"
+	               android:layout_width="wrap_content"
+	               android:layout_height="wrap_content"
+	               android:textOn=""
+	               android:textOff=""
+	               android:background="@drawable/btn_edit"/>
 
-            </LinearLayout>
+	           <ToggleButton
+	               android:id="@+id/toggleButtonLine"
+	               android:layout_width="wrap_content"
+	               android:layout_height="wrap_content"
+	               android:textOn=""
+	               android:textOff=""
+	               android:background="@drawable/btn_line"/>	           
+
+	           <ToggleButton
+	               android:id="@+id/toggleButtonCircle"
+	               android:layout_width="wrap_content"
+	               android:layout_height="wrap_content"
+	               android:textOn=""
+	               android:textOff=""
+	               android:background="@drawable/btn_circle"/>
+	           
+	           <ToggleButton
+	               android:id="@+id/toggleButtonRect"
+	               android:layout_width="wrap_content"
+	               android:layout_height="wrap_content"
+	               android:textOn=""
+	               android:textOff=""
+	               android:background="@drawable/btn_rect"/>
+	        </LinearLayout>
 
             <Button
                 android:id="@+id/buttonFinish"
