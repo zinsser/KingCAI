@@ -69,7 +69,12 @@ public class AnswerStatus extends PaperStatus implements QuestionListener{
 		holder.doGettingItemViews(index, fontsize, new ItemViewHolder.onSubViewClickListener() {
 
 			public void onViewClick(Integer index, Answer answer) {
-				PostClicked(index, answer);	
+				if (answer != null && 
+					answer.getQuestionType() == QuestionInfo.QUESTION_TYPE_SUBJECTIVE){
+					
+				}else{
+					PostClicked(index, answer);
+				}
 			}
 		});
 	}

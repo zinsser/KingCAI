@@ -131,7 +131,7 @@ public class KingService extends Service{
 			sendMessage(new RequestMessage_QueryServer(getLocalIPAddress(), "1.1.5", mActiveSSID));
 			startUDPServer();
 		}else{
-			broadcastSimulatorEvent(ActiveMessage_QueryComplete.s_MsgTag);
+			broadcastSimulatorEvent(ActiveMessage_QueryComplete.s_MsgTag+"127.0.0.1[versionerror]1.1.6[size]0[ssiderror]ok");
 		}
 	}
 	
@@ -279,7 +279,7 @@ public class KingService extends Service{
 		mLoginInfo.mPassword = password;
 		if (mLoginInfo.mOffline){
 			mLoginInfo.mIsValid = true;
-			broadcastSimulatorEvent(ActiveMessage_LoginComplete.s_MsgTag+"[pass]zhou.jincai[grade]class 3 grade 7");
+			broadcastSimulatorEvent(ActiveMessage_LoginComplete.s_MsgTag+"[pass]zhou.jincai[photosize]0");
 		}else{
 			sendMessage(new RequestMessage_Login(number, password), 0);
 		}

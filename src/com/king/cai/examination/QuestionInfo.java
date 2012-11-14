@@ -11,6 +11,7 @@ public class QuestionInfo {
 	public static final int QUESTION_TYPE_BLANK = 3;
 	public static final int QUESTION_TYPE_MULTIBLANK = 4;	
 	public static final int QUESTION_TYPE_LOGIC = 5;
+	public static final int QUESTION_TYPE_SUBJECTIVE = 6;	
 	public static final int QUESTION_TYPE_MAX = QUESTION_TYPE_LOGIC + 1;
 	
 	public String mID;
@@ -84,7 +85,9 @@ public class QuestionInfo {
 	public boolean isLogic(){
 		return mType == QUESTION_TYPE_LOGIC;
 	}
-	
+	public boolean isSubjective(){
+		return mType == QUESTION_TYPE_SUBJECTIVE;
+	}	
 	public boolean isOption(){
 		return (mType == QUESTION_TYPE_OPTION) || (mType == QUESTION_TYPE_MULTIOPTION);		
 	}

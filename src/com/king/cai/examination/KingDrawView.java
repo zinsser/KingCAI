@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;  
+import android.graphics.Bitmap;
 import android.graphics.Canvas;  
 import android.graphics.Color;  
 import android.graphics.Paint;  
@@ -157,7 +158,8 @@ public class KingDrawView extends View {
 				canvas.drawPath(path, mPaint);				
 			}
 		}
-			
+		
+		super.onDraw(canvas);
 	}
 
 	private void init() {		
@@ -170,5 +172,15 @@ public class KingDrawView extends View {
 		mPaint.setStrokeWidth(3);
 		mPaint.setColor(Color.RED);	
 		switchStatusByMode(false);
+	}
+	
+	public void drawToBitmap(Bitmap bitmap){
+		if (bitmap == null) return ;
+		Canvas canvas = new Canvas(bitmap);
+		for (Path path : mPaths) {
+			if (path != null && !path.isEmpty()){
+				canvas.drawPath(path, mPaint);				
+			}
+		}
 	}
  }

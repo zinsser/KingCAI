@@ -139,6 +139,8 @@ public class PaperViewAdapter extends BaseAdapter {
         		holder = new BlankItemViewHolder(mHostActivity, convertView, mQuestionMgr);
         	}else if (mQuestionMgr.getQuestionItem(mIndexes.get(position)).isLogic()){
         		
+        	}else if (mQuestionMgr.getQuestionItem(mIndexes.get(position)).isSubjective()){
+        		holder = new SubjectiveItemViewHolder(mHostActivity, convertView, mQuestionMgr);
         	}else{
         		holder = new ItemViewHolder(mHostActivity, convertView, mQuestionMgr);
         	}

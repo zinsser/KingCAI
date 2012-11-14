@@ -28,11 +28,16 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.king.cai.KingCAIConfig;
 import com.king.cai.R;
@@ -111,6 +116,7 @@ public class PaperActivity  extends ComunicableActivity {
 		
 		mTextViewStatus = (TextView)findViewById(R.id.textViewPaperStatus);
 		mTextViewStatus.setVisibility(View.GONE);
+		initDrawPanel();
     }
 	
     @Override
@@ -716,5 +722,44 @@ public class PaperActivity  extends ComunicableActivity {
 	
 	public AnswerManager getAnswerManager(){
 		return mAnswerMgr;
+	}
+	
+	private LinearLayout mLinearLayoutDrawpanel = null;
+	private KingDrawView mDrawView = null; 
+	private ToggleButton mToggleButtonErase = null;
+	private Button mButtonFinish = null;	
+	private ImageView mTargetImage = null;
+	
+	public void initDrawPanel(){
+		mLinearLayoutDrawpanel = (LinearLayout)findViewById(R.id.linearLayoutDrawpanel);
+        mDrawView = (KingDrawView)findViewById(R.id.kingDrawViewPaint);
+        mToggleButtonErase = (ToggleButton)findViewById(R.id.toggleButtonErase);
+        mToggleButtonErase.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				mToggleButtonErase.setBackgroundResource(isChecked ? R.drawable.ic_menu_eraser_active
+														: R.drawable.ic_menu_eraser);
+				mDrawView.switchStatusByMode(isChecked);
+			}
+		});
+                
+        mButtonFinish = (Button)findViewById(R.id.buttonFinish);
+        mButtonFinish.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				Bitmap bmp = Bitmap.createBitmap(mDrawView.getWidth(),
+						mDrawView.getWidth(), Bitmap.Config.ARGB_8888);
+				mDrawView.drawToBitmap(bmp);
+				if (mTargetImage != null){
+					mTargetImage.setImageBitmap(bmp);
+				}				
+				mLinearLayoutDrawpanel.setVisibility(View.GONE);
+			}
+		});		
+	}
+	
+	public void prepareForSubjectiveItem(ImageView imageView){
+		mTargetImage = imageView;
+		mLinearLayoutDrawpanel.setVisibility(View.VISIBLE);
 	}
 }

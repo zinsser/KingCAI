@@ -14,6 +14,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	protected RatingBar mRatingBarHardness = null;
 	protected LinearLayout mLinearLayoutOptions = null;
 	protected LinearLayout mLinearLayoutBlanks = null;
+	protected LinearLayout mLinearLayoutSubjective = null;
 	protected ImageView mImageView_1 = null;
 	protected ImageView mImageView_2 = null;
 	protected LinearLayout mLinearLayout_ImageView_1 = null;
@@ -30,6 +31,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 	    
 	    mLinearLayoutOptions = (LinearLayout)rawView.findViewById(R.id.linearLayoutOption);
 	    mLinearLayoutBlanks = (LinearLayout)rawView.findViewById(R.id.linearLayoutBlanks);
+	    mLinearLayoutSubjective = (LinearLayout)rawView.findViewById(R.id.linearLayoutSubjective);
 	    
 	    mImageView_1 = (ImageView)rawView.findViewById(R.id.imageView_1);
 	    mImageView_2 = (ImageView)rawView.findViewById(R.id.imageView_2);
@@ -94,7 +96,11 @@ public class QuestionItemViewHolder extends ItemViewHolder{
     	
     	if (mLinearLayoutBlanks != null){
     		mLinearLayoutBlanks.setVisibility(View.GONE);
-    	} 	
+    	}
+    	
+    	if (mLinearLayoutSubjective != null){
+    		mLinearLayoutSubjective.setVisibility(View.GONE);
+    	}
     	
     	if (mRatingBarHardness != null){
     		mRatingBarHardness.setVisibility(View.GONE);
@@ -129,7 +135,7 @@ public class QuestionItemViewHolder extends ItemViewHolder{
 				ImageView imgMask = (ImageView)v;
 				Integer index = (Integer)imgMask.getTag();
 				Answer answer = mHostActivity.getAnswerManager().getAnswer(mQuestionMgr.getIdByIndex(index));
-				answer.mIsMark = !answer.mIsMark;
+				answer.mIsMark = answer != null && !answer.mIsMark;
 				imgMask.setImageBitmap(answer.mIsMark ? mMarkIcon : mUnMarkIcon);
 				mSubViewListener.onViewClick(index, answer);
 			}

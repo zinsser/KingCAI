@@ -39,7 +39,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter> -->            
+            </intent-filter> -->
+            <intent-filter >
+               <action android:name="android.intent.action.MAIN" />
+               <category android:name="android.intent.category.LAUNCHER" />
+           	</intent-filter>                                    
          </activity>	
         
         <activity
@@ -56,10 +60,6 @@
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/Transparent"
             android:screenOrientation="portrait" >
-            <intent-filter >
-               <action android:name="android.intent.action.MAIN" />
-               <category android:name="android.intent.category.LAUNCHER" />
-           	</intent-filter>               
          </activity> 
         <activity
             android:name=".examination.PaperActivity" 
@@ -67,7 +67,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait" >
-          
+           
         </activity>                  
         <service android:enabled="true" 
   				android:name=".service.KingService" >

@@ -94,16 +94,90 @@
         android:layout_width="match_parent"
         android:layout_height="4dip"
         android:background="#DCDCDC" />
-	<com.king.cai.examination.KingDrawView
-	    android:layout_width="match_parent"
-	    android:layout_height="400dp"
-	    android:focusableInTouchMode="true"
-		android:focusable="true"
-		android:layout_gravity="center" /> 		   
-	    <TextView
-	        android:id="@+id/textViewPaperStatus"
-	        android:layout_width="match_parent"
-	        android:layout_height="50dp"
-	        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutDrawpanel"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_weight="0.4"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+	           <ToggleButton
+	               android:id="@+id/toggleButtonErase"
+	               android:layout_width="wrap_content"
+	               android:layout_height="wrap_content"
+	               android:textOn=""
+	               android:textOff=""
+	               android:background="@drawable/ic_menu_eraser"/>
+	           
+	           <ToggleButton
+	               android:id="@+id/toggleButtonWrite"
+	               android:layout_width="wrap_content"
+	               android:layout_height="wrap_content"
+	               android:textOn=""
+	               android:textOff=""
+	               android:background="@drawable/btn_edit"/>
+
+	           <ToggleButton
+	               android:id="@+id/toggleButtonLine"
+	               android:layout_width="wrap_content"
+	               android:layout_height="wrap_content"
+	               android:textOn=""
+	               android:textOff=""
+	               android:background="@drawable/btn_line"/>	           
+
+	           <ToggleButton
+	               android:id="@+id/toggleButtonCircle"
+	               android:layout_width="wrap_content"
+	               android:layout_height="wrap_content"
+	               android:textOn=""
+	               android:textOff=""
+	               android:background="@drawable/btn_circle"/>
+	           
+	           <ToggleButton
+	               android:id="@+id/toggleButtonRect"
+	               android:layout_width="wrap_content"
+	               android:layout_height="wrap_content"
+	               android:textOn=""
+	               android:textOff=""
+	               android:background="@drawable/btn_rect"/>
+	        </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonFinish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Finish" 
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+
+		<com.king.cai.examination.KingDrawView
+		    android:id="@+id/kingDrawViewPaint"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:layout_gravity="center"
+		    android:background="@drawable/handwrite_bg"
+		    android:focusable="true"
+		    android:focusableInTouchMode="true" />
+ 
+        
+    </LinearLayout>	   
+    <TextView
+        android:id="@+id/textViewPaperStatus"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:visibility="gone"/>
 
 </LinearLayout>

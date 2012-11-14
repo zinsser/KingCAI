@@ -132,7 +132,7 @@ public class WorkspaceActivity extends ComunicableActivity  {
 		Integer photoSize = Integer.valueOf(strPhotosize); 
 		mServiceChannel.updateDownloadInfo(photoSize);
 		LoginInfo loginInfo = mServiceChannel.getLoginInfo();
-		if (loginInfo != null){
+		if (loginInfo != null && photoSize > 0){
 			mServiceChannel.sendMessage(new RequestMessage_HeadPhoto(loginInfo.mID), 0);
 		}
 	}
@@ -166,8 +166,12 @@ public class WorkspaceActivity extends ComunicableActivity  {
 	
 	public void requestUpdateApk(String strSize){
 		Integer size = Integer.valueOf(strSize);
-		mServiceChannel.updateDownloadInfo(size);
-		mServiceChannel.sendMessage(new RequestMessage_UpdateApk(), 0);		
+		if (size > 0){
+			mServiceChannel.updateDownloadInfo(size);
+			mServiceChannel.sendMessage(new RequestMessage_UpdateApk(), 0);
+		}else{
+			showToast("应用程序大小未知！");
+		}
 	}
 	
 	public void sendMessage(RequestMessage msg){

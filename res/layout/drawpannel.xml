@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_weight="0.6"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
