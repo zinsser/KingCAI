@@ -1,0 +1,1 @@
+zipalign -v 4 ..\KingCAI_new.apk final.apk
